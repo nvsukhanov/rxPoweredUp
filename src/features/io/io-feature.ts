@@ -5,13 +5,14 @@ import {
     PortInformationRequestOutboundMessageFactory,
     PortInputFormatSetupSingleOutboundMessageFactory,
     PortModeInformationRequestOutboundMessageFactory,
-} from '../messages';
-import { MessageType, PortModeInformationType, PortModeName } from '../constants';
+} from '../../messages';
+import { MessageType, PortModeInformationType, PortModeName } from '../../constants';
 import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-factory';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
-import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../types';
+import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../../types';
+import { IIoFeature } from './i-io-feature';
 
-export class IoFeature {
+export class IoFeature implements IIoFeature {
     public readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>;
 
     public readonly portModeReplies$: Observable<PortModeInboundMessage>;

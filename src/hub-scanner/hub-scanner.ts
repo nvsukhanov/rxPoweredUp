@@ -1,8 +1,9 @@
-import { HUB_SERVICE_UUID } from './constants';
-import { BluetoothDeviceWithGatt } from './types';
-import { ConnectionErrorFactory } from './errors';
+import { HUB_SERVICE_UUID } from '../constants';
+import { BluetoothDeviceWithGatt } from '../types';
+import { ConnectionErrorFactory } from '../errors';
+import { IHubScanner } from './i-hub-scanner';
 
-export class HubScanner {
+export class HubScanner implements IHubScanner {
     constructor(
         private readonly connectionErrorFactoryService: ConnectionErrorFactory,
         private readonly bluetoothApi: Bluetooth

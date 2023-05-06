@@ -1,11 +1,12 @@
-import { HubPropertiesOutboundMessageFactory, HubPropertiesReplyParser, InboundMessageListenerFactory, IOutboundMessenger } from '../messages';
+import { HubPropertiesOutboundMessageFactory, HubPropertiesReplyParser, InboundMessageListenerFactory, IOutboundMessenger } from '../../messages';
 import { Observable } from 'rxjs';
-import { MessageType } from '../constants';
+import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
-import { ConnectionErrorFactory } from '../errors';
+import { ConnectionErrorFactory } from '../../errors';
 import { injectable } from 'tsyringe';
-import { ILogger } from '../logging';
-import { RawMessage } from '../types';
+import { ILogger } from '../../logging';
+import { RawMessage } from '../../types';
+import { IHubPropertiesFeature } from './i-hub-properties-feature';
 
 @injectable()
 export class HubPropertiesFeatureFactory {
@@ -23,7 +24,7 @@ export class HubPropertiesFeatureFactory {
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger,
         logger: ILogger
-    ): HubPropertiesFeature {
+    ): IHubPropertiesFeature {
         const repliesProvider = this.featureMessageProviderFactoryService.create(
             characteristicDataStream,
             this.replyParserService,

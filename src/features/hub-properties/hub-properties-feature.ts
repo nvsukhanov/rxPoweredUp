@@ -1,11 +1,12 @@
 import { filter, from, map, Observable, share, switchMap, tap } from 'rxjs';
-import { HubProperty, MAX_NAME_SIZE, MessageType, SubscribableHubProperties } from '../constants';
-import { HubPropertiesOutboundMessageFactory, IInboundMessageListener, IOutboundMessenger } from '../messages';
-import { ConnectionErrorFactory } from '../errors';
-import { ILogger } from '../logging';
-import { HubPropertyInboundMessage } from '../types';
+import { HubProperty, MAX_NAME_SIZE, MessageType, SubscribableHubProperties } from '../../constants';
+import { HubPropertiesOutboundMessageFactory, IInboundMessageListener, IOutboundMessenger } from '../../messages';
+import { ConnectionErrorFactory } from '../../errors';
+import { ILogger } from '../../logging';
+import { HubPropertyInboundMessage } from '../../types';
+import { IHubPropertiesFeature } from './i-hub-properties-feature';
 
-export class HubPropertiesFeature {
+export class HubPropertiesFeature implements IHubPropertiesFeature {
     public batteryLevel$ = this.createPropertyStream(HubProperty.batteryVoltage);
 
     public rssiLevel$ = this.createPropertyStream(HubProperty.RSSI);

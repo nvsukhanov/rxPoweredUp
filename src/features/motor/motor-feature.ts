@@ -1,7 +1,8 @@
-import { IOutboundMessenger, PortOutputCommandOutboundMessageFactory } from '../messages';
-import { MOTOR_LIMITS, MotorProfile, MotorServoEndState, PortOperationCompletionInformation, PortOperationStartupInformation } from '../constants';
+import { IOutboundMessenger, PortOutputCommandOutboundMessageFactory } from '../../messages';
+import { MOTOR_LIMITS, MotorProfile, MotorServoEndState, PortOperationCompletionInformation, PortOperationStartupInformation } from '../../constants';
+import { IMotorFeature } from './i-motor-feature';
 
-export class MotorFeature {
+export class MotorFeature implements IMotorFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: PortOutputCommandOutboundMessageFactory,

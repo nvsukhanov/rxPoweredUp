@@ -9,13 +9,14 @@ import {
     PortModeInformationReplyParser,
     PortModeInformationRequestOutboundMessageFactory,
     PortValueReplyParserResolver,
-} from '../messages';
+} from '../../messages';
 import { Observable } from 'rxjs';
-import { MessageType } from '../constants';
+import { MessageType } from '../../constants';
 import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-factory';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { injectable } from 'tsyringe';
-import { RawMessage } from '../types';
+import { RawMessage } from '../../types';
+import { IIoFeature } from './i-io-feature';
 
 @injectable()
 export class IoFeatureFactory {
@@ -36,7 +37,7 @@ export class IoFeatureFactory {
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger
-    ): IoFeature {
+    ): IIoFeature {
         const portInformationMessageListener = this.inboundMessageListenerFactory.create(
             characteristicDataStream,
             this.portInformationRequestReplyParserService,
