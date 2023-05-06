@@ -3,7 +3,7 @@ import 'reflect-metadata';
 
 import { connectHub } from '../register';
 import { LoggingMiddleware } from '../middleware';
-import { Hub } from '../hub';
+import { IHub } from '../hub';
 
 async function connect(): Promise<void> {
     const hub = await connectHub(
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('connect')!.addEventListener('click', () => connect());
 });
 
-function onConnected(hub: Hub): void {
+function onConnected(hub: IHub): void {
     setControlsState(true);
     const hubDisconnectHandle = (): unknown => hub.disconnect();
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle);

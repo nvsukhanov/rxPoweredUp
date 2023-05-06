@@ -1,20 +1,21 @@
 import { fromEvent, map, NEVER, Observable, shareReplay, Subject, take, takeUntil, tap } from 'rxjs';
-import { IMessageMiddleware } from './middleware';
-import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from './constants';
-import { ConnectionErrorFactory } from './errors';
-import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from './messages';
-import { HubPropertiesFeature, HubPropertiesFeatureFactory, IoFeature, IoFeatureFactory, MotorFeature, MotorFeatureFactory } from './features';
-import { BluetoothDeviceWithGatt, ILegoHubConfig } from './types';
-import { ILogger } from './logging';
+import { IMessageMiddleware } from '../middleware';
+import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
+import { ConnectionErrorFactory } from '../errors';
+import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from '../messages';
+import { HubPropertiesFeatureFactory, IHubPropertiesFeature, IIoFeature, IMotorFeature, IoFeatureFactory, MotorFeatureFactory } from '../features';
+import { BluetoothDeviceWithGatt, ILegoHubConfig } from '../types';
+import { ILogger } from '../logging';
+import { IHub } from './i-hub';
 
-export class Hub {
+export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
 
-    private _ports: IoFeature | undefined;
+    private _ports: IIoFeature | undefined;
 
-    private _motor: MotorFeature | undefined;
+    private _motor: IMotorFeature | undefined;
 
-    private _properties: HubPropertiesFeature | undefined;
+    private _properties: IHubPropertiesFeature | undefined;
 
     private _isConnected = false;
 
@@ -40,21 +41,21 @@ export class Hub {
     ) {
     }
 
-    public get ports(): IoFeature {
+    public get ports(): IIoFeature {
         if (!this._ports) {
             throw new Error('Hub not connected');
         }
         return this._ports;
     }
 
-    public get motor(): MotorFeature {
+    public get motor(): IMotorFeature {
         if (!this._motor) {
             throw new Error('Hub not connected');
         }
         return this._motor;
     }
 
-    public get properties(): HubPropertiesFeature {
+    public get properties(): IHubPropertiesFeature {
         if (!this._properties) {
             throw new Error('Hub not connected');
         }
@@ -66,13 +67,6 @@ export class Hub {
             throw new Error('Hub not connected');
         }
         return this._beforeDisconnect;
-    }
-
-    public get primaryCharacteristic(): BluetoothRemoteGATTCharacteristic {
-        if (!this._primaryCharacteristic) {
-            throw new Error('Hub not connected');
-        }
-        return this._primaryCharacteristic;
     }
 
     public get disconnected$(): Observable<void> {
@@ -95,7 +89,7 @@ export class Hub {
             this.logger.debug('Got primary service');
             this._primaryCharacteristic = await primaryService.getCharacteristic(HUB_CHARACTERISTIC_UUID);
             this.logger.debug('Got primary characteristic');
-            await this.createFeatures(this.primaryCharacteristic);
+            await this.createFeatures(this._primaryCharacteristic);
             this._isConnected = true;
             this.logger.debug('Hub connection successful');
         } catch (e) {
@@ -110,7 +104,7 @@ export class Hub {
         }
         this.logger.debug('Disconnection invoked');
         this._beforeDisconnect.next();
-        await this.primaryCharacteristic.stopNotifications();
+        await this._primaryCharacteristic?.stopNotifications();
         this.logger.debug('Stopped primary characteristic notifications');
         this.device.gatt.disconnect();
         this.logger.debug('Disconnected');

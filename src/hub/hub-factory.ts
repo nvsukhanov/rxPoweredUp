@@ -1,13 +1,13 @@
 import { Hub } from './hub';
-import { HubLoggerFactory } from './logging';
-import { ILegoHubConfig, LEGO_HUB_CONFIG } from './types/i-lego-hub-config';
-import { ConnectionErrorFactory } from './errors';
-import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from './messages';
-import { HubPropertiesFeatureFactory, IoFeatureFactory, MotorFeatureFactory } from './features';
+import { HubLoggerFactory } from '../logging';
+import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
+import { ConnectionErrorFactory } from '../errors';
+import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from '../messages';
+import { HubPropertiesFeatureFactory, IoFeatureFactory, MotorFeatureFactory } from '../features';
 import { inject, injectable } from 'tsyringe';
-import { IMessageMiddleware } from './middleware';
+import { IMessageMiddleware } from '../middleware';
 import { NEVER, Observable } from 'rxjs';
-import { BluetoothDeviceWithGatt } from './types';
+import { IHub } from './i-hub';
 
 @injectable()
 export class HubFactory {
@@ -28,7 +28,7 @@ export class HubFactory {
         incomingMessageMiddleware: IMessageMiddleware[] = [],
         outgoingMessageMiddleware: IMessageMiddleware[] = [],
         externalDisconnectEvents$: Observable<unknown> = NEVER
-    ): Hub {
+    ): IHub {
         return new Hub(
             device,
             this.hubLoggerFactory.createHubLogger(device.name ?? device.id),
