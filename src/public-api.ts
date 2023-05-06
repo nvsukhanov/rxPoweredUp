@@ -2,7 +2,7 @@ export * from './constants';
 export * from './types';
 
 export { ConnectionError } from './errors';
-export { IIoFeature, IHubPropertiesFeature, IMotorFeature } from './features';
+export { IIoFeature, IHubPropertiesFeature, ICommandsFeature } from './features';
 export { ILogger } from './logging';
 export { IMessageMiddleware, LoggingMiddleware } from './middleware';
 

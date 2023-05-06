@@ -2,6 +2,7 @@ import { injectable } from 'tsyringe';
 
 import { RawMessage } from '../../types';
 import {
+    MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
     MOTOR_LIMITS,
     MessageType,
     MotorProfile,
@@ -14,14 +15,14 @@ import {
 import { numberToUint32LEArray } from '../../helpers';
 
 @injectable()
-export class PortOutputCommandOutboundMessageFactory {
+export class OutputCommandOutboundMessageFactory {
     public startRotation(
         portId: number,
         speed: number = MOTOR_LIMITS.maxSpeed,
         power: number = MOTOR_LIMITS.maxPower,
         profile: MotorProfile = MotorProfile.dontUseProfiles,
-        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
-        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.noAction,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
     ): RawMessage<MessageType.portOutputCommand> {
         this.ensureSpeedIsWithinLimits(speed);
         this.ensurePowerIsWithinLimits(power);
@@ -48,8 +49,8 @@ export class PortOutputCommandOutboundMessageFactory {
         power: number = MOTOR_LIMITS.maxPower,
         endState: MotorServoEndState = MotorServoEndState.hold,
         profile: MotorProfile = MotorProfile.dontUseProfiles,
-        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
-        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.noAction,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
     ): RawMessage<MessageType.portOutputCommand> {
         this.ensureSpeedIsWithinLimits(speed);
         this.ensurePowerIsWithinLimits(power);
@@ -90,6 +91,56 @@ export class PortOutputCommandOutboundMessageFactory {
                 ...numberToUint32LEArray(absolutePosition),
             ])
         };
+    }
+
+    public setAccelerationTime(
+        portId: number,
+        timeMs: number,
+        profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
+    ): RawMessage<MessageType.portOutputCommand> {
+        this.ensureAccDecTimeIsWithinLimits(timeMs);
+        return {
+            header: {
+                messageType: MessageType.portOutputCommand,
+            },
+            payload: new Uint8Array([
+                portId,
+                startupMode | completionMode,
+                OutputSubCommand.setAccTime,
+                timeMs,
+                profileId
+            ])
+        };
+    }
+
+    public setDecelerationTime(
+        portId: number,
+        timeMs: number,
+        profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
+    ): RawMessage<MessageType.portOutputCommand> {
+        this.ensureAccDecTimeIsWithinLimits(timeMs);
+        return {
+            header: {
+                messageType: MessageType.portOutputCommand,
+            },
+            payload: new Uint8Array([
+                portId,
+                startupMode | completionMode,
+                OutputSubCommand.setDecTime,
+                timeMs,
+                profileId
+            ])
+        };
+    }
+
+    private ensureAccDecTimeIsWithinLimits(timeMs: number): void {
+        if (timeMs > MOTOR_LIMITS.maxAccDecTime || timeMs < MOTOR_LIMITS.minAccDecTime) {
+            throw new Error(`Acceleration/deceleration time must be between ${MOTOR_LIMITS.minAccDecTime} and ${MOTOR_LIMITS.maxAccDecTime}. Got ${timeMs}`);
+        }
     }
 
     private ensureSpeedIsWithinLimits(speed: number): void {
