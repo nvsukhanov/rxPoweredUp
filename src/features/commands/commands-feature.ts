@@ -1,12 +1,43 @@
-import { IOutboundMessenger, PortOutputCommandOutboundMessageFactory } from '../../messages';
-import { MOTOR_LIMITS, MotorProfile, MotorServoEndState, PortOperationCompletionInformation, PortOperationStartupInformation } from '../../constants';
-import { IMotorFeature } from './i-motor-feature';
+import { IOutboundMessenger, OutputCommandOutboundMessageFactory } from '../../messages';
+import {
+    MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
+    MOTOR_LIMITS,
+    MotorProfile,
+    MotorServoEndState,
+    PortOperationCompletionInformation,
+    PortOperationStartupInformation
+} from '../../constants';
+import { ICommandsFeature } from './i-commands-feature';
 
-export class MotorFeature implements IMotorFeature {
+export class CommandsFeature implements ICommandsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
-        private readonly portOutputCommandOutboundMessageFactoryService: PortOutputCommandOutboundMessageFactory,
+        private readonly portOutputCommandOutboundMessageFactoryService: OutputCommandOutboundMessageFactory,
     ) {
+    }
+
+    public setAccelerationTime(
+        portId: number,
+        time: number,
+        profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+    ): Promise<void> {
+        return this.messenger.sendWithoutResponse(this.portOutputCommandOutboundMessageFactoryService.setAccelerationTime(
+            portId,
+            time,
+            profileId
+        ));
+    }
+
+    public setDecelerationTime(
+        portId: number,
+        time: number,
+        profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+    ): Promise<void> {
+        return this.messenger.sendWithoutResponse(this.portOutputCommandOutboundMessageFactoryService.setDecelerationTime(
+            portId,
+            time,
+            profileId
+        ));
     }
 
     public setSpeed(
@@ -14,7 +45,7 @@ export class MotorFeature implements IMotorFeature {
         speed: number,
         power: number = MOTOR_LIMITS.maxPower,
         profile: MotorProfile = MotorProfile.dontUseProfiles,
-        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
     ): Promise<void> {
         return this.messenger.sendWithoutResponse(this.portOutputCommandOutboundMessageFactoryService.startRotation(
@@ -34,7 +65,7 @@ export class MotorFeature implements IMotorFeature {
         power: number = MOTOR_LIMITS.maxPower,
         endState: MotorServoEndState = MotorServoEndState.hold,
         profile: MotorProfile = MotorProfile.dontUseProfiles,
-        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
     ): Promise<void> {
         return this.messenger.sendWithoutResponse(this.portOutputCommandOutboundMessageFactoryService.goToAbsolutePosition(

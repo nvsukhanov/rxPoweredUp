@@ -6,7 +6,7 @@ import { HubLoggerFactory } from '../logging';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from '../messages';
-import { HubPropertiesFeatureFactory, IoFeatureFactory, MotorFeatureFactory } from '../features';
+import { CommandsFeatureFactory, HubPropertiesFeatureFactory, IoFeatureFactory } from '../features';
 import { IMessageMiddleware } from '../middleware';
 import { IHub } from './i-hub';
 
@@ -20,7 +20,7 @@ export class HubFactory {
         private readonly propertiesFactoryService: HubPropertiesFeatureFactory,
         private readonly ioFeatureFactoryService: IoFeatureFactory,
         private readonly characteristicsDataStreamFactoryService: CharacteristicDataStreamFactory,
-        private readonly motorFeatureFactoryService: MotorFeatureFactory,
+        private readonly motorFeatureFactoryService: CommandsFeatureFactory,
     ) {
     }
 

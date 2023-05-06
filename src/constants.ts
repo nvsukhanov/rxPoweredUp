@@ -11,6 +11,7 @@ export enum MessageType {
     portModeInformation = 0x44, // 68
     portValueSingle = 0x45, // 69
     portOutputCommand = 0x81, // 129
+    portOutputCommandFeedback = 0x82, // 130
 }
 
 export enum PortModeInformationType {
@@ -128,6 +129,8 @@ export const MOTOR_LIMITS = {
     maxRawAngle: 0x7FFFFFF, // 2147483647
     minServoDegreesRange: 15,
     maxServoDegreesRange: 360,
+    maxAccDecTime: 10000,
+    minAccDecTime: 0
 } as const;
 
 export enum MotorServoEndState {
@@ -154,6 +157,8 @@ export enum MotorProfile {
 }
 
 export enum OutputSubCommand {
+    setAccTime = 0x05,
+    setDecTime = 0x06,
     startSpeed = 0x07,
     gotoAbsolutePosition = 0x0D, // 13
     writeDirectModeData = 0x51, // 81
@@ -162,6 +167,8 @@ export enum OutputSubCommand {
 export enum WriteDirectModeDataSubCommand {
     presetEncoder = 0x02,
 }
+
+export const MOTOR_ACC_DEC_DEFAULT_PROFILE_ID = 0;
 
 export type SubscribableHubProperties = HubProperty.RSSI | HubProperty.batteryVoltage | HubProperty.button | HubProperty.advertisingName;
 

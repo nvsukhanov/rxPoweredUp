@@ -8,7 +8,7 @@
     "clean": "rimraf dist",
     "lint": "eslint src/ --ext .ts",
     "test": "jest --detectOpenHandles --forceExit",
-    "start:web": "webpack-dev-server --mode development",
+    "web": "webpack-dev-server --mode development",
     "start": "tsc --watch",
     "ci": "npm run lint && npm run test && npm run build",
     "prepare": "npm run lint && npm run test && npm run build"

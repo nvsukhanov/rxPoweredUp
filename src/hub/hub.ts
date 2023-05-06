@@ -4,7 +4,7 @@ import { IMessageMiddleware } from '../middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from '../messages';
-import { HubPropertiesFeatureFactory, IHubPropertiesFeature, IIoFeature, IMotorFeature, IoFeatureFactory, MotorFeatureFactory } from '../features';
+import { CommandsFeatureFactory, HubPropertiesFeatureFactory, ICommandsFeature, IHubPropertiesFeature, IIoFeature, IoFeatureFactory } from '../features';
 import { BluetoothDeviceWithGatt, ILegoHubConfig } from '../types';
 import { ILogger } from '../logging';
 import { IHub } from './i-hub';
@@ -14,7 +14,7 @@ export class Hub implements IHub {
 
     private _ports: IIoFeature | undefined;
 
-    private _motor: IMotorFeature | undefined;
+    private _motor: ICommandsFeature | undefined;
 
     private _properties: IHubPropertiesFeature | undefined;
 
@@ -35,7 +35,7 @@ export class Hub implements IHub {
         private readonly propertiesFactoryService: HubPropertiesFeatureFactory,
         private readonly ioFeatureFactoryService: IoFeatureFactory,
         private readonly characteristicsDataStreamFactoryService: CharacteristicDataStreamFactory,
-        private readonly motorFeatureFactoryService: MotorFeatureFactory,
+        private readonly motorFeatureFactoryService: CommandsFeatureFactory,
         private readonly incomingMessageMiddleware: IMessageMiddleware[] = [],
         private readonly outgoingMessageMiddleware: IMessageMiddleware[] = [],
         private readonly externalDisconnectEvents$: Observable<unknown> = NEVER
@@ -49,7 +49,7 @@ export class Hub implements IHub {
         return this._ports;
     }
 
-    public get motor(): IMotorFeature {
+    public get commands(): ICommandsFeature {
         if (!this._motor) {
             throw new Error('Hub not connected');
         }
@@ -137,7 +137,7 @@ export class Hub implements IHub {
             this.logger
         );
 
-        this._motor = this.motorFeatureFactoryService.createMotorFeature(
+        this._motor = this.motorFeatureFactoryService.createCommandsFeature(
             messenger
         );
 
