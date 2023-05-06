@@ -1,7 +1,7 @@
 import { IReplyParser } from '../i-reply-parser';
 import { MessageType, PortInformationReplyType } from '../../constants';
-import { InboundMessage, PortModeInboundMessage } from '../inbound-message';
-import { RawMessage } from '../raw-message';
+import { InboundMessage, PortModeInboundMessage } from '../../types/inbound-message';
+import { RawMessage } from '../../types/raw-message';
 import { concatUint8ToUint16, readBitAtPosition } from '../../helpers';
 import { injectable } from 'tsyringe';
 

@@ -12,8 +12,8 @@ import {
     PortModeInformationSiRange,
     PortModeInformationSymbol,
     PortModeInformationValueFormat
-} from '../inbound-message';
-import { RawMessage } from '../raw-message';
+} from '../../types/inbound-message';
+import { RawMessage } from '../../types/raw-message';
 import { readBitAtPosition } from '../../helpers';
 import { injectable } from 'tsyringe';
 

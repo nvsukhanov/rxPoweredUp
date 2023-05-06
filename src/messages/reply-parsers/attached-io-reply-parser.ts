@@ -1,12 +1,12 @@
 import { AttachIoEvent, MessageType } from '../../constants';
 import { IReplyParser } from '../i-reply-parser';
-import { RawMessage } from '../raw-message';
+import { RawMessage } from '../../types/raw-message';
 import {
     AttachedIoAttachInboundMessage,
     AttachedIOAttachVirtualInboundMessage,
     AttachedIODetachInboundMessage,
     AttachedIOInboundMessage
-} from '../inbound-message';
+} from '../../types/inbound-message';
 import { readNumberFromUint8LEArray } from '../../helpers';
 import { injectable } from 'tsyringe';
 

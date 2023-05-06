@@ -1,18 +1,15 @@
 import { exhaustMap, filter, Observable, share } from 'rxjs';
 import {
-    AttachedIOInboundMessage,
-    InboundMessageListener,
-    OutboundMessenger,
+    IInboundMessageListener,
+    IOutboundMessenger,
     PortInformationRequestOutboundMessageFactory,
     PortInputFormatSetupSingleOutboundMessageFactory,
-    PortModeInboundMessage,
-    PortModeInformationInboundMessage,
     PortModeInformationRequestOutboundMessageFactory,
-    PortValueInboundMessage
 } from '../messages';
 import { MessageType, PortModeInformationType, PortModeName } from '../constants';
 import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-factory';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
+import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../types';
 
 export class IoFeature {
     public readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>;
@@ -27,17 +24,17 @@ export class IoFeature {
 
     constructor(
         private readonly messageFactoryService: PortInformationRequestOutboundMessageFactory,
-        private readonly portModeInboundMessageListener: InboundMessageListener<MessageType.portInformation>,
+        private readonly portModeInboundMessageListener: IInboundMessageListener<MessageType.portInformation>,
         private readonly portValueInboundListenerFactory: IoFeaturePortValueListenerFactory,
-        private readonly attachedIOInboundMessageListener: InboundMessageListener<MessageType.attachedIO>,
-        private readonly portModeInformationInboundMessageListener: InboundMessageListener<MessageType.portModeInformation>,
+        private readonly attachedIOInboundMessageListener: IInboundMessageListener<MessageType.attachedIO>,
+        private readonly portModeInformationInboundMessageListener: IInboundMessageListener<MessageType.portModeInformation>,
         private readonly portModeInformationOutboundMessageFactoryService: PortModeInformationRequestOutboundMessageFactory,
         private readonly portInputFormatSetupSingleOutboundMessageFactoryService: PortInputFormatSetupSingleOutboundMessageFactory,
-        private readonly messenger: OutboundMessenger,
+        private readonly messenger: IOutboundMessenger,
         private readonly attachedIoRepliesCacheFactoryService: AttachedIoRepliesCacheFactory,
         private readonly onDisconnected$: Observable<void>,
     ) {
-        this.portModeInformationReplies$  = this.portModeInformationInboundMessageListener.replies$.pipe(
+        this.portModeInformationReplies$ = this.portModeInformationInboundMessageListener.replies$.pipe(
             share()
         );
 

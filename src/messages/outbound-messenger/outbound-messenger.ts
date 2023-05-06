@@ -1,13 +1,14 @@
-import { MessageType } from '../constants';
-import { RawMessage } from './raw-message';
-import { IMessageMiddleware } from '../middleware';
+import { MessageType } from '../../constants';
+import { RawMessage } from '../../types/raw-message';
+import { IMessageMiddleware } from '../../middleware';
 import { catchError, firstValueFrom, from, Observable, retry, switchMap, tap, timeout } from 'rxjs';
-import { InboundMessage } from './inbound-message';
-import { concatUint8Arrays } from '../helpers';
-import { ILegoHubConfig } from '../types';
-import { ILogger } from '../logging';
+import { InboundMessage } from '../../types/inbound-message';
+import { concatUint8Arrays } from '../../helpers';
+import { ILegoHubConfig } from '../../types';
+import { ILogger } from '../../logging';
+import { IOutboundMessenger } from './i-outbound-messenger';
 
-export class OutboundMessenger {
+export class OutboundMessenger implements IOutboundMessenger {
     private queue: Promise<unknown> = Promise.resolve(); // TODO: replace with more sophisticated queue (with queue size tracking)
 
     private readonly messageTypeLength = 1;

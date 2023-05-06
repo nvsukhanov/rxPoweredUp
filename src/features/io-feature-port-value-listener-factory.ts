@@ -1,6 +1,7 @@
 import { MessageType, PortModeName } from '../constants';
-import { InboundMessageListener, InboundMessageListenerFactory, PortValueReplyParserResolver, RawMessage } from '../messages';
+import { IInboundMessageListener, InboundMessageListenerFactory, PortValueReplyParserResolver } from '../messages';
 import { Observable } from 'rxjs';
+import { RawMessage } from '../types';
 
 export class IoFeaturePortValueListenerFactory {
     constructor(
@@ -13,7 +14,7 @@ export class IoFeaturePortValueListenerFactory {
 
     public createForMode(
         modeName: PortModeName
-    ): InboundMessageListener<MessageType.portValueSingle> {
+    ): IInboundMessageListener<MessageType.portValueSingle> {
         const replyParserService = this.portValueReplyParserResolverService.resolve(modeName);
         if (!replyParserService) {
             throw new Error(`No reply parser for mode ${modeName}`);

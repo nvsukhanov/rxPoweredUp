@@ -1,5 +1,5 @@
 import { HubProperty, HubPropertyOperation, MessageType, SubscribableHubProperties, WritableHubProperties } from '../../constants';
-import { RawMessage } from '../raw-message';
+import { RawMessage } from '../../types/raw-message';
 import { injectable } from 'tsyringe';
 
 @injectable()

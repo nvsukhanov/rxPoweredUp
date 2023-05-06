@@ -1,10 +1,11 @@
-import { MessageType } from '../constants';
+import { MessageType } from '../../constants';
 import { filter, map, Observable, takeUntil } from 'rxjs';
-import { IReplyParser } from './i-reply-parser';
-import { RawMessage } from './raw-message';
-import { InboundMessage } from './inbound-message';
+import { IReplyParser } from '../i-reply-parser';
+import { RawMessage } from '../../types/raw-message';
+import { InboundMessage } from '../../types';
+import { IInboundMessageListener } from './i-inbound-message-listener';
 
-export class InboundMessageListener<TMessageType extends MessageType> {
+export class InboundMessageListener<TMessageType extends MessageType> implements IInboundMessageListener<TMessageType> {
     constructor(
         private readonly characteristicDataStream: Observable<RawMessage<MessageType>>,
         private readonly replyParserService: IReplyParser<TMessageType>,

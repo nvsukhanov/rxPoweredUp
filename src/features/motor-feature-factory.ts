@@ -1,5 +1,5 @@
 import { MotorFeature } from './motor-feature';
-import { OutboundMessenger, PortOutputCommandOutboundMessageFactory } from '../messages';
+import { IOutboundMessenger, PortOutputCommandOutboundMessageFactory } from '../messages';
 import { injectable } from 'tsyringe';
 
 @injectable()
@@ -10,7 +10,7 @@ export class MotorFeatureFactory {
     }
 
     public createMotorFeature(
-        messenger: OutboundMessenger
+        messenger: IOutboundMessenger
     ): MotorFeature {
         return new MotorFeature(
             messenger,
