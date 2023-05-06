@@ -1,7 +1,8 @@
+import { injectable } from 'tsyringe';
+
 import { PortValueAbsolutePositionReplyParser, PortValueSpeedReplyParser } from './port-value';
 import { MessageType, PortModeName } from '../../constants';
 import { IReplyParser } from '../i-reply-parser';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class PortValueReplyParserResolver { // TODO: refactor to chain of responsibility

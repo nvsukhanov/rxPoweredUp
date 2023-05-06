@@ -1,7 +1,8 @@
+import { inject, injectable } from 'tsyringe';
+
 import { MessageType } from '../../constants';
 import { ILegoHubConfig, LEGO_HUB_CONFIG, RawMessage } from '../../types';
 import { numberToUint32LEArray } from '../../helpers';
-import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export class PortInputFormatSetupSingleOutboundMessageFactory {

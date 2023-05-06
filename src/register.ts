@@ -1,9 +1,10 @@
 import { container } from 'tsyringe';
+import { NEVER, Observable } from 'rxjs';
+
 import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HubScannerFactory } from './hub-scanner';
 import { HubFactory, IHub } from './hub';
 import { IMessageMiddleware } from './middleware';
-import { NEVER, Observable } from 'rxjs';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });
 

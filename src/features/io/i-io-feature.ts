@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+
 import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../../types';
 import { PortModeInformationType, PortModeName } from '../../constants';
 

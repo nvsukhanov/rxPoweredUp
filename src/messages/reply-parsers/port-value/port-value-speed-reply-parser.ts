@@ -1,8 +1,9 @@
+import { injectable } from 'tsyringe';
+
 import { IReplyParser } from '../../i-reply-parser';
 import { MessageType, PortModeName } from '../../../constants';
 import { PortValueSpeedInboundMessage, RawMessage } from '../../../types';
 import { convertUint8ToSignedInt } from '../../../helpers';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class PortValueSpeedReplyParser implements IReplyParser<MessageType.portValueSingle> {

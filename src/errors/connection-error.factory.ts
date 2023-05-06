@@ -1,6 +1,7 @@
+import { injectable } from 'tsyringe';
+
 import { ConnectionError } from './connection-error';
 import { HubProperty } from '../constants';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class ConnectionErrorFactory {

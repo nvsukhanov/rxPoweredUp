@@ -1,6 +1,7 @@
+import { injectable } from 'tsyringe';
+
 import { RawMessage } from '../../types';
 import { MessageType, PortInformationRequestType } from '../../constants';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class PortInformationRequestOutboundMessageFactory {

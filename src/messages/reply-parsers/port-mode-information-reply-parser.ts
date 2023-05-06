@@ -1,3 +1,5 @@
+import { injectable } from 'tsyringe';
+
 import { IReplyParser } from '../i-reply-parser';
 import { MessageType, PortModeInformationType } from '../../constants';
 import {
@@ -15,7 +17,6 @@ import {
     RawMessage
 } from '../../types';
 import { readBitAtPosition } from '../../helpers';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class PortModeInformationReplyParser implements IReplyParser<MessageType.portModeInformation> {

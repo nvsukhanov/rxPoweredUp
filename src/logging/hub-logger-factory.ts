@@ -1,5 +1,6 @@
 import { injectable } from 'tsyringe';
 import { Logger } from 'tslog';
+
 import { ILogger } from './i-logger';
 
 @injectable()

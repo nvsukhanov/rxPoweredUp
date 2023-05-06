@@ -1,4 +1,5 @@
-import { filter, from, map, Observable, share, switchMap, tap } from 'rxjs';
+import { Observable, filter, from, map, share, switchMap, tap } from 'rxjs';
+
 import { HubProperty, MAX_NAME_SIZE, MessageType, SubscribableHubProperties } from '../../constants';
 import { HubPropertiesOutboundMessageFactory, IInboundMessageListener, IOutboundMessenger } from '../../messages';
 import { ConnectionErrorFactory } from '../../errors';

@@ -1,6 +1,7 @@
+import { injectable } from 'tsyringe';
+
 import { MessageType } from '../constants';
 import { RawMessage } from '../types';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class InboundMessageDissector {

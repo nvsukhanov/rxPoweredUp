@@ -1,14 +1,15 @@
+import { injectable } from 'tsyringe';
+
 import { AttachIoEvent, MessageType } from '../../constants';
 import { IReplyParser } from '../i-reply-parser';
 import {
-    AttachedIoAttachInboundMessage,
     AttachedIOAttachVirtualInboundMessage,
     AttachedIODetachInboundMessage,
     AttachedIOInboundMessage,
+    AttachedIoAttachInboundMessage,
     RawMessage
 } from '../../types';
 import { readNumberFromUint8LEArray } from '../../helpers';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class AttachedIoReplyParser implements IReplyParser<MessageType.attachedIO> {
