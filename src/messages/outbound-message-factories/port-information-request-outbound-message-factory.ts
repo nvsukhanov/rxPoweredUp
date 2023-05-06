@@ -1,4 +1,4 @@
-import { RawMessage } from '../../types/raw-message';
+import { RawMessage } from '../../types';
 import { MessageType, PortInformationRequestType } from '../../constants';
 import { injectable } from 'tsyringe';
 

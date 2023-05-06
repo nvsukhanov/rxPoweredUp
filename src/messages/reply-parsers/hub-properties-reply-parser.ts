@@ -1,6 +1,5 @@
 import { HUB_DEVICE_TYPE_MAP, HubProperty, HubType, MessageType } from '../../constants';
 import { IReplyParser } from '../i-reply-parser';
-import { RawMessage } from '../../types/raw-message';
 import {
     HubPropertyAdvertisingNameInboundMessage,
     HubPropertyBatteryInboundMessage,
@@ -9,8 +8,9 @@ import {
     HubPropertyPrimaryMacAddressInboundMessage,
     HubPropertyRssiInboundMessage,
     HubPropertySystemTypeIdInboundMessage,
-    InboundMessage
-} from '../../types/inbound-message';
+    InboundMessage,
+    RawMessage
+} from '../../types';
 import { convertUint8ToSignedInt } from '../../helpers';
 import { injectable } from 'tsyringe';
 

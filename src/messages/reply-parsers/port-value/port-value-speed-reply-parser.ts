@@ -1,7 +1,6 @@
 import { IReplyParser } from '../../i-reply-parser';
 import { MessageType, PortModeName } from '../../../constants';
-import { RawMessage } from '../../../types/raw-message';
-import { PortValueSpeedInboundMessage } from '../../../types/inbound-message';
+import { PortValueSpeedInboundMessage, RawMessage } from '../../../types';
 import { convertUint8ToSignedInt } from '../../../helpers';
 import { injectable } from 'tsyringe';
 

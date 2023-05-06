@@ -1,4 +1,4 @@
-import { RawMessage } from '../../types/raw-message';
+import { RawMessage } from '../../types';
 import {
     MessageType,
     MOTOR_LIMITS,

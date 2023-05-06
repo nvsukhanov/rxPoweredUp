@@ -1,10 +1,8 @@
 import { MessageType } from '../../constants';
-import { RawMessage } from '../../types/raw-message';
+import { ILegoHubConfig, InboundMessage, RawMessage } from '../../types';
 import { IMessageMiddleware } from '../../middleware';
 import { catchError, firstValueFrom, from, Observable, retry, switchMap, tap, timeout } from 'rxjs';
-import { InboundMessage } from '../../types/inbound-message';
 import { concatUint8Arrays } from '../../helpers';
-import { ILegoHubConfig } from '../../types';
 import { ILogger } from '../../logging';
 import { IOutboundMessenger } from './i-outbound-messenger';
 

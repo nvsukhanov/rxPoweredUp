@@ -1,7 +1,6 @@
 import { MessageType } from '../../constants';
-import { RawMessage } from '../../types/raw-message';
+import { ILegoHubConfig, LEGO_HUB_CONFIG, RawMessage } from '../../types';
 import { numberToUint32LEArray } from '../../helpers';
-import { ILegoHubConfig, LEGO_HUB_CONFIG } from '../../types';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
