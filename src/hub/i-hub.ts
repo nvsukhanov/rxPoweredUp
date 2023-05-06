@@ -1,5 +1,6 @@
-import { IHubPropertiesFeature, IIoFeature, IMotorFeature } from '../features';
 import { Observable } from 'rxjs';
+
+import { IHubPropertiesFeature, IIoFeature, IMotorFeature } from '../features';
 
 export interface IHub {
     readonly ports: IIoFeature;

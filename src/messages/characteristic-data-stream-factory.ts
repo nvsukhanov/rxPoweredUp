@@ -1,8 +1,9 @@
-import { EMPTY, fromEvent, map, Observable, of, share, switchMap } from 'rxjs';
+import { EMPTY, Observable, fromEvent, map, of, share, switchMap } from 'rxjs';
+import { injectable } from 'tsyringe';
+
 import { InboundMessageDissector } from './inbound-message-dissector';
 import { MessageType } from '../constants';
 import { IMessageMiddleware } from '../middleware';
-import { injectable } from 'tsyringe';
 import { RawMessage } from '../types';
 
 @injectable()

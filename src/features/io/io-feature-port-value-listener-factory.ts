@@ -1,6 +1,7 @@
+import { Observable } from 'rxjs';
+
 import { MessageType, PortModeName } from '../../constants';
 import { IInboundMessageListener, InboundMessageListenerFactory, PortValueReplyParserResolver } from '../../messages';
-import { Observable } from 'rxjs';
 import { RawMessage } from '../../types';
 
 export class IoFeaturePortValueListenerFactory {

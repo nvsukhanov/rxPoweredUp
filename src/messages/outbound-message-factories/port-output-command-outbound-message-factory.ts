@@ -1,7 +1,9 @@
-import { RawMessage } from '../../types/raw-message';
+import { injectable } from 'tsyringe';
+
+import { RawMessage } from '../../types';
 import {
-    MessageType,
     MOTOR_LIMITS,
+    MessageType,
     MotorProfile,
     MotorServoEndState,
     OutputSubCommand,
@@ -10,7 +12,6 @@ import {
     WriteDirectModeDataSubCommand
 } from '../../constants';
 import { numberToUint32LEArray } from '../../helpers';
-import { injectable } from 'tsyringe';
 
 @injectable()
 export class PortOutputCommandOutboundMessageFactory {

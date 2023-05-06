@@ -1,12 +1,13 @@
+import { inject, injectable } from 'tsyringe';
+import { NEVER, Observable } from 'rxjs';
+
 import { Hub } from './hub';
 import { HubLoggerFactory } from '../logging';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from '../messages';
 import { HubPropertiesFeatureFactory, IoFeatureFactory, MotorFeatureFactory } from '../features';
-import { inject, injectable } from 'tsyringe';
 import { IMessageMiddleware } from '../middleware';
-import { NEVER, Observable } from 'rxjs';
 import { IHub } from './i-hub';
 
 @injectable()

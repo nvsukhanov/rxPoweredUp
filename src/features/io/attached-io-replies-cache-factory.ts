@@ -1,6 +1,7 @@
-import { AttachedIoRepliesCache } from './attached-io-replies-cache';
 import { Observable } from 'rxjs';
 import { injectable } from 'tsyringe';
+
+import { AttachedIoRepliesCache } from './attached-io-replies-cache';
 import { AttachedIOInboundMessage } from '../../types';
 
 @injectable()

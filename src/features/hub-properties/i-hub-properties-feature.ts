@@ -1,5 +1,6 @@
-import { HubProperty } from '../../constants';
 import { Observable } from 'rxjs';
+
+import { HubProperty } from '../../constants';
 import { HubPropertyBatteryInboundMessage, HubPropertyButtonStateInboundMessage, HubPropertyInboundMessage, HubPropertyRssiInboundMessage } from '../../types';
 
 export interface IHubPropertiesFeature {

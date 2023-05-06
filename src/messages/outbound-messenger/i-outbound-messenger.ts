@@ -1,7 +1,7 @@
-import { RawMessage } from '../../types/raw-message';
-import { MessageType } from '../../constants';
 import { Observable } from 'rxjs';
-import { InboundMessage } from '../../types';
+
+import { InboundMessage, RawMessage } from '../../types';
+import { MessageType } from '../../constants';
 
 export interface IOutboundMessenger {
     sendWithoutResponse(

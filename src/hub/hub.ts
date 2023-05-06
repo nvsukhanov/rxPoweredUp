@@ -1,4 +1,5 @@
-import { fromEvent, map, NEVER, Observable, shareReplay, Subject, take, takeUntil, tap } from 'rxjs';
+import { NEVER, Observable, Subject, fromEvent, map, shareReplay, take, takeUntil, tap } from 'rxjs';
+
 import { IMessageMiddleware } from '../middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
 import { ConnectionErrorFactory } from '../errors';

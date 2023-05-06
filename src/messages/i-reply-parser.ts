@@ -1,7 +1,5 @@
 import { MessageType } from '../constants';
-import { InboundMessage } from '../types/inbound-message';
-
-import { RawMessage } from '../types/raw-message';
+import { InboundMessage, RawMessage } from '../types';
 
 export interface IReplyParser<T extends MessageType> {
     readonly messageType: T;

@@ -1,8 +1,11 @@
+import { Observable } from 'rxjs';
+import { injectable } from 'tsyringe';
+
 import { IoFeature } from './io-feature';
 import {
     AttachedIoReplyParser,
-    InboundMessageListenerFactory,
     IOutboundMessenger,
+    InboundMessageListenerFactory,
     PortInformationReplyParser,
     PortInformationRequestOutboundMessageFactory,
     PortInputFormatSetupSingleOutboundMessageFactory,
@@ -10,11 +13,9 @@ import {
     PortModeInformationRequestOutboundMessageFactory,
     PortValueReplyParserResolver,
 } from '../../messages';
-import { Observable } from 'rxjs';
 import { MessageType } from '../../constants';
 import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-factory';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
-import { injectable } from 'tsyringe';
 import { RawMessage } from '../../types';
 import { IIoFeature } from './i-io-feature';
 

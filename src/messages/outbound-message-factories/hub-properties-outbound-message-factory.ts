@@ -1,6 +1,7 @@
-import { HubProperty, HubPropertyOperation, MessageType, SubscribableHubProperties, WritableHubProperties } from '../../constants';
-import { RawMessage } from '../../types/raw-message';
 import { injectable } from 'tsyringe';
+
+import { HubProperty, HubPropertyOperation, MessageType, SubscribableHubProperties, WritableHubProperties } from '../../constants';
+import { RawMessage } from '../../types';
 
 @injectable()
 export class HubPropertiesOutboundMessageFactory {
