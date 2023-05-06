@@ -1,16 +1,9 @@
-import { from, fromEvent, map, NEVER, Observable, shareReplay, Subject, take, takeUntil, tap } from 'rxjs';
+import { fromEvent, map, NEVER, Observable, shareReplay, Subject, take, takeUntil, tap } from 'rxjs';
 import { IMessageMiddleware } from './middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from './constants';
 import { ConnectionErrorFactory } from './errors';
 import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from './messages';
-import {
-    HubPropertiesFeature,
-    HubPropertiesFeatureFactory,
-    IoFeature,
-    IoFeatureFactory,
-    MotorFeature,
-    MotorFeatureFactory
-} from './features';
+import { HubPropertiesFeature, HubPropertiesFeatureFactory, IoFeature, IoFeatureFactory, MotorFeature, MotorFeatureFactory } from './features';
 import { BluetoothDeviceWithGatt, ILegoHubConfig } from './types';
 import { ILogger } from './logging';
 
@@ -111,21 +104,16 @@ export class Hub {
         }
     }
 
-    public disconnect(): Observable<void> {
+    public async disconnect(): Promise<void> {
         if (!this._isConnected) {
             throw new Error('Hub not connected');
         }
         this.logger.debug('Disconnection invoked');
         this._beforeDisconnect.next();
-        return from(this.primaryCharacteristic.stopNotifications()).pipe(
-            map(() => void 0),
-            tap(() => {
-                this.logger.debug('Stopped primary characteristic notifications');
-                this.device.gatt.disconnect();
-                this.logger.debug('Disconnected from GATT server');
-            }),
-            take(1)
-        );
+        await this.primaryCharacteristic.stopNotifications();
+        this.logger.debug('Stopped primary characteristic notifications');
+        this.device.gatt.disconnect();
+        this.logger.debug('Disconnected');
     }
 
     private async createFeatures(

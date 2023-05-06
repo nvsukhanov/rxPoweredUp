@@ -1,6 +1,6 @@
-import { AttachedIOInboundMessage } from '../messages';
 import { Observable, take, takeUntil, TeardownLogic } from 'rxjs';
 import { AttachIoEvent } from '../constants';
+import { AttachedIOInboundMessage } from '../types';
 
 export class AttachedIoRepliesCache {
     public readonly replies$: Observable<AttachedIOInboundMessage>;

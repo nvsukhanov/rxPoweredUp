@@ -1,6 +1,6 @@
 {
   "name": "@nvsukhanov/poweredup-api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A Typescript interface to LEGO Powered Up hubs",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,9 @@
     "clean": "rimraf dist",
     "lint": "eslint src/ --ext .ts",
     "test": "jest --detectOpenHandles --forceExit",
-    "start": "webpack-dev-server --mode development",
+    "start:web": "webpack-dev-server --mode development",
+    "start": "tsc --watch",
+    "ci": "npm run lint && npm run test && npm run build",
     "prepare": "npm run lint && npm run test && npm run build"
   },
   "author": "Nikolay Sukhanov <nvsukhanov@outlook.com>",

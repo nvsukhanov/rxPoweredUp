@@ -2,20 +2,20 @@ import { IoFeature } from './io-feature';
 import {
     AttachedIoReplyParser,
     InboundMessageListenerFactory,
-    OutboundMessenger,
+    IOutboundMessenger,
     PortInformationReplyParser,
     PortInformationRequestOutboundMessageFactory,
     PortInputFormatSetupSingleOutboundMessageFactory,
     PortModeInformationReplyParser,
     PortModeInformationRequestOutboundMessageFactory,
     PortValueReplyParserResolver,
-    RawMessage
 } from '../messages';
 import { Observable } from 'rxjs';
 import { MessageType } from '../constants';
 import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-factory';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { injectable } from 'tsyringe';
+import { RawMessage } from '../types';
 
 @injectable()
 export class IoFeatureFactory {
@@ -35,7 +35,7 @@ export class IoFeatureFactory {
     public create(
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
-        messenger: OutboundMessenger
+        messenger: IOutboundMessenger
     ): IoFeature {
         const portInformationMessageListener = this.inboundMessageListenerFactory.create(
             characteristicDataStream,

@@ -1,7 +1,7 @@
-import { PortValueAbsolutePositionReplyParser } from './port-value-absolute-position-reply-parser';
+import { PortValueAbsolutePositionReplyParser } from './port-value/port-value-absolute-position-reply-parser';
 import { MessageType, PortModeName } from '../../constants';
 import { IReplyParser } from '../i-reply-parser';
-import { PortValueSpeedReplyParser } from './port-value-speed-reply-parser';
+import { PortValueSpeedReplyParser } from './port-value/port-value-speed-reply-parser';
 import { injectable } from 'tsyringe';
 
 @injectable()

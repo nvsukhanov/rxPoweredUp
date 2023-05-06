@@ -1,5 +1,5 @@
 import { MessageType } from '../constants';
-import { RawMessage } from './raw-message';
+import { RawMessage } from '../types/raw-message';
 import { injectable } from 'tsyringe';
 
 @injectable()

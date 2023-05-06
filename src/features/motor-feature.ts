@@ -1,9 +1,9 @@
-import { OutboundMessenger, PortOutputCommandOutboundMessageFactory } from '../messages';
+import { IOutboundMessenger, PortOutputCommandOutboundMessageFactory } from '../messages';
 import { MOTOR_LIMITS, MotorProfile, MotorServoEndState, PortOperationCompletionInformation, PortOperationStartupInformation } from '../constants';
 
 export class MotorFeature {
     constructor(
-        private readonly messenger: OutboundMessenger,
+        private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: PortOutputCommandOutboundMessageFactory,
     ) {
     }

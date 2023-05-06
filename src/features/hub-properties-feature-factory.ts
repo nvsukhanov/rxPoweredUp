@@ -1,16 +1,11 @@
-import {
-    HubPropertiesOutboundMessageFactory,
-    HubPropertiesReplyParser,
-    InboundMessageListenerFactory,
-    OutboundMessenger,
-    RawMessage
-} from '../messages';
+import { HubPropertiesOutboundMessageFactory, HubPropertiesReplyParser, InboundMessageListenerFactory, IOutboundMessenger } from '../messages';
 import { Observable } from 'rxjs';
 import { MessageType } from '../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
 import { ConnectionErrorFactory } from '../errors';
 import { injectable } from 'tsyringe';
 import { ILogger } from '../logging';
+import { RawMessage } from '../types';
 
 @injectable()
 export class HubPropertiesFeatureFactory {
@@ -26,7 +21,7 @@ export class HubPropertiesFeatureFactory {
         advertisingName: string,
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
-        messenger: OutboundMessenger,
+        messenger: IOutboundMessenger,
         logger: ILogger
     ): HubPropertiesFeature {
         const repliesProvider = this.featureMessageProviderFactoryService.create(
