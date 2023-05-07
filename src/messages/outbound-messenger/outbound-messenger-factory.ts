@@ -1,28 +1,25 @@
-import { inject, injectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
 
 import { OutboundMessenger } from './outbound-messenger';
 import { IMessageMiddleware } from '../../middleware';
-import { ILegoHubConfig, LEGO_HUB_CONFIG } from '../../types';
-import { ILogger } from '../../logging';
 import { IOutboundMessenger } from './i-outbound-messenger';
+import { PacketBuilder } from './packet-builder';
 
 @injectable()
 export class OutboundMessengerFactory {
     constructor(
-        @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig
+        private readonly packerBuilder: PacketBuilder,
     ) {
     }
 
     public create(
         characteristic: BluetoothRemoteGATTCharacteristic,
         messageMiddleware: IMessageMiddleware[],
-        logger: ILogger
     ): IOutboundMessenger {
         return new OutboundMessenger(
             characteristic,
+            this.packerBuilder,
             messageMiddleware,
-            logger,
-            this.config
         );
     }
 }

@@ -1,111 +1,111 @@
-import { Observable, catchError, firstValueFrom, from, retry, switchMap, tap, timeout } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 
+import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
-import { ILegoHubConfig, InboundMessage, RawMessage } from '../../types';
 import { IMessageMiddleware } from '../../middleware';
-import { concatUint8Arrays } from '../../helpers';
-import { ILogger } from '../../logging';
+import { PacketBuilder } from './packet-builder';
 import { IOutboundMessenger } from './i-outbound-messenger';
 
-export class OutboundMessenger implements IOutboundMessenger {
-    private queue: Promise<unknown> = Promise.resolve(); // TODO: replace with more sophisticated queue (with queue size tracking)
+type QueueItem<TResponse> = {
+    message: RawMessage<MessageType>,
+    internalResponses$: Observable<TResponse>,
+    outerResponses$: Subject<TResponse>,
+}
 
-    private readonly messageTypeLength = 1;
+export class OutboundMessenger implements IOutboundMessenger {
+    private queue: QueueItem<unknown>[] = [];
+
+    private isRunning = false;
 
     constructor(
         private readonly characteristic: BluetoothRemoteGATTCharacteristic,
+        private readonly packetBuilder: PacketBuilder,
         private readonly messageMiddleware: IMessageMiddleware[],
-        private readonly logger: ILogger,
-        private readonly config: ILegoHubConfig
     ) {
     }
 
     public sendWithoutResponse(
-        message: RawMessage<MessageType>
-    ): Promise<void> {
-        return this.enqueueOperation(this.createSendOperation(message));
-    }
-
-    public sendWithoutResponse$(
         message: RawMessage<MessageType>,
     ): Observable<void> {
-        return from(this.sendWithoutResponse(message));
+        return this.sendWithResponse(message, of(void 0));
     }
 
-    public sendAndReceive$<TInboundMessage extends InboundMessage>(
+    public sendWithResponse<TResponse>(
         message: RawMessage<MessageType>,
-        listener$: Observable<TInboundMessage>
-    ): Observable<TInboundMessage> {
-        const stream = new Observable<TInboundMessage>((subscriber) => {
+        responseStream: Observable<TResponse>,
+    ): Observable<TResponse> {
+        const responsesSubject = new Subject<TResponse>();
 
-            const sendOp = this.createSendOperation(message);
-
-            const sub = from(sendOp()).pipe(
-                switchMap(() => listener$)
-            ).subscribe((message) => {
-                subscriber.next(message);
-                subscriber.complete();
-                sub.unsubscribe();
-            });
-            return () => sub.unsubscribe();
+        this.queue.push({
+            message,
+            internalResponses$: responseStream,
+            outerResponses$: responsesSubject as Subject<unknown>
         });
-        let retryFired = false;
-        const request = stream.pipe(
-            timeout(this.config.outboundMessageReplyTimeout),
-            catchError((e) => {
-                this.logger.warn(`Expected response for message of type ${message.header.messageType} was not received. Resending request...`);
-                retryFired = true;
-                throw e;
-            }),
-            retry(this.config.outboundMessageRetriesCount),
-            tap(() => {
-                if (retryFired) {
-                    this.logger.warn(`Expected response for message of type ${message.header.messageType} was received after retrying`);
-                }
-            }),
-            catchError((e) => {
-                this.logger.warn(`Expected response for message of type ${message.header.messageType} was not received, giving up...`);
-                throw e;
-            })
-        );
 
-        return from(this.enqueueOperation(() => firstValueFrom(request)));
-    }
-
-    private createSendOperation(
-        message: RawMessage<MessageType>
-    ): () => Promise<void> {
-        return (): Promise<void> => {
-            this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message);
-            const header = this.composeHeader(message);
-            const packet = concatUint8Arrays(header, message.payload);
-            return this.characteristic.writeValueWithoutResponse(packet);
-        };
-    }
-
-    private enqueueOperation<T>(
-        op: () => Promise<T>
-    ): Promise<T> {
-        const promise = this.queue.then(() => op());
-        this.queue = promise.catch((e) => {
-            this.logger.error(e);
-        });
-        return promise;
-    }
-
-    private composeHeader(
-        message: RawMessage<MessageType>
-    ): Uint8Array {
-        if (this.getPayloadLengthPaddedWithMessageType(message) < 127) {
-            return Uint8Array.from([ message.payload.byteLength, 0x00, message.header.messageType ]);
-        } else {
-            throw new Error('Long messages are not supported yet'); // TODO: add support
+        if (!this.isRunning) {
+            this.runExecution();
         }
+
+        return responsesSubject;
     }
 
-    private getPayloadLengthPaddedWithMessageType(
-        message: RawMessage<MessageType>
-    ): number {
-        return message.payload.length + this.messageTypeLength;
+    private runExecution(): void {
+        const task = this.queue.shift();
+
+        if (!task) {
+            this.isRunning = false;
+            return;
+        }
+
+        this.isRunning = true;
+
+        this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), task.message);
+        const packet = this.packetBuilder.buildPacket(task.message);
+
+        // sometimes we receive the response from hub BEFORE the then() callback of writeValueWithoutResponse is called
+        // (hub replies faster than microtask queue is processed?)
+        const earlyRepliesCollection: Array<unknown> = [];
+        const earlyCollectSubscription = task.internalResponses$.subscribe((v) => {
+            earlyRepliesCollection.push(v);
+        });
+
+        this.characteristic.writeValueWithoutResponse(
+            packet
+        ).catch((e) => {
+            task.outerResponses$.error(e);
+            task.outerResponses$.complete();
+            return true;
+        }).then((isErrorEncountered) => {
+            earlyCollectSubscription.unsubscribe();
+
+            if (isErrorEncountered) {
+                this.runExecution();
+                return;
+            }
+
+            earlyRepliesCollection.forEach((r) => {
+                task.outerResponses$.next(r);
+            });
+
+            const sub = task.internalResponses$.subscribe({
+                next: (v) => {
+                    // We should not complete the outerResponses$ here since first reply is not always the last one
+                    // i.g. portCommand task can send multiple replies (in_progress -> busy)
+                    task.outerResponses$.next(v);
+                    // After receiving the first response from the hub, we can start the next task.
+                    // If we don't wait for the first response and start the next task immediately,
+                    // the hub will never send the response for the first task and API behavior will be broken
+                    this.runExecution();
+                },
+                complete: () => {
+                    task.outerResponses$.complete();
+                },
+                error: (e) => {
+                    task.outerResponses$.error(e);
+                    sub.unsubscribe();
+                    this.runExecution();
+                }
+            });
+        });
     }
 }

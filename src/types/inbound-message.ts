@@ -179,9 +179,23 @@ export type PortModeInformationInboundMessage =
 
 export type PortInformationInboundMessageTypes = PortModeInboundMessage;
 
+export type PortOutputCommandFeedbackInboundMessage = {
+    messageType: MessageType.portOutputCommandFeedback;
+    portId: number;
+    feedback: {
+        bufferEmptyCommandInProgress: boolean;
+        bufferEmptyCommandCompleted: boolean;
+        currentCommandDiscarded: boolean;
+        idle: boolean;
+        busyOrFull: boolean;
+        executionError: boolean;
+    }
+}
+
 export type InboundMessage =
     HubPropertyInboundMessage
     | AttachedIOInboundMessage
     | PortInformationInboundMessageTypes
     | PortValueInboundMessage
     | PortModeInformationInboundMessage
+    | PortOutputCommandFeedbackInboundMessage

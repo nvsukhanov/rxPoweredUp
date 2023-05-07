@@ -11,7 +11,7 @@ export interface IHubPropertiesFeature {
 
     setHubAdvertisingName(
         advertisingName: string
-    ): Promise<void>;
+    ): Observable<void>;
 
     disconnect(): Promise<void>;
 
