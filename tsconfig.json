@@ -27,7 +27,6 @@
     ],
     "types": [
       "web-bluetooth",
-      "reflect-metadata",
       "jest",
       "node"
     ]

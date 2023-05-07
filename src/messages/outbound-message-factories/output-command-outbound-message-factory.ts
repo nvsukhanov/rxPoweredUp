@@ -85,7 +85,7 @@ export class OutputCommandOutboundMessageFactory {
             },
             payload: new Uint8Array([
                 portId,
-                PortOperationStartupInformation.executeImmediately | PortOperationCompletionInformation.commandFeedback,
+                PortOperationStartupInformation.bufferIfNecessary | PortOperationCompletionInformation.commandFeedback,
                 OutputSubCommand.writeDirectModeData,
                 WriteDirectModeDataSubCommand.presetEncoder,
                 ...numberToUint32LEArray(absolutePosition),

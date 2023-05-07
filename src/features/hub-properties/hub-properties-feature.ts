@@ -1,4 +1,4 @@
-import { Observable, filter, from, map, share, switchMap, tap } from 'rxjs';
+import { Observable, filter, from, map, share, switchMap, take, tap } from 'rxjs';
 
 import { HubProperty, MAX_NAME_SIZE, MessageType, SubscribableHubProperties } from '../../constants';
 import { HubPropertiesOutboundMessageFactory, IInboundMessageListener, IOutboundMessenger } from '../../messages';
@@ -32,15 +32,18 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
 
     public setHubAdvertisingName(
         advertisingName: string
-    ): Promise<void> {
+    ): Observable<void> {
         if (advertisingName.length > MAX_NAME_SIZE || advertisingName.length === 0) {
             throw this.errorsFactory.createInvalidPropertyValueError(HubProperty.advertisingName, advertisingName);
         }
         const charCodes = advertisingName.split('').map((char) => char.charCodeAt(0));
         const message = this.messageFactoryService.setProperty(HubProperty.advertisingName, charCodes);
-        return this.messenger.sendWithoutResponse(message).then(() => {
-            this._advertisingName = advertisingName;
-        });
+
+        const requestStream = this.messenger.sendWithoutResponse(message);
+
+        requestStream.subscribe(() => this._advertisingName = advertisingName);
+
+        return requestStream;
     }
 
     public async disconnect(): Promise<void> {
@@ -56,8 +59,9 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
         const replies = this.messageListener.replies$.pipe(
             filter((reply) => reply.propertyType === property),
             map((reply) => reply as HubPropertyInboundMessage & { propertyType: T }),
+            take(1)
         );
-        return this.messenger.sendAndReceive$(message, replies);
+        return this.messenger.sendWithResponse(message, replies);
     }
 
     private async sendSubscribeMessage(

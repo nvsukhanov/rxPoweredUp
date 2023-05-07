@@ -1,4 +1,4 @@
-import { Observable, exhaustMap, filter, share } from 'rxjs';
+import { Observable, exhaustMap, filter, share, take } from 'rxjs';
 
 import {
     IInboundMessageListener,
@@ -87,10 +87,10 @@ export class IoFeature implements IIoFeature {
 
             // setting up port input format
             // since we have share() operator below, this will be executed only once per port/mode
-            const sub = this.messenger.sendWithoutResponse$(setPortInputFormatMessage).pipe(
+            const sub = this.messenger.sendWithoutResponse(setPortInputFormatMessage).pipe(
                 // requesting port value
                 // since we have share() operator below, this will be executed only once per port/mode
-                exhaustMap(() => this.messenger.sendAndReceive$(portValueRequestMessage, messageReplyListener.replies$)),
+                exhaustMap(() => this.messenger.sendWithResponse(portValueRequestMessage, messageReplyListener.replies$)),
             ).subscribe((v) => {
                 this.portValueModeState.delete(portId);
                 this.portValueStreamMap.delete(portModeHash);
@@ -115,10 +115,11 @@ export class IoFeature implements IIoFeature {
     public getPortModes$(
         portId: number
     ): Observable<PortModeInboundMessage> {
-        return this.messenger.sendAndReceive$(
+        return this.messenger.sendWithResponse(
             this.messageFactoryService.createPortModeRequest(portId),
             this.portModeReplies$.pipe(
-                filter((r) => r.portId === portId)
+                filter((r) => r.portId === portId),
+                take(1)
             )
         );
     }
@@ -138,7 +139,7 @@ export class IoFeature implements IIoFeature {
             filter((r) => r.modeInformationType === modeInformationType && r.portId === portId && r.mode === mode),
         );
 
-        return this.messenger.sendAndReceive$(
+        return this.messenger.sendWithResponse(
             portModeRequestMessage,
             replies$
         );

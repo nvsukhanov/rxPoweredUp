@@ -120,7 +120,7 @@ export class Hub implements IHub {
             shareReplay({ bufferSize: 1, refCount: true })
         );
 
-        const messenger = this.outboundMessengerFactoryService.create(primaryCharacteristic, this.outgoingMessageMiddleware, this.logger);
+        const messenger = this.outboundMessengerFactoryService.create(primaryCharacteristic, this.outgoingMessageMiddleware);
         const dataStream = this.characteristicsDataStreamFactoryService.create(primaryCharacteristic, this.incomingMessageMiddleware);
 
         this._ports = this.ioFeatureFactoryService.create(
@@ -138,7 +138,9 @@ export class Hub implements IHub {
         );
 
         this._motor = this.motorFeatureFactoryService.createCommandsFeature(
-            messenger
+            dataStream,
+            messenger,
+            this.beforeDisconnect$
         );
 
         await primaryCharacteristic.startNotifications();

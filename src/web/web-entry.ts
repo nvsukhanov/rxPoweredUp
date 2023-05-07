@@ -8,6 +8,7 @@ import { LoggingMiddleware } from '../middleware';
 import { IHub } from '../hub';
 import { WebLogger } from './web-logger';
 import { AttachIoEvent, MotorProfile, MotorServoEndState } from '../constants';
+import { PortCommandExecutionStatus } from '../features';
 
 let hub: IHub | undefined;
 
@@ -33,50 +34,47 @@ function onConnected(nextHub: IHub): void {
     nextHub.ports.attachedIoReplies$.pipe(
         filter((r) => r.event === AttachIoEvent.Attached && (r.portId === 0 || r.portId === 1)),
     ).subscribe((r) => {
-        nextHub.commands.setAccelerationTime(r.portId, 100);
-        nextHub.commands.setDecelerationTime(r.portId, 100);
-        nextHub.commands.setAbsoluteZeroRelativeToCurrentPosition(r.portId, 0);
+        nextHub.commands.setAccelerationTime(r.portId, 200).subscribe((t) => {
+            console.log('setAccelerationTime', r.portId, PortCommandExecutionStatus[t]);
+        });
+        nextHub.commands.setDecelerationTime(r.portId, 200).subscribe((t) => {
+            console.log('setDecelerationTime', r.portId, PortCommandExecutionStatus[t]);
+        });
+        nextHub.commands.setAbsoluteZeroRelativeToCurrentPosition(r.portId, 0).subscribe((t) => {
+            console.log('setAbsoluteZeroRelativeToCurrentPosition', r.portId, PortCommandExecutionStatus[t]);
+        });
     });
 
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle);
     document.getElementById('increment-angle')!.addEventListener('click', incrementAngle);
-    document.getElementById('decrement-angle')!.addEventListener('click', decrementAngle);
     document.getElementById('sequential-increment-angle')!.addEventListener('click', sequentialIncrementAngle);
-    document.getElementById('sequential-decrement-angle')!.addEventListener('click', sequentialDecrementAngle);
 
     nextHub.disconnected$.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
         document.getElementById('increment-angle')!.removeEventListener('click', incrementAngle);
-        document.getElementById('decrement-angle')!.removeEventListener('click', decrementAngle);
         document.getElementById('sequential-increment-angle')!.removeEventListener('click', sequentialIncrementAngle);
-        document.getElementById('sequential-decrement-angle')!.removeEventListener('click', sequentialDecrementAngle);
         onDisconnected();
     });
 }
 
-const angleStep = 45;
+const angleStep = 90;
 let currentAngle = 0;
 
 function incrementAngle(): void {
     currentAngle += angleStep;
-    hub?.commands.goToAbsoluteDegree(0, currentAngle, 100, 100, MotorServoEndState.hold, MotorProfile.useAccelerationAndDecelerationProfiles);
-}
-
-function decrementAngle(): void {
-    currentAngle -= angleStep;
-    hub?.commands.goToAbsoluteDegree(0, currentAngle, 100, 100, MotorServoEndState.hold, MotorProfile.useAccelerationAndDecelerationProfiles);
+    const targetAngle = currentAngle;
+    hub?.commands.goToAbsoluteDegree(0, targetAngle, 100, 100, MotorServoEndState.hold, MotorProfile.useAccelerationAndDecelerationProfiles)
+       .subscribe({
+           next: (r) => {
+               console.log('settings angle', targetAngle, PortCommandExecutionStatus[r]);
+           }
+       });
 }
 
 function sequentialIncrementAngle(): void {
-    interval(100).pipe(
+    interval(1000 / 20).pipe(
         take(10)
     ).subscribe(() => incrementAngle());
-}
-
-function sequentialDecrementAngle(): void {
-    interval(100).pipe(
-        take(10)
-    ).subscribe(() => decrementAngle());
 }
 
 function onDisconnected(): void {

@@ -4,3 +4,4 @@ export * from './port-information-reply-parser';
 export * from './port-mode-information-reply-parser';
 export * from './port-value';
 export * from './port-value-reply-parser-resolver';
+export * from './port-output-command-feedback-reply-parser';
