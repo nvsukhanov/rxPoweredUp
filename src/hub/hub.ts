@@ -3,11 +3,12 @@ import { NEVER, Observable, Subject, fromEvent, map, shareReplay, take, takeUnti
 import { IMessageMiddleware } from '../middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
 import { ConnectionErrorFactory } from '../errors';
-import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from '../messages';
+import { CharacteristicDataStreamFactory } from '../messages';
 import { CommandsFeatureFactory, HubPropertiesFeatureFactory, ICommandsFeature, IHubPropertiesFeature, IIoFeature, IoFeatureFactory } from '../features';
 import { BluetoothDeviceWithGatt, ILegoHubConfig } from '../types';
 import { ILogger } from '../logging';
 import { IHub } from './i-hub';
+import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
@@ -31,7 +32,7 @@ export class Hub implements IHub {
         private readonly logger: ILogger,
         private readonly config: ILegoHubConfig,
         private readonly hubConnectionErrorFactory: ConnectionErrorFactory,
-        private readonly outboundMessengerFactoryService: OutboundMessengerFactory,
+        private readonly outboundMessengerFactoryService: IOutboundMessengerFactory,
         private readonly propertiesFactoryService: HubPropertiesFeatureFactory,
         private readonly ioFeatureFactoryService: IoFeatureFactory,
         private readonly characteristicsDataStreamFactoryService: CharacteristicDataStreamFactory,

@@ -1,13 +1,14 @@
 import { Observable } from 'rxjs';
 import { injectable } from 'tsyringe';
 
-import { HubPropertiesOutboundMessageFactory, HubPropertiesReplyParser, IOutboundMessenger, InboundMessageListenerFactory } from '../../messages';
+import { HubPropertiesOutboundMessageFactory, HubPropertiesReplyParser, InboundMessageListenerFactory } from '../../messages';
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
 import { ConnectionErrorFactory } from '../../errors';
 import { ILogger } from '../../logging';
 import { RawMessage } from '../../types';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
+import { IOutboundMessenger } from '../i-outbound-messenger';
 
 @injectable()
 export class HubPropertiesFeatureFactory {

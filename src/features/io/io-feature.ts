@@ -2,7 +2,6 @@ import { Observable, exhaustMap, filter, share, take } from 'rxjs';
 
 import {
     IInboundMessageListener,
-    IOutboundMessenger,
     PortInformationRequestOutboundMessageFactory,
     PortInputFormatSetupSingleOutboundMessageFactory,
     PortModeInformationRequestOutboundMessageFactory,
@@ -12,6 +11,7 @@ import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-facto
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../../types';
 import { IIoFeature } from './i-io-feature';
+import { IOutboundMessenger } from '../i-outbound-messenger';
 
 export class IoFeature implements IIoFeature {
     public readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>;

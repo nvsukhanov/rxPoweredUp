@@ -4,7 +4,7 @@ import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
 import { IMessageMiddleware } from '../../middleware';
 import { PacketBuilder } from './packet-builder';
-import { IOutboundMessenger } from './i-outbound-messenger';
+import { IOutboundMessenger } from '../../features';
 
 type QueueItem<TResponse> = {
     message: RawMessage<MessageType>,

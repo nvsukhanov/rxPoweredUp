@@ -3,10 +3,12 @@ import { NEVER, Observable } from 'rxjs';
 
 import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HubScannerFactory } from './hub-scanner';
-import { HubFactory, IHub } from './hub';
+import { HubFactory, IHub, OUTBOUND_MESSAGE_FACTORY } from './hub';
 import { IMessageMiddleware } from './middleware';
+import { OutboundMessengerFactory } from './messages';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });
+container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
 
 export async function connectHub(
     bluetooth: Bluetooth,

@@ -4,7 +4,6 @@ import { injectable } from 'tsyringe';
 import { IoFeature } from './io-feature';
 import {
     AttachedIoReplyParser,
-    IOutboundMessenger,
     InboundMessageListenerFactory,
     PortInformationReplyParser,
     PortInformationRequestOutboundMessageFactory,
@@ -18,6 +17,7 @@ import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-facto
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { RawMessage } from '../../types';
 import { IIoFeature } from './i-io-feature';
+import { IOutboundMessenger } from '../i-outbound-messenger';
 
 @injectable()
 export class IoFeatureFactory {

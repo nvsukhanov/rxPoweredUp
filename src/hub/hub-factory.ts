@@ -5,10 +5,11 @@ import { Hub } from './hub';
 import { HubLoggerFactory } from '../logging';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
 import { ConnectionErrorFactory } from '../errors';
-import { CharacteristicDataStreamFactory, OutboundMessengerFactory } from '../messages';
+import { CharacteristicDataStreamFactory } from '../messages';
 import { CommandsFeatureFactory, HubPropertiesFeatureFactory, IoFeatureFactory } from '../features';
 import { IMessageMiddleware } from '../middleware';
 import { IHub } from './i-hub';
+import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
 
 @injectable()
 export class HubFactory {
@@ -16,7 +17,7 @@ export class HubFactory {
         private readonly hubLoggerFactory: HubLoggerFactory,
         @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig,
         private readonly connectionErrorFactory: ConnectionErrorFactory,
-        private readonly outboundMessengerFactoryService: OutboundMessengerFactory,
+        @inject(OUTBOUND_MESSAGE_FACTORY) private readonly outboundMessengerFactoryService: IOutboundMessengerFactory,
         private readonly propertiesFactoryService: HubPropertiesFeatureFactory,
         private readonly ioFeatureFactoryService: IoFeatureFactory,
         private readonly characteristicsDataStreamFactoryService: CharacteristicDataStreamFactory,

@@ -2,11 +2,12 @@ import { injectable } from 'tsyringe';
 
 import { OutboundMessenger } from './outbound-messenger';
 import { IMessageMiddleware } from '../../middleware';
-import { IOutboundMessenger } from './i-outbound-messenger';
+import { IOutboundMessenger } from '../../features';
 import { PacketBuilder } from './packet-builder';
+import { IOutboundMessengerFactory } from '../../hub';
 
 @injectable()
-export class OutboundMessengerFactory {
+export class OutboundMessengerFactory implements IOutboundMessengerFactory {
     constructor(
         private readonly packerBuilder: PacketBuilder,
     ) {
