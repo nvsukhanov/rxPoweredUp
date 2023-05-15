@@ -2,10 +2,9 @@ import { inject, injectable } from 'tsyringe';
 import { Observable } from 'rxjs';
 
 import { CommandsFeature } from './commands-feature';
-import { ICommandsFeature, ICommandsFeatureFactory } from '../../hub';
+import { ICommandsFeature, ICommandsFeatureFactory, IOutboundMessenger } from '../../hub';
 import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
-import { IOutboundMessenger } from '../i-outbound-messenger';
 import { IPortOutputCommandOutboundMessageFactory, PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-port-output-command-outbound-message-factory';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
 import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from './port-output-command-feedback-reply-parser';

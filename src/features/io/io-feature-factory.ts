@@ -5,7 +5,7 @@ import { IoFeature } from './io-feature';
 import { MessageType } from '../../constants';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { RawMessage } from '../../types';
-import { IOutboundMessenger } from '../i-outbound-messenger';
+import { IIoFeature, IIoFeatureFactory, IOutboundMessenger } from '../../hub';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
 import { PORT_INFORMATION_REPLY_PARSER } from './port-information-reply-parser';
 import { IReplyParser } from '../i-reply-parser';
@@ -17,7 +17,6 @@ import { IPortInformationRequestMessageFactory, PORT_INFORMATION_REQUEST_MESSAGE
 import { IPortModeInformationRequestMessageFactory, PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory, PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from './i-port-input-format-setup-message-factory';
 import { AttachedIoRepliesCache } from './attached-io-replies-cache';
-import { IIoFeature, IIoFeatureFactory } from '../../hub';
 
 @injectable()
 export class IoFeatureFactory implements IIoFeatureFactory {

@@ -1,8 +1,7 @@
 import { injectable } from 'tsyringe';
 
 import { OutboundMessenger } from './outbound-messenger';
-import { IMessageMiddleware, IOutboundMessengerFactory } from '../../hub';
-import { IOutboundMessenger } from '../../features';
+import { IMessageMiddleware, IOutboundMessenger, IOutboundMessengerFactory } from '../../hub';
 import { PacketBuilder } from './packet-builder';
 
 @injectable()

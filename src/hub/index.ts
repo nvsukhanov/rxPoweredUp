@@ -1,5 +1,6 @@
 export * from './hub-factory';
 export * from './i-hub';
+export * from './i-outbound-messenger';
 export * from './i-outbound-messenger-factory';
 export * from './i-hub-properties-feature';
 export * from './i-hub-properties-feature-factory';

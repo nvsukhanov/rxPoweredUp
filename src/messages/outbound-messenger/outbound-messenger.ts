@@ -2,9 +2,8 @@ import { Observable, Subject, of } from 'rxjs';
 
 import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
-import { IMessageMiddleware } from '../../hub';
+import { IMessageMiddleware, IOutboundMessenger } from '../../hub';
 import { PacketBuilder } from './packet-builder';
-import { IOutboundMessenger } from '../../features';
 
 type QueueItem<TResponse> = {
     message: RawMessage<MessageType>,

@@ -1,7 +1,7 @@
 import { InjectionToken } from 'tsyringe';
 
 import { IMessageMiddleware } from './i-message-middleware';
-import { IOutboundMessenger } from '../features';
+import { IOutboundMessenger } from './i-outbound-messenger';
 
 export interface IOutboundMessengerFactory {
     create(
