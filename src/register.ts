@@ -23,6 +23,7 @@ import {
 import {
     ATTACHED_IO_REPLIES_PARSER,
     CommandsFeatureFactory,
+    HUB_PROPERTIES_FEATURE_ERRORS_FACTORY,
     HUB_PROPERTIES_MESSAGE_FACTORY,
     HUB_PROPERTIES_REPLIES_PARSER,
     HubPropertiesFeatureFactory,
@@ -41,6 +42,7 @@ import {
 } from './features';
 import { HUB_PROPERTY_FEATURE_FACTORY } from './hub/i-hub-properties-feature-factory';
 import { IO_FEATURE_FACTORY } from './hub/i-io-feature-factory';
+import { ConnectionErrorFactory } from './errors';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });
 container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
@@ -60,6 +62,7 @@ container.register(HUB_PROPERTIES_MESSAGE_FACTORY, HubPropertiesOutboundMessageF
 container.register(HUB_PROPERTY_FEATURE_FACTORY, HubPropertiesFeatureFactory);
 container.register(COMMANDS_FEATURE_FACTORY, CommandsFeatureFactory);
 container.register(IO_FEATURE_FACTORY, IoFeatureFactory);
+container.register(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, ConnectionErrorFactory);
 
 export async function connectHub(
     bluetooth: Bluetooth,
