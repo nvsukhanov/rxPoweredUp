@@ -3,9 +3,10 @@ import { injectable } from 'tsyringe';
 import { ConnectionError } from './connection-error';
 import { HubProperty } from '../constants';
 import { IHubPropertiesFeatureErrorsFactory } from '../features';
+import { IHubConnectionErrorsFactory } from '../hub';
 
 @injectable()
-export class ConnectionErrorFactory implements IHubPropertiesFeatureErrorsFactory {
+export class ConnectionErrorFactory implements IHubPropertiesFeatureErrorsFactory, IHubConnectionErrorsFactory {
     public createConnectionError(): ConnectionError {
         return new ConnectionError('Hub connection error', 'hubConnectionError');
     }

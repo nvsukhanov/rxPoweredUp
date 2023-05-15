@@ -5,6 +5,7 @@ import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HubScannerFactory } from './hub-scanner';
 import {
     COMMANDS_FEATURE_FACTORY,
+    HUB_CONNECTION_ERRORS_FACTORY,
     HUB_PROPERTY_FEATURE_FACTORY,
     HubFactory,
     IHub,
@@ -68,6 +69,7 @@ container.register(HUB_PROPERTY_FEATURE_FACTORY, HubPropertiesFeatureFactory);
 container.register(COMMANDS_FEATURE_FACTORY, CommandsFeatureFactory);
 container.register(IO_FEATURE_FACTORY, IoFeatureFactory);
 container.register(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, ConnectionErrorFactory);
+container.register(HUB_CONNECTION_ERRORS_FACTORY, ConnectionErrorFactory);
 
 export async function connectHub(
     bluetooth: Bluetooth,

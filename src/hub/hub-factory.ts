@@ -4,7 +4,7 @@ import { Logger } from 'tslog';
 
 import { Hub } from './hub';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
-import { ConnectionErrorFactory } from '../errors';
+import { HUB_CONNECTION_ERRORS_FACTORY, IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { CHARACTERISTIC_DATA_STREAM_FACTORY, ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
 import { IMessageMiddleware } from './i-message-middleware';
 import { IHub } from './i-hub';
@@ -17,7 +17,7 @@ import { IIoFeatureFactory, IO_FEATURE_FACTORY } from './i-io-feature-factory';
 export class HubFactory {
     constructor(
         @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig,
-        private readonly connectionErrorFactory: ConnectionErrorFactory,
+        @inject(HUB_CONNECTION_ERRORS_FACTORY) private readonly connectionErrorFactory: IHubConnectionErrorsFactory,
         @inject(OUTBOUND_MESSAGE_FACTORY) private readonly outboundMessengerFactory: IOutboundMessengerFactory,
         @inject(HUB_PROPERTY_FEATURE_FACTORY) private readonly hubPropertiesFactory: IHubPropertiesFeatureFactory,
         @inject(IO_FEATURE_FACTORY) private readonly ioFeatureFactoryService: IIoFeatureFactory,

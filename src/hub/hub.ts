@@ -2,7 +2,7 @@ import { NEVER, Observable, Subject, fromEvent, map, shareReplay, take, takeUnti
 
 import { IMessageMiddleware } from './i-message-middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
-import { ConnectionErrorFactory } from '../errors';
+import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
 import { BluetoothDeviceWithGatt, ILegoHubConfig } from '../types';
 import { ILogger } from '../i-logger';
@@ -36,7 +36,7 @@ export class Hub implements IHub {
         private readonly device: BluetoothDeviceWithGatt,
         private readonly logger: ILogger,
         private readonly config: ILegoHubConfig,
-        private readonly hubConnectionErrorFactory: ConnectionErrorFactory,
+        private readonly hubConnectionErrorFactory: IHubConnectionErrorsFactory,
         private readonly outboundMessengerFactory: IOutboundMessengerFactory,
         private readonly propertiesFeatureFactory: IHubPropertiesFeatureFactory,
         private readonly ioFeatureFactory: IIoFeatureFactory,

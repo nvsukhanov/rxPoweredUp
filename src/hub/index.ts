@@ -9,3 +9,4 @@ export * from './i-io-feature';
 export * from './i-io-feature-factory';
 export * from './i-message-middleware';
 export * from './i-characteristic-data-stream-factory';
+export * from './i-hub-connection-errors-factory';
