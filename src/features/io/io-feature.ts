@@ -1,56 +1,31 @@
 import { Observable, exhaustMap, filter, share, take } from 'rxjs';
 
 import {
-    IInboundMessageListener,
     PortInformationRequestOutboundMessageFactory,
     PortInputFormatSetupSingleOutboundMessageFactory,
     PortModeInformationRequestOutboundMessageFactory,
 } from '../../messages';
-import { MessageType, PortModeInformationType, PortModeName } from '../../constants';
-import { AttachedIoRepliesCacheFactory } from './attached-io-replies-cache-factory';
+import { PortModeInformationType, PortModeName } from '../../constants';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../../types';
 import { IIoFeature } from './i-io-feature';
 import { IOutboundMessenger } from '../i-outbound-messenger';
 
 export class IoFeature implements IIoFeature {
-    public readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>;
-
-    public readonly portModeReplies$: Observable<PortModeInboundMessage>;
-
-    public readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>;
-
     private portValueStreamMap = new Map<string, Observable<PortValueInboundMessage>>();
 
     private portValueModeState = new Map<number, number>();
 
     constructor(
+        public readonly portModeReplies$: Observable<PortModeInboundMessage>,
+        public readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>,
+        public readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>,
         private readonly messageFactoryService: PortInformationRequestOutboundMessageFactory,
-        private readonly portModeInboundMessageListener: IInboundMessageListener<MessageType.portInformation>,
         private readonly portValueInboundListenerFactory: IoFeaturePortValueListenerFactory,
-        private readonly attachedIOInboundMessageListener: IInboundMessageListener<MessageType.attachedIO>,
-        private readonly portModeInformationInboundMessageListener: IInboundMessageListener<MessageType.portModeInformation>,
         private readonly portModeInformationOutboundMessageFactoryService: PortModeInformationRequestOutboundMessageFactory,
         private readonly portInputFormatSetupSingleOutboundMessageFactoryService: PortInputFormatSetupSingleOutboundMessageFactory,
         private readonly messenger: IOutboundMessenger,
-        private readonly attachedIoRepliesCacheFactoryService: AttachedIoRepliesCacheFactory,
-        private readonly onDisconnected$: Observable<void>,
     ) {
-        this.portModeInformationReplies$ = this.portModeInformationInboundMessageListener.replies$.pipe(
-            share()
-        );
-
-        this.portModeReplies$ = this.portModeInboundMessageListener.replies$.pipe(
-            share()
-        );
-
-        const cache = this.attachedIoRepliesCacheFactoryService.create(
-            this.attachedIOInboundMessageListener.replies$,
-            this.onDisconnected$,
-        );
-        this.attachedIoReplies$ = cache.replies$.pipe(
-            share()
-        );
     }
 
     public getPortValue$(
@@ -73,7 +48,7 @@ export class IoFeature implements IIoFeature {
         }
 
         // will throw if no listener can be created for this mode
-        const messageReplyListener = this.portValueInboundListenerFactory.createForMode(
+        const portValueReplies$ = this.portValueInboundListenerFactory.createForMode(
             portModeName
         );
 
@@ -90,7 +65,7 @@ export class IoFeature implements IIoFeature {
             const sub = this.messenger.sendWithoutResponse(setPortInputFormatMessage).pipe(
                 // requesting port value
                 // since we have share() operator below, this will be executed only once per port/mode
-                exhaustMap(() => this.messenger.sendWithResponse(portValueRequestMessage, messageReplyListener.replies$)),
+                exhaustMap(() => this.messenger.sendWithResponse(portValueRequestMessage, portValueReplies$)),
             ).subscribe((v) => {
                 this.portValueModeState.delete(portId);
                 this.portValueStreamMap.delete(portModeHash);

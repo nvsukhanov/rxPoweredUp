@@ -1,7 +1,7 @@
 import { Observable, filter, from, map, share, switchMap, take, tap } from 'rxjs';
 
-import { HubProperty, MAX_NAME_SIZE, MessageType, SubscribableHubProperties } from '../../constants';
-import { HubPropertiesOutboundMessageFactory, IInboundMessageListener } from '../../messages';
+import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
+import { HubPropertiesOutboundMessageFactory } from '../../messages';
 import { ConnectionErrorFactory } from '../../errors';
 import { ILogger } from '../../logging';
 import { HubPropertyInboundMessage } from '../../types';
@@ -22,7 +22,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
         private readonly messageFactoryService: HubPropertiesOutboundMessageFactory,
         private readonly messenger: IOutboundMessenger,
         private readonly logging: ILogger,
-        private readonly messageListener: IInboundMessageListener<MessageType.properties>,
+        private readonly inboundMessages: Observable<HubPropertyInboundMessage>,
         private readonly errorsFactory: ConnectionErrorFactory
     ) {
     }
@@ -57,7 +57,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
         property: T
     ): Observable<HubPropertyInboundMessage & { propertyType: T }> {
         const message = this.messageFactoryService.requestPropertyUpdate(property);
-        const replies = this.messageListener.replies$.pipe(
+        const replies = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === property),
             map((reply) => reply as HubPropertyInboundMessage & { propertyType: T }),
             take(1)
@@ -89,7 +89,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
                     const message = this.messageFactoryService.requestPropertyUpdate(trackedProperty);
                     this.messenger.sendWithoutResponse(message);
                 }),
-                switchMap(() => this.messageListener.replies$),
+                switchMap(() => this.inboundMessages),
                 filter((reply) => reply.propertyType === trackedProperty),
             ).subscribe((message) => {
                 subscriber.next(message as HubPropertyInboundMessage & { propertyType: T });
