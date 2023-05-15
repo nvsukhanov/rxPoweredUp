@@ -1,11 +1,11 @@
 import { HUB_SERVICE_UUID } from '../constants';
 import { BluetoothDeviceWithGatt } from '../types';
-import { ConnectionErrorFactory } from '../errors';
+import { IHubScannerErrorFactory } from './i-hub-scanner-error-factory';
 import { IHubScanner } from './i-hub-scanner';
 
 export class HubScanner implements IHubScanner {
     constructor(
-        private readonly connectionErrorFactoryService: ConnectionErrorFactory,
+        private readonly hubScannerErrorFactory: IHubScannerErrorFactory,
         private readonly bluetoothApi: Bluetooth
     ) {
     }
@@ -20,16 +20,16 @@ export class HubScanner implements IHubScanner {
                 ]
             });
         } catch (e) {
-            throw this.connectionErrorFactoryService.createConnectionCancelledByUserError();
+            throw this.hubScannerErrorFactory.createConnectionCancelledByUserError();
         }
 
         if (!device) {
-            throw this.connectionErrorFactoryService.createConnectionCancelledByUserError();
+            throw this.hubScannerErrorFactory.createConnectionCancelledByUserError();
         }
         if (this.isDeviceWithGatt(device)) {
             return device;
         } else {
-            throw this.connectionErrorFactoryService.createGattUnavailableError();
+            throw this.hubScannerErrorFactory.createGattUnavailableError();
         }
     }
 

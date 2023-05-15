@@ -4,9 +4,10 @@ import { ConnectionError } from './connection-error';
 import { HubProperty } from '../constants';
 import { IHubPropertiesFeatureErrorsFactory } from '../features';
 import { IHubConnectionErrorsFactory } from '../hub';
+import { IHubScannerErrorFactory } from '../hub-scanner';
 
 @injectable()
-export class ConnectionErrorFactory implements IHubPropertiesFeatureErrorsFactory, IHubConnectionErrorsFactory {
+export class ConnectionErrorFactory implements IHubPropertiesFeatureErrorsFactory, IHubConnectionErrorsFactory, IHubScannerErrorFactory {
     public createConnectionError(): ConnectionError {
         return new ConnectionError('Hub connection error', 'hubConnectionError');
     }

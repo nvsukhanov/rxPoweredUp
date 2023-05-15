@@ -49,6 +49,7 @@ import {
     PORT_VALUE_SPEED_REPLY_PARSER
 } from './features';
 import { ConnectionErrorFactory } from './errors';
+import { HUB_SCANNER_ERROR_FACTORY } from './hub-scanner/i-hub-scanner-error-factory';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });
 container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
@@ -70,6 +71,7 @@ container.register(COMMANDS_FEATURE_FACTORY, CommandsFeatureFactory);
 container.register(IO_FEATURE_FACTORY, IoFeatureFactory);
 container.register(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_CONNECTION_ERRORS_FACTORY, ConnectionErrorFactory);
+container.register(HUB_SCANNER_ERROR_FACTORY, ConnectionErrorFactory);
 
 export async function connectHub(
     bluetooth: Bluetooth,
