@@ -5,10 +5,12 @@ import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HubScannerFactory } from './hub-scanner';
 import { HubFactory, IHub, OUTBOUND_MESSAGE_FACTORY } from './hub';
 import { IMessageMiddleware } from './middleware';
-import { OutboundMessengerFactory } from './messages';
+import { OutboundMessengerFactory, PortOutputCommandOutboundMessageFactory } from './messages';
+import { PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './features';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });
 container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
+container.register(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY, PortOutputCommandOutboundMessageFactory);
 
 export async function connectHub(
     bluetooth: Bluetooth,
