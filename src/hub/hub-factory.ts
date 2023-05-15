@@ -5,7 +5,7 @@ import { Logger } from 'tslog';
 import { Hub } from './hub';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
 import { ConnectionErrorFactory } from '../errors';
-import { CharacteristicDataStreamFactory } from '../messages';
+import { CHARACTERISTIC_DATA_STREAM_FACTORY, ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
 import { IMessageMiddleware } from './i-message-middleware';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
@@ -21,7 +21,7 @@ export class HubFactory {
         @inject(OUTBOUND_MESSAGE_FACTORY) private readonly outboundMessengerFactory: IOutboundMessengerFactory,
         @inject(HUB_PROPERTY_FEATURE_FACTORY) private readonly hubPropertiesFactory: IHubPropertiesFeatureFactory,
         @inject(IO_FEATURE_FACTORY) private readonly ioFeatureFactoryService: IIoFeatureFactory,
-        private readonly characteristicsDataStreamFactoryService: CharacteristicDataStreamFactory,
+        @inject(CHARACTERISTIC_DATA_STREAM_FACTORY) private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
         @inject(COMMANDS_FEATURE_FACTORY) private readonly commandsFeatureFactory: ICommandsFeatureFactory,
     ) {
     }
@@ -40,7 +40,7 @@ export class HubFactory {
             this.outboundMessengerFactory,
             this.hubPropertiesFactory,
             this.ioFeatureFactoryService,
-            this.characteristicsDataStreamFactoryService,
+            this.characteristicsDataStreamFactory,
             this.commandsFeatureFactory,
             incomingMessageMiddleware,
             outgoingMessageMiddleware,
