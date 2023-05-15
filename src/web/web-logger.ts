@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ILogger } from '../i-logger';
+import { ILogger } from '../types';
 
 export class WebLogger implements ILogger {
     constructor(

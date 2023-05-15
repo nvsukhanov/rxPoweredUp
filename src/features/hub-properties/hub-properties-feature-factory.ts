@@ -3,8 +3,7 @@ import { inject, injectable } from 'tsyringe';
 
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
-import { ILogger } from '../../i-logger';
-import { RawMessage } from '../../types';
+import { ILogger, RawMessage } from '../../types';
 import { IHubPropertiesFeature, IHubPropertiesFeatureFactory, IOutboundMessenger } from '../../hub';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
 import { HUB_PROPERTIES_REPLIES_PARSER } from './hub-properties-reply-parser';
