@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 import { NEVER, Observable } from 'rxjs';
+import { Logger } from 'tslog';
 
 import { Hub } from './hub';
-import { HubLoggerFactory } from '../logging';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory } from '../messages';
@@ -16,7 +16,6 @@ import { IIoFeatureFactory, IO_FEATURE_FACTORY } from './i-io-feature-factory';
 @injectable()
 export class HubFactory {
     constructor(
-        private readonly hubLoggerFactory: HubLoggerFactory,
         @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig,
         private readonly connectionErrorFactory: ConnectionErrorFactory,
         @inject(OUTBOUND_MESSAGE_FACTORY) private readonly outboundMessengerFactory: IOutboundMessengerFactory,
@@ -35,7 +34,7 @@ export class HubFactory {
     ): IHub {
         return new Hub(
             device,
-            this.hubLoggerFactory.createHubLogger(device.name ?? device.id),
+            new Logger({ name: device.name ?? device.id }),
             this.config,
             this.connectionErrorFactory,
             this.outboundMessengerFactory,

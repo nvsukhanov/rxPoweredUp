@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
-import { ILogger } from '../../logging';
+import { ILogger } from '../../i-logger';
 import { RawMessage } from '../../types';
 import { IHubPropertiesFeature, IHubPropertiesFeatureFactory } from '../../hub';
 import { IOutboundMessenger } from '../i-outbound-messenger';

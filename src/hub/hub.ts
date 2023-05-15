@@ -5,7 +5,7 @@ import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory } from '../messages';
 import { BluetoothDeviceWithGatt, ILegoHubConfig } from '../types';
-import { ILogger } from '../logging';
+import { ILogger } from '../i-logger';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';

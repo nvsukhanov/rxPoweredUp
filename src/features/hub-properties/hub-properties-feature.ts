@@ -1,7 +1,7 @@
 import { Observable, filter, from, map, share, switchMap, take, tap } from 'rxjs';
 
 import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
-import { ILogger } from '../../logging';
+import { ILogger } from '../../i-logger';
 import { HubPropertyInboundMessage } from '../../types';
 import { IHubPropertiesFeature } from '../../hub';
 import { IOutboundMessenger } from '../i-outbound-messenger';
