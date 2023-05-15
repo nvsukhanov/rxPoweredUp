@@ -1,24 +1,35 @@
 import { Observable } from 'rxjs';
 
-import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../types';
+import {
+    AttachedIOAttachVirtualInboundMessage,
+    AttachedIODetachInboundMessage,
+    AttachedIoAttachInboundMessage,
+    PortModeInboundMessage,
+    PortModeInformationInboundMessage,
+    PortValueInboundMessage
+} from '../types';
 import { PortModeInformationType, PortModeName } from '../constants';
 
 export interface IIoFeature {
-    readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>;
-    readonly portModeReplies$: Observable<PortModeInboundMessage>;
-    readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>;
+    onIoAttach(
+        portId?: number
+    ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
 
-    getPortValue$(
+    onIoDetach(
+        portId?: number
+    ): Observable<AttachedIODetachInboundMessage>;
+
+    getPortValue(
         portId: number,
         modeId: number,
         portModeName: PortModeName
     ): Observable<PortValueInboundMessage>;
 
-    getPortModes$(
+    getPortModes(
         portId: number
     ): Observable<PortModeInboundMessage>;
 
-    getPortModeInformation$<T extends PortModeInformationType>(
+    getPortModeInformation<T extends PortModeInformationType>(
         portId: number,
         mode: number,
         modeInformationType: T

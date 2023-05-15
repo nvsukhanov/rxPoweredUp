@@ -1,9 +1,10 @@
 import { container } from 'tsyringe';
-import { NEVER, Observable } from 'rxjs';
+import { NEVER, Observable, map, switchMap } from 'rxjs';
 
 import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HubScannerFactory } from './hub-scanner';
 import {
+    CHARACTERISTIC_DATA_STREAM_FACTORY,
     COMMANDS_FEATURE_FACTORY,
     HUB_CONNECTION_ERRORS_FACTORY,
     HUB_PROPERTY_FEATURE_FACTORY,
@@ -15,6 +16,7 @@ import {
 } from './hub';
 import {
     AttachedIoReplyParser,
+    CharacteristicDataStreamFactory,
     HubPropertiesOutboundMessageFactory,
     HubPropertiesReplyParser,
     OutboundMessengerFactory,
@@ -72,17 +74,18 @@ container.register(IO_FEATURE_FACTORY, IoFeatureFactory);
 container.register(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_CONNECTION_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_SCANNER_ERROR_FACTORY, ConnectionErrorFactory);
+container.register(CHARACTERISTIC_DATA_STREAM_FACTORY, CharacteristicDataStreamFactory);
 
-export async function connectHub(
+export function connectHub(
     bluetooth: Bluetooth,
     incomingMessageMiddleware: IMessageMiddleware[] = [],
     outgoingMessageMiddleware: IMessageMiddleware[] = [],
-    externalDisconnectEvents$: Observable<unknown> = NEVER
-): Promise<IHub> {
-    const factory = container.resolve(HubScannerFactory).create(bluetooth);
-    const device = await factory.discoverHub();
+    externalDisconnectEvents: Observable<unknown> = NEVER
+): Observable<IHub> {
+    const scannerFactory = container.resolve(HubScannerFactory).create(bluetooth);
     const hubFactory = container.resolve(HubFactory);
-    const hub = await hubFactory.create(device, incomingMessageMiddleware, outgoingMessageMiddleware, externalDisconnectEvents$);
-    await hub.connect();
-    return hub;
+    return scannerFactory.discoverHub().pipe(
+        map((device) => hubFactory.create(device, incomingMessageMiddleware, outgoingMessageMiddleware, externalDisconnectEvents)),
+        switchMap((hub) => hub.connect().pipe(map(() => hub)))
+    );
 }

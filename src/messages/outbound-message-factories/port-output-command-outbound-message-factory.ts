@@ -5,8 +5,8 @@ import {
     MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
     MOTOR_LIMITS,
     MessageType,
-    MotorProfile,
     MotorServoEndState,
+    MotorUseProfile,
     OutputSubCommand,
     PortOperationCompletionInformation,
     PortOperationStartupInformation,
@@ -21,7 +21,7 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
         portId: number,
         speed: number,
         power: number = MOTOR_LIMITS.maxPower,
-        profile: MotorProfile = MotorProfile.dontUseProfiles,
+        profile: MotorUseProfile = MotorUseProfile.dontUseProfiles,
         startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
     ): RawMessage<MessageType.portOutputCommand> {
@@ -49,7 +49,7 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
         speed: number = MOTOR_LIMITS.maxSpeed,
         power: number = MOTOR_LIMITS.maxPower,
         endState: MotorServoEndState = MotorServoEndState.hold,
-        profile: MotorProfile = MotorProfile.dontUseProfiles,
+        profile: MotorUseProfile = MotorUseProfile.dontUseProfiles,
         startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
     ): RawMessage<MessageType.portOutputCommand> {

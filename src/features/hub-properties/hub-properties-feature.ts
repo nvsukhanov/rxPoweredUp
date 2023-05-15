@@ -1,12 +1,12 @@
 import { Observable, filter, from, map, share, switchMap, take, tap } from 'rxjs';
 
 import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
-import { HubPropertyInboundMessage, ILogger } from '../../types';
+import { HubPropertyInboundMessage, IDisposable, ILogger } from '../../types';
 import { IHubPropertiesFeature, IOutboundMessenger } from '../../hub';
 import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 import { IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 
-export class HubPropertiesFeature implements IHubPropertiesFeature {
+export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable {
     public batteryLevel$ = this.createPropertyStream(HubProperty.batteryVoltage);
 
     public rssiLevel$ = this.createPropertyStream(HubProperty.RSSI);
@@ -45,13 +45,13 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
         return requestStream;
     }
 
-    public async disconnect(): Promise<void> {
+    public async dispose(): Promise<void> {
         for (const unsubscribeHandler of this.characteristicUnsubscribeHandlers.values()) {
             await unsubscribeHandler();
         }
     }
 
-    public getPropertyValue$<T extends HubProperty>(
+    public getPropertyValue<T extends HubProperty>(
         property: T
     ): Observable<HubPropertyInboundMessage & { propertyType: T }> {
         const message = this.messageFactoryService.requestPropertyUpdate(property);

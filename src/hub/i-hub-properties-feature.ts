@@ -13,9 +13,7 @@ export interface IHubPropertiesFeature {
         advertisingName: string
     ): Observable<void>;
 
-    disconnect(): Promise<void>;
-
-    getPropertyValue$<T extends HubProperty>(
+    getPropertyValue<T extends HubProperty>(
         property: T
     ): Observable<HubPropertyInboundMessage & { propertyType: T }>;
 }

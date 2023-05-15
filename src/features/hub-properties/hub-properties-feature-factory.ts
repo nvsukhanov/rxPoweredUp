@@ -4,7 +4,7 @@ import { inject, injectable } from 'tsyringe';
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
 import { ILogger, RawMessage } from '../../types';
-import { IHubPropertiesFeature, IHubPropertiesFeatureFactory, IOutboundMessenger } from '../../hub';
+import { IHubPropertiesFeatureFactory, IOutboundMessenger } from '../../hub';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
 import { HUB_PROPERTIES_REPLIES_PARSER } from './hub-properties-reply-parser';
 import { IReplyParser } from '../i-reply-parser';
@@ -27,7 +27,7 @@ export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger,
         logger: ILogger
-    ): IHubPropertiesFeature {
+    ): HubPropertiesFeature {
         const replies$ = this.messageListenerFactory.create(
             characteristicDataStream,
             this.replyParser,

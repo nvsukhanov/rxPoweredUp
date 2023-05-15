@@ -1,11 +1,19 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction, Subscription, filter, take } from 'rxjs';
 
-import { MOTOR_ACC_DEC_DEFAULT_PROFILE_ID, MOTOR_LIMITS, MessageType, MotorProfile, MotorServoEndState, } from '../../constants';
-import { ICommandsFeature, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
+import { MOTOR_ACC_DEC_DEFAULT_PROFILE_ID, MOTOR_LIMITS, MessageType, MotorServoEndState, MotorUseProfile, } from '../../constants';
+import {
+    GoToAbsoluteDegreeOptions,
+    IOutboundMessenger,
+    IPortOutputCommandsFeature,
+    PortCommandExecutionStatus,
+    SetAccelerationTimeOptions,
+    SetDecelerationTimeOptions,
+    SetSpeedOptions
+} from '../../hub';
 import { PortOutputCommandFeedbackInboundMessage, RawMessage } from '../../types';
 import { IPortOutputCommandOutboundMessageFactory } from './i-port-output-command-outbound-message-factory';
 
-export class CommandsFeature implements ICommandsFeature {
+export class CommandsFeature implements IPortOutputCommandsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: IPortOutputCommandOutboundMessageFactory,
@@ -16,12 +24,12 @@ export class CommandsFeature implements ICommandsFeature {
     public setAccelerationTime(
         portId: number,
         time: number,
-        profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+        options?: SetAccelerationTimeOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.setAccelerationTime(
             portId,
             time,
-            profileId
+            options?.profileId ?? MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
         );
         return this.execute(message, portId);
     }
@@ -29,12 +37,12 @@ export class CommandsFeature implements ICommandsFeature {
     public setDecelerationTime(
         portId: number,
         time: number,
-        profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+        options?: SetDecelerationTimeOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.setDecelerationTime(
             portId,
             time,
-            profileId
+            options?.profileId ?? MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
         );
         return this.execute(message, portId);
     }
@@ -42,14 +50,13 @@ export class CommandsFeature implements ICommandsFeature {
     public setSpeed(
         portId: number,
         speed: number,
-        power: number = MOTOR_LIMITS.maxPower,
-        profile: MotorProfile = MotorProfile.dontUseProfiles,
+        options?: SetSpeedOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.startRotation(
             portId,
             speed,
-            power,
-            profile,
+            options?.power ?? MOTOR_LIMITS.maxPower,
+            options?.useProfile ?? MotorUseProfile.dontUseProfiles,
         );
         return this.execute(message, portId);
     }
@@ -57,18 +64,15 @@ export class CommandsFeature implements ICommandsFeature {
     public goToAbsoluteDegree(
         portId: number,
         absoluteDegree: number,
-        speed: number = MOTOR_LIMITS.maxSpeed,
-        power: number = MOTOR_LIMITS.maxPower,
-        endState: MotorServoEndState = MotorServoEndState.hold,
-        profile: MotorProfile = MotorProfile.dontUseProfiles,
+        options?: GoToAbsoluteDegreeOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.goToAbsolutePosition(
             portId,
             absoluteDegree,
-            speed,
-            power,
-            endState,
-            profile,
+            options?.speed ?? MOTOR_LIMITS.maxSpeed,
+            options?.power ?? MOTOR_LIMITS.maxPower,
+            options?.endState ?? MotorServoEndState.hold,
+            options?.useProfile ?? MotorUseProfile.dontUseProfiles,
         );
         return this.execute(message, portId);
     }
