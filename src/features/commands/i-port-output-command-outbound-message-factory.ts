@@ -1,6 +1,6 @@
 import { InjectionToken } from 'tsyringe';
 
-import { MessageType, MotorProfile, MotorServoEndState, PortOperationCompletionInformation, PortOperationStartupInformation } from '../../constants';
+import { MessageType, MotorServoEndState, MotorUseProfile, PortOperationCompletionInformation, PortOperationStartupInformation } from '../../constants';
 import { RawMessage } from '../../types';
 
 export interface IPortOutputCommandOutboundMessageFactory {
@@ -8,7 +8,7 @@ export interface IPortOutputCommandOutboundMessageFactory {
         portId: number,
         speed: number,
         power?: number,
-        profile?: MotorProfile,
+        useProfile?: MotorUseProfile,
         startupMode?: PortOperationStartupInformation,
         completionMode?: PortOperationCompletionInformation,
     ): RawMessage<MessageType.portOutputCommand>;
@@ -19,7 +19,7 @@ export interface IPortOutputCommandOutboundMessageFactory {
         speed?: number,
         power?: number,
         endState?: MotorServoEndState,
-        profile?: MotorProfile,
+        useProfile?: MotorUseProfile,
         startupMode?: PortOperationStartupInformation,
         completionMode?: PortOperationCompletionInformation,
     ): RawMessage<MessageType.portOutputCommand>;

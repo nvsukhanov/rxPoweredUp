@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { MotorProfile, MotorServoEndState } from '../constants';
+import { MotorServoEndState, MotorUseProfile } from '../constants';
 
 export enum PortCommandExecutionStatus {
     InProgress,
@@ -9,33 +9,49 @@ export enum PortCommandExecutionStatus {
     ExecutionError,
 }
 
-export interface ICommandsFeature {
+export type SetAccelerationTimeOptions = {
+    profileId: number;
+}
+
+export type SetDecelerationTimeOptions = {
+    profileId: number;
+}
+
+export type SetSpeedOptions = {
+    power?: number;
+    useProfile?: MotorUseProfile;
+}
+
+export type GoToAbsoluteDegreeOptions = {
+    speed?: number;
+    power?: number;
+    endState?: MotorServoEndState;
+    useProfile?: MotorUseProfile;
+}
+
+export interface IPortOutputCommandsFeature {
     setAccelerationTime(
         portId: number,
         time: number,
-        profileId?: number
+        options?: SetAccelerationTimeOptions
     ): Observable<PortCommandExecutionStatus>;
 
     setDecelerationTime(
         portId: number,
         time: number,
-        profileId?: number
+        options?: SetDecelerationTimeOptions
     ): Observable<PortCommandExecutionStatus>;
 
     setSpeed(
         portId: number,
         speed: number,
-        power?: number,
-        profile?: MotorProfile,
+        options?: SetSpeedOptions
     ): Observable<PortCommandExecutionStatus>;
 
     goToAbsoluteDegree(
         portId: number,
         absoluteDegree: number,
-        speed?: number,
-        power?: number,
-        endState?: MotorServoEndState,
-        profile?: MotorProfile,
+        options?: GoToAbsoluteDegreeOptions
     ): Observable<PortCommandExecutionStatus>;
 
     setAbsoluteZeroRelativeToCurrentPosition(

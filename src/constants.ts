@@ -149,7 +149,7 @@ export enum PortOperationCompletionInformation {
     commandFeedback = 0b00000001,
 }
 
-export enum MotorProfile {
+export enum MotorUseProfile {
     dontUseProfiles = 0b00000000,
     useAccelerationProfile = 0b00000001,
     useDecelerationProfile = 0b00000010,

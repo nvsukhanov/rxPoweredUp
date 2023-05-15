@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { Observable } from 'rxjs';
 
 import { CommandsFeature } from './commands-feature';
-import { ICommandsFeature, ICommandsFeatureFactory, IOutboundMessenger } from '../../hub';
+import { IOutboundMessenger, IPortOutputCommandsFeature, IPortOutputCommandsFeatureFactory } from '../../hub';
 import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
 import { IPortOutputCommandOutboundMessageFactory, PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-port-output-command-outbound-message-factory';
@@ -11,7 +11,7 @@ import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from './port-output-command
 import { IReplyParser } from '../i-reply-parser';
 
 @injectable()
-export class CommandsFeatureFactory implements ICommandsFeatureFactory {
+export class CommandsFeatureFactory implements IPortOutputCommandsFeatureFactory {
     constructor(
         @inject(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY) private readonly messageFactory: IPortOutputCommandOutboundMessageFactory,
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
@@ -23,7 +23,7 @@ export class CommandsFeatureFactory implements ICommandsFeatureFactory {
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         messenger: IOutboundMessenger,
         onDisconnected$: Observable<void>
-    ): ICommandsFeature {
+    ): IPortOutputCommandsFeature {
         const replies$ = this.messageListenerFactory.create(
             characteristicDataStream,
             this.feedbackIReplyParser,

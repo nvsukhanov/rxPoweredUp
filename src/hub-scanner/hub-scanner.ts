@@ -1,3 +1,5 @@
+import { Observable, from, map } from 'rxjs';
+
 import { HUB_SERVICE_UUID } from '../constants';
 import { BluetoothDeviceWithGatt } from '../types';
 import { IHubScannerErrorFactory } from './i-hub-scanner-error-factory';
@@ -10,27 +12,22 @@ export class HubScanner implements IHubScanner {
     ) {
     }
 
-    public async discoverHub(): Promise<BluetoothDeviceWithGatt> {
-        let device: BluetoothDevice;
-
-        try {
-            device = await this.bluetoothApi.requestDevice({
-                filters: [
-                    { services: [ HUB_SERVICE_UUID ] }
-                ]
-            });
-        } catch (e) {
-            throw this.hubScannerErrorFactory.createConnectionCancelledByUserError();
-        }
-
-        if (!device) {
-            throw this.hubScannerErrorFactory.createConnectionCancelledByUserError();
-        }
-        if (this.isDeviceWithGatt(device)) {
-            return device;
-        } else {
-            throw this.hubScannerErrorFactory.createGattUnavailableError();
-        }
+    public discoverHub(): Observable<BluetoothDeviceWithGatt> {
+        return from(this.bluetoothApi.requestDevice({
+            filters: [
+                { services: [ HUB_SERVICE_UUID ] }
+            ]
+        })).pipe(
+            map((device) => {
+                if (!device) {
+                    throw this.hubScannerErrorFactory.createConnectionCancelledByUserError();
+                } else if (this.isDeviceWithGatt(device)) {
+                    return device;
+                } else {
+                    throw this.hubScannerErrorFactory.createGattUnavailableError();
+                }
+            })
+        );
     }
 
     private isDeviceWithGatt(device: BluetoothDevice | BluetoothDeviceWithGatt): device is BluetoothDeviceWithGatt {

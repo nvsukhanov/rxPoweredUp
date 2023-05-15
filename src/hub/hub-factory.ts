@@ -10,7 +10,7 @@ import { IMessageMiddleware } from './i-message-middleware';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
 import { HUB_PROPERTY_FEATURE_FACTORY, IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
-import { COMMANDS_FEATURE_FACTORY, ICommandsFeatureFactory } from './i-commands-feature-factory';
+import { COMMANDS_FEATURE_FACTORY, IPortOutputCommandsFeatureFactory } from './i-port-output-commands-feature-factory';
 import { IIoFeatureFactory, IO_FEATURE_FACTORY } from './i-io-feature-factory';
 
 @injectable()
@@ -22,7 +22,7 @@ export class HubFactory {
         @inject(HUB_PROPERTY_FEATURE_FACTORY) private readonly hubPropertiesFactory: IHubPropertiesFeatureFactory,
         @inject(IO_FEATURE_FACTORY) private readonly ioFeatureFactoryService: IIoFeatureFactory,
         @inject(CHARACTERISTIC_DATA_STREAM_FACTORY) private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
-        @inject(COMMANDS_FEATURE_FACTORY) private readonly commandsFeatureFactory: ICommandsFeatureFactory,
+        @inject(COMMANDS_FEATURE_FACTORY) private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
     ) {
     }
 

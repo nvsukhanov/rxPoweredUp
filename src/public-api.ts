@@ -4,5 +4,5 @@ export * from './types';
 export { ConnectionError } from './errors';
 export { LoggingMiddleware } from './middleware';
 
-export { IHub, IHubPropertiesFeature, ICommandsFeature, IIoFeature, IMessageMiddleware } from './hub';
+export { IHub, IHubPropertiesFeature, IPortOutputCommandsFeature, IIoFeature, IMessageMiddleware } from './hub';
 export { connectHub } from './register';
