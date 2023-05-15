@@ -3,13 +3,14 @@ import { inject, injectable } from 'tsyringe';
 import { MessageType } from '../../constants';
 import { ILegoHubConfig, LEGO_HUB_CONFIG, RawMessage } from '../../types';
 import { numberToUint32LEArray } from '../../helpers';
+import { IPortInputFormatSetupMessageFactory } from '../../features/io/i-port-input-format-setup-message-factory';
 
 @injectable()
-export class PortInputFormatSetupSingleOutboundMessageFactory {
+export class PortInputFormatSetupSingleOutboundMessageFactory implements IPortInputFormatSetupMessageFactory {
     private readonly defaultUnsubscribePortPollingInterval = 0xFFFFFFFF; // UInt32 max
 
     constructor(
-        @inject(LEGO_HUB_CONFIG) private config: ILegoHubConfig
+        @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig
     ) {
     }
 

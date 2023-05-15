@@ -5,3 +5,6 @@ export * from './port-information-reply-parser';
 export * from './port-value-absolute-position-reply-parser';
 export * from './port-value-speed-reply-parser';
 export * from './port-mode-information-reply-parser';
+export * from './i-port-information-request-message-factory';
+export * from './i-port-mode-information-request-message-factory';
+export * from './i-port-input-format-setup-message-factory';

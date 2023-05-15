@@ -1,15 +1,13 @@
 import { Observable, exhaustMap, filter, share, take } from 'rxjs';
 
-import {
-    PortInformationRequestOutboundMessageFactory,
-    PortInputFormatSetupSingleOutboundMessageFactory,
-    PortModeInformationRequestOutboundMessageFactory,
-} from '../../messages';
 import { PortModeInformationType, PortModeName } from '../../constants';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../../types';
 import { IIoFeature } from './i-io-feature';
 import { IOutboundMessenger } from '../i-outbound-messenger';
+import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
+import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
+import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
 
 export class IoFeature implements IIoFeature {
     private portValueStreamMap = new Map<string, Observable<PortValueInboundMessage>>();
@@ -20,10 +18,10 @@ export class IoFeature implements IIoFeature {
         public readonly portModeReplies$: Observable<PortModeInboundMessage>,
         public readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>,
         public readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>,
-        private readonly messageFactoryService: PortInformationRequestOutboundMessageFactory,
+        private readonly portInformationRequestMessageFactory: IPortInformationRequestMessageFactory,
         private readonly portValueInboundListenerFactory: IoFeaturePortValueListenerFactory,
-        private readonly portModeInformationOutboundMessageFactoryService: PortModeInformationRequestOutboundMessageFactory,
-        private readonly portInputFormatSetupSingleOutboundMessageFactoryService: PortInputFormatSetupSingleOutboundMessageFactory,
+        private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
+        private readonly portInputFormatSetupMessageFactory: IPortInputFormatSetupMessageFactory,
         private readonly messenger: IOutboundMessenger,
     ) {
     }
@@ -53,12 +51,12 @@ export class IoFeature implements IIoFeature {
         );
 
         const stream: Observable<PortValueInboundMessage> = new Observable((subscriber) => {
-            const setPortInputFormatMessage = this.portInputFormatSetupSingleOutboundMessageFactoryService.createMessage(
+            const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
                 portId,
                 modeId,
                 false,
             );
-            const portValueRequestMessage = this.messageFactoryService.createPortValueRequest(portId);
+            const portValueRequestMessage = this.portInformationRequestMessageFactory.createPortValueRequest(portId);
 
             // setting up port input format
             // since we have share() operator below, this will be executed only once per port/mode
@@ -91,7 +89,7 @@ export class IoFeature implements IIoFeature {
         portId: number
     ): Observable<PortModeInboundMessage> {
         return this.messenger.sendWithResponse(
-            this.messageFactoryService.createPortModeRequest(portId),
+            this.portInformationRequestMessageFactory.createPortModeRequest(portId),
             this.portModeReplies$.pipe(
                 filter((r) => r.portId === portId),
                 take(1)
@@ -104,7 +102,7 @@ export class IoFeature implements IIoFeature {
         mode: number,
         modeInformationType: T
     ): Observable<PortModeInformationInboundMessage & { modeInformationType: T }> {
-        const portModeRequestMessage = this.portModeInformationOutboundMessageFactoryService.createPortModeInformationRequest(
+        const portModeRequestMessage = this.portModeInformationMessageFactory.createPortModeInformationRequest(
             portId,
             mode,
             modeInformationType
