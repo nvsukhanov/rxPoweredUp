@@ -1,21 +1,23 @@
 import { Observable } from 'rxjs';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
-import { HubPropertiesOutboundMessageFactory, HubPropertiesReplyParser, IOutboundMessenger, InboundMessageListenerFactory } from '../../messages';
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
-import { ConnectionErrorFactory } from '../../errors';
-import { ILogger } from '../../logging';
-import { RawMessage } from '../../types';
-import { IHubPropertiesFeature } from './i-hub-properties-feature';
+import { ILogger, RawMessage } from '../../types';
+import { IHubPropertiesFeature, IHubPropertiesFeatureFactory, IOutboundMessenger } from '../../hub';
+import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
+import { HUB_PROPERTIES_REPLIES_PARSER } from './hub-properties-reply-parser';
+import { IReplyParser } from '../i-reply-parser';
+import { HUB_PROPERTIES_MESSAGE_FACTORY, IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
+import { HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 
 @injectable()
-export class HubPropertiesFeatureFactory {
+export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory {
     constructor(
-        private readonly featureMessageProviderFactoryService: InboundMessageListenerFactory,
-        private readonly replyParserService: HubPropertiesReplyParser,
-        private readonly messageFactoryService: HubPropertiesOutboundMessageFactory,
-        private readonly errorsFactory: ConnectionErrorFactory
+        @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
+        @inject(HUB_PROPERTIES_REPLIES_PARSER) private readonly replyParser: IReplyParser<MessageType.properties>,
+        @inject(HUB_PROPERTIES_MESSAGE_FACTORY) private readonly messageFactory: IHubPropertiesMessageFactory,
+        @inject(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY) private readonly errorsFactory: IHubPropertiesFeatureErrorsFactory
     ) {
     }
 
@@ -26,17 +28,17 @@ export class HubPropertiesFeatureFactory {
         messenger: IOutboundMessenger,
         logger: ILogger
     ): IHubPropertiesFeature {
-        const repliesProvider = this.featureMessageProviderFactoryService.create(
+        const replies$ = this.messageListenerFactory.create(
             characteristicDataStream,
-            this.replyParserService,
+            this.replyParser,
             onHubDisconnected,
         );
         return new HubPropertiesFeature(
             advertisingName,
-            this.messageFactoryService,
+            this.messageFactory,
             messenger,
             logger,
-            repliesProvider,
+            replies$,
             this.errorsFactory
         );
     }

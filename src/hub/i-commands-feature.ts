@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { MotorProfile, MotorServoEndState } from '../../constants';
+import { MotorProfile, MotorServoEndState } from '../constants';
 
 export enum PortCommandExecutionStatus {
     InProgress,

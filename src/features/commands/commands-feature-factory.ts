@@ -1,18 +1,21 @@
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { Observable } from 'rxjs';
 
 import { CommandsFeature } from './commands-feature';
-import { IOutboundMessenger, InboundMessageListenerFactory, OutputCommandOutboundMessageFactory, PortOutputCommandFeedbackReplyParser } from '../../messages';
-import { ICommandsFeature } from './i-commands-feature';
+import { ICommandsFeature, ICommandsFeatureFactory, IOutboundMessenger } from '../../hub';
 import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
+import { IPortOutputCommandOutboundMessageFactory, PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-port-output-command-outbound-message-factory';
+import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
+import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from './port-output-command-feedback-reply-parser';
+import { IReplyParser } from '../i-reply-parser';
 
 @injectable()
-export class CommandsFeatureFactory {
+export class CommandsFeatureFactory implements ICommandsFeatureFactory {
     constructor(
-        private readonly portOutputCommandOutboundMessageFactoryService: OutputCommandOutboundMessageFactory,
-        private readonly inboundMessageListenerFactory: InboundMessageListenerFactory,
-        private readonly portOutputCommandFeedbackReplyParser: PortOutputCommandFeedbackReplyParser
+        @inject(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY) private readonly messageFactory: IPortOutputCommandOutboundMessageFactory,
+        @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
+        @inject(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER) private readonly feedbackIReplyParser: IReplyParser<MessageType.portOutputCommandFeedback>
     ) {
     }
 
@@ -21,14 +24,16 @@ export class CommandsFeatureFactory {
         messenger: IOutboundMessenger,
         onDisconnected$: Observable<void>
     ): ICommandsFeature {
+        const replies$ = this.messageListenerFactory.create(
+            characteristicDataStream,
+            this.feedbackIReplyParser,
+            onDisconnected$
+        );
+
         return new CommandsFeature(
             messenger,
-            this.portOutputCommandOutboundMessageFactoryService,
-            this.inboundMessageListenerFactory.create(
-                characteristicDataStream,
-                this.portOutputCommandFeedbackReplyParser,
-                onDisconnected$
-            )
+            this.messageFactory,
+            replies$
         );
     }
 }

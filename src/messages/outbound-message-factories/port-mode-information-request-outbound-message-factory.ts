@@ -2,9 +2,10 @@ import { injectable } from 'tsyringe';
 
 import { MessageType, PortModeInformationType } from '../../constants';
 import { RawMessage } from '../../types';
+import { IPortModeInformationRequestMessageFactory } from '../../features';
 
 @injectable()
-export class PortModeInformationRequestOutboundMessageFactory {
+export class PortModeInformationRequestOutboundMessageFactory implements IPortModeInformationRequestMessageFactory {
     public createPortModeInformationRequest(
         portId: number,
         mode: number,

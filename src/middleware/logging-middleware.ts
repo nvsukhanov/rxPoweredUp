@@ -1,7 +1,6 @@
-import { IMessageMiddleware } from './i-message-middleware';
+import { IMessageMiddleware } from '../hub';
 import { MessageType } from '../constants';
-import { ILogger } from '../logging';
-import { RawMessage } from '../types';
+import { ILogger, RawMessage } from '../types';
 
 export class LoggingMiddleware implements IMessageMiddleware {
     private readonly logMessageTypesSet: ReadonlySet<MessageType>;

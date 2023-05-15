@@ -1,13 +1,20 @@
 import { Observable } from 'rxjs';
 
 import { MessageType, PortModeName } from '../../constants';
-import { IInboundMessageListener, InboundMessageListenerFactory, PortValueReplyParserResolver } from '../../messages';
-import { RawMessage } from '../../types';
+import { PortValueInboundMessage, RawMessage } from '../../types';
+import { IInboundMessageListenerFactory } from '../i-inbound-message-listener-factory';
+import { IReplyParser } from '../i-reply-parser';
 
 export class IoFeaturePortValueListenerFactory {
+    private readonly portValueParsers: { [m in PortModeName]?: IReplyParser<MessageType.portValueSingle> } = {
+        [PortModeName.absolutePosition]: this.portValueAbsolutePositionReplyParserService,
+        [PortModeName.speed]: this.portValueSpeedReplyParserService
+    };
+
     constructor(
-        private readonly inboundMessageListenerFactoryService: InboundMessageListenerFactory,
-        private readonly portValueReplyParserResolverService: PortValueReplyParserResolver,
+        private readonly portValueAbsolutePositionReplyParserService: IReplyParser<MessageType.portValueSingle>,
+        private readonly portValueSpeedReplyParserService: IReplyParser<MessageType.portValueSingle>,
+        private readonly messageListenerFactory: IInboundMessageListenerFactory,
         private readonly characteristicDataStream: Observable<RawMessage<MessageType>>,
         private readonly onDisconnected$: Observable<void>,
     ) {
@@ -15,12 +22,12 @@ export class IoFeaturePortValueListenerFactory {
 
     public createForMode(
         modeName: PortModeName
-    ): IInboundMessageListener<MessageType.portValueSingle> {
-        const replyParserService = this.portValueReplyParserResolverService.resolve(modeName);
+    ): Observable<PortValueInboundMessage> {
+        const replyParserService = this.portValueParsers[modeName];
         if (!replyParserService) {
             throw new Error(`No reply parser for mode ${modeName}`);
         }
-        return this.inboundMessageListenerFactoryService.create(
+        return this.messageListenerFactory.create(
             this.characteristicDataStream,
             replyParserService,
             this.onDisconnected$,

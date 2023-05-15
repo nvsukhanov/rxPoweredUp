@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
-import { HubProperty } from '../../constants';
-import { HubPropertyBatteryInboundMessage, HubPropertyButtonStateInboundMessage, HubPropertyInboundMessage, HubPropertyRssiInboundMessage } from '../../types';
+import { HubProperty } from '../constants';
+import { HubPropertyBatteryInboundMessage, HubPropertyButtonStateInboundMessage, HubPropertyInboundMessage, HubPropertyRssiInboundMessage } from '../types';
 
 export interface IHubPropertiesFeature {
     readonly batteryLevel$: Observable<HubPropertyBatteryInboundMessage>;

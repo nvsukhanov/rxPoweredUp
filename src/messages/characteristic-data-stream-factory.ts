@@ -3,11 +3,11 @@ import { injectable } from 'tsyringe';
 
 import { InboundMessageDissector } from './inbound-message-dissector';
 import { MessageType } from '../constants';
-import { IMessageMiddleware } from '../middleware';
+import { ICharacteristicDataStreamFactory, IMessageMiddleware } from '../hub';
 import { RawMessage } from '../types';
 
 @injectable()
-export class CharacteristicDataStreamFactory {
+export class CharacteristicDataStreamFactory implements ICharacteristicDataStreamFactory {
     private readonly characteristicValueChangedEventName = 'characteristicvaluechanged';
 
     constructor(

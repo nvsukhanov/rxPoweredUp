@@ -1,11 +1,10 @@
 import { Observable, filter, from, map, share, switchMap, take, tap } from 'rxjs';
 
-import { HubProperty, MAX_NAME_SIZE, MessageType, SubscribableHubProperties } from '../../constants';
-import { HubPropertiesOutboundMessageFactory, IInboundMessageListener, IOutboundMessenger } from '../../messages';
-import { ConnectionErrorFactory } from '../../errors';
-import { ILogger } from '../../logging';
-import { HubPropertyInboundMessage } from '../../types';
-import { IHubPropertiesFeature } from './i-hub-properties-feature';
+import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
+import { HubPropertyInboundMessage, ILogger } from '../../types';
+import { IHubPropertiesFeature, IOutboundMessenger } from '../../hub';
+import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
+import { IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 
 export class HubPropertiesFeature implements IHubPropertiesFeature {
     public batteryLevel$ = this.createPropertyStream(HubProperty.batteryVoltage);
@@ -18,11 +17,11 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
 
     constructor(
         private _advertisingName: string,
-        private readonly messageFactoryService: HubPropertiesOutboundMessageFactory,
+        private readonly messageFactoryService: IHubPropertiesMessageFactory,
         private readonly messenger: IOutboundMessenger,
         private readonly logging: ILogger,
-        private readonly messageListener: IInboundMessageListener<MessageType.properties>,
-        private readonly errorsFactory: ConnectionErrorFactory
+        private readonly inboundMessages: Observable<HubPropertyInboundMessage>,
+        private readonly errorsFactory: IHubPropertiesFeatureErrorsFactory
     ) {
     }
 
@@ -56,7 +55,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
         property: T
     ): Observable<HubPropertyInboundMessage & { propertyType: T }> {
         const message = this.messageFactoryService.requestPropertyUpdate(property);
-        const replies = this.messageListener.replies$.pipe(
+        const replies = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === property),
             map((reply) => reply as HubPropertyInboundMessage & { propertyType: T }),
             take(1)
@@ -88,7 +87,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
                     const message = this.messageFactoryService.requestPropertyUpdate(trackedProperty);
                     this.messenger.sendWithoutResponse(message);
                 }),
-                switchMap(() => this.messageListener.replies$),
+                switchMap(() => this.inboundMessages),
                 filter((reply) => reply.propertyType === trackedProperty),
             ).subscribe((message) => {
                 subscriber.next(message as HubPropertyInboundMessage & { propertyType: T });

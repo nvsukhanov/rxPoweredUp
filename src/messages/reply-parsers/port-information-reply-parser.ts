@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 
-import { IReplyParser } from '../i-reply-parser';
+import { IReplyParser } from '../../features';
 import { MessageType, PortInformationReplyType } from '../../constants';
 import { InboundMessage, PortModeInboundMessage, RawMessage } from '../../types';
 import { concatUint8ToUint16, readBitAtPosition } from '../../helpers';

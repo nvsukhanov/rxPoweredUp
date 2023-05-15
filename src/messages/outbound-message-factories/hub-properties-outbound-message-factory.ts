@@ -2,9 +2,10 @@ import { injectable } from 'tsyringe';
 
 import { HubProperty, HubPropertyOperation, MessageType, SubscribableHubProperties, WritableHubProperties } from '../../constants';
 import { RawMessage } from '../../types';
+import { IHubPropertiesMessageFactory } from '../../features';
 
 @injectable()
-export class HubPropertiesOutboundMessageFactory {
+export class HubPropertiesOutboundMessageFactory implements IHubPropertiesMessageFactory {
     public setProperty(
         property: WritableHubProperties,
         value: number[]

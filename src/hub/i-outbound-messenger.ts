@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
-import { RawMessage } from '../../types';
-import { MessageType } from '../../constants';
+import { RawMessage } from '../types';
+import { MessageType } from '../constants';
 
 export interface IOutboundMessenger {
     sendWithResponse<TResponse>(
@@ -13,3 +13,4 @@ export interface IOutboundMessenger {
         message: RawMessage<MessageType>,
     ): Observable<void>
 }
+

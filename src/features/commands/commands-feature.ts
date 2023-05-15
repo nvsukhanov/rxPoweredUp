@@ -1,15 +1,15 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction, Subscription, filter, take } from 'rxjs';
 
-import { IInboundMessageListener, IOutboundMessenger, OutputCommandOutboundMessageFactory } from '../../messages';
 import { MOTOR_ACC_DEC_DEFAULT_PROFILE_ID, MOTOR_LIMITS, MessageType, MotorProfile, MotorServoEndState, } from '../../constants';
-import { ICommandsFeature, PortCommandExecutionStatus } from './i-commands-feature';
+import { ICommandsFeature, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
 import { PortOutputCommandFeedbackInboundMessage, RawMessage } from '../../types';
+import { IPortOutputCommandOutboundMessageFactory } from './i-port-output-command-outbound-message-factory';
 
 export class CommandsFeature implements ICommandsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
-        private readonly portOutputCommandOutboundMessageFactoryService: OutputCommandOutboundMessageFactory,
-        private readonly messageListener: IInboundMessageListener<MessageType.portOutputCommandFeedback>,
+        private readonly portOutputCommandOutboundMessageFactoryService: IPortOutputCommandOutboundMessageFactory,
+        private readonly inboundMessages: Observable<PortOutputCommandFeedbackInboundMessage>
     ) {
     }
 
@@ -100,7 +100,7 @@ export class CommandsFeature implements ICommandsFeature {
     ): Observable<PortCommandExecutionStatus> {
         return this.messenger.sendWithResponse(
             message,
-            this.messageListener.replies$.pipe(
+            this.inboundMessages.pipe(
                 // here we provide a single message (filtered by port id) to messenger and then wait for a single reply
                 this.prepareSignalForMessenger(portId),
             )
@@ -137,7 +137,7 @@ export class CommandsFeature implements ICommandsFeature {
                         // all following replies come from message listener
                         // this complicated logic is used to mitigate race condition that could happen if we just feed filtered replies
                         // directly to messenger. Maybe there is a better way to do this?
-                        remainingRepliesSubscription = this.messageListener.replies$.pipe(
+                        remainingRepliesSubscription = this.inboundMessages.pipe(
                             filter((r) => r.portId === portId),
                         ).subscribe((remainingReply) => {
                             if (remainingReply.feedback.executionError) {
