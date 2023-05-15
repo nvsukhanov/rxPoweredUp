@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
-import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../../types';
-import { PortModeInformationType, PortModeName } from '../../constants';
+import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../types';
+import { PortModeInformationType, PortModeName } from '../constants';
 
 export interface IIoFeature {
     readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>;

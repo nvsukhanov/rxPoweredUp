@@ -4,7 +4,7 @@ import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../con
 import { ConnectionErrorFactory } from '../../errors';
 import { ILogger } from '../../logging';
 import { HubPropertyInboundMessage } from '../../types';
-import { IHubPropertiesFeature } from './i-hub-properties-feature';
+import { IHubPropertiesFeature } from '../../hub';
 import { IOutboundMessenger } from '../i-outbound-messenger';
 import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 

@@ -3,7 +3,7 @@ import { Observable, exhaustMap, filter, share, take } from 'rxjs';
 import { PortModeInformationType, PortModeName } from '../../constants';
 import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
 import { AttachedIOInboundMessage, PortModeInboundMessage, PortModeInformationInboundMessage, PortValueInboundMessage } from '../../types';
-import { IIoFeature } from './i-io-feature';
+import { IIoFeature } from '../../hub';
 import { IOutboundMessenger } from '../i-outbound-messenger';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';

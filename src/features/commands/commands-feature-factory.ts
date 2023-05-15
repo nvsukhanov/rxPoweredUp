@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { Observable } from 'rxjs';
 
 import { CommandsFeature } from './commands-feature';
-import { ICommandsFeature } from './i-commands-feature';
+import { ICommandsFeature, ICommandsFeatureFactory } from '../../hub';
 import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
 import { IOutboundMessenger } from '../i-outbound-messenger';
@@ -12,7 +12,7 @@ import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from './port-output-command
 import { IReplyParser } from '../i-reply-parser';
 
 @injectable()
-export class CommandsFeatureFactory {
+export class CommandsFeatureFactory implements ICommandsFeatureFactory {
     constructor(
         @inject(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY) private readonly messageFactory: IPortOutputCommandOutboundMessageFactory,
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,

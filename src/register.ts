@@ -3,7 +3,7 @@ import { NEVER, Observable } from 'rxjs';
 
 import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HubScannerFactory } from './hub-scanner';
-import { HubFactory, IHub, OUTBOUND_MESSAGE_FACTORY } from './hub';
+import { COMMANDS_FEATURE_FACTORY, HubFactory, IHub, OUTBOUND_MESSAGE_FACTORY } from './hub';
 import { IMessageMiddleware } from './middleware';
 import {
     AttachedIoReplyParser,
@@ -22,10 +22,13 @@ import {
 } from './messages';
 import {
     ATTACHED_IO_REPLIES_PARSER,
+    CommandsFeatureFactory,
     HUB_PROPERTIES_MESSAGE_FACTORY,
     HUB_PROPERTIES_REPLIES_PARSER,
+    HubPropertiesFeatureFactory,
     INBOUND_MESSAGE_LISTENER_FACTORY,
     InboundMessageListenerFactory,
+    IoFeatureFactory,
     PORT_INFORMATION_REPLY_PARSER,
     PORT_INFORMATION_REQUEST_MESSAGE_FACTORY,
     PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY,
@@ -36,6 +39,8 @@ import {
     PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER,
     PORT_VALUE_SPEED_REPLY_PARSER
 } from './features';
+import { HUB_PROPERTY_FEATURE_FACTORY } from './hub/i-hub-properties-feature-factory';
+import { IO_FEATURE_FACTORY } from './hub/i-io-feature-factory';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });
 container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
@@ -52,6 +57,9 @@ container.register(PORT_INFORMATION_REQUEST_MESSAGE_FACTORY, PortInformationRequ
 container.register(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY, PortModeInformationRequestOutboundMessageFactory);
 container.register(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY, PortInputFormatSetupSingleOutboundMessageFactory);
 container.register(HUB_PROPERTIES_MESSAGE_FACTORY, HubPropertiesOutboundMessageFactory);
+container.register(HUB_PROPERTY_FEATURE_FACTORY, HubPropertiesFeatureFactory);
+container.register(COMMANDS_FEATURE_FACTORY, CommandsFeatureFactory);
+container.register(IO_FEATURE_FACTORY, IoFeatureFactory);
 
 export async function connectHub(
     bluetooth: Bluetooth,

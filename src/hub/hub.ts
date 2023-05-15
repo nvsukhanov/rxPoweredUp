@@ -4,11 +4,16 @@ import { IMessageMiddleware } from '../middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory } from '../messages';
-import { CommandsFeatureFactory, HubPropertiesFeatureFactory, ICommandsFeature, IHubPropertiesFeature, IIoFeature, IoFeatureFactory } from '../features';
 import { BluetoothDeviceWithGatt, ILegoHubConfig } from '../types';
 import { ILogger } from '../logging';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
+import { IHubPropertiesFeature } from './i-hub-properties-feature';
+import { IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
+import { ICommandsFeatureFactory } from './i-commands-feature-factory';
+import { ICommandsFeature } from './i-commands-feature';
+import { IIoFeatureFactory } from './i-io-feature-factory';
+import { IIoFeature } from './i-io-feature';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
@@ -32,11 +37,11 @@ export class Hub implements IHub {
         private readonly logger: ILogger,
         private readonly config: ILegoHubConfig,
         private readonly hubConnectionErrorFactory: ConnectionErrorFactory,
-        private readonly outboundMessengerFactoryService: IOutboundMessengerFactory,
-        private readonly propertiesFactoryService: HubPropertiesFeatureFactory,
-        private readonly ioFeatureFactoryService: IoFeatureFactory,
-        private readonly characteristicsDataStreamFactoryService: CharacteristicDataStreamFactory,
-        private readonly motorFeatureFactoryService: CommandsFeatureFactory,
+        private readonly outboundMessengerFactory: IOutboundMessengerFactory,
+        private readonly propertiesFeatureFactory: IHubPropertiesFeatureFactory,
+        private readonly ioFeatureFactory: IIoFeatureFactory,
+        private readonly characteristicsDataStreamFactory: CharacteristicDataStreamFactory,
+        private readonly commandsFeatureFactory: ICommandsFeatureFactory,
         private readonly incomingMessageMiddleware: IMessageMiddleware[] = [],
         private readonly outgoingMessageMiddleware: IMessageMiddleware[] = [],
         private readonly externalDisconnectEvents$: Observable<unknown> = NEVER
@@ -121,16 +126,16 @@ export class Hub implements IHub {
             shareReplay({ bufferSize: 1, refCount: true })
         );
 
-        const messenger = this.outboundMessengerFactoryService.create(primaryCharacteristic, this.outgoingMessageMiddleware);
-        const dataStream = this.characteristicsDataStreamFactoryService.create(primaryCharacteristic, this.incomingMessageMiddleware);
+        const messenger = this.outboundMessengerFactory.create(primaryCharacteristic, this.outgoingMessageMiddleware);
+        const dataStream = this.characteristicsDataStreamFactory.create(primaryCharacteristic, this.incomingMessageMiddleware);
 
-        this._ports = this.ioFeatureFactoryService.create(
+        this._ports = this.ioFeatureFactory.create(
             dataStream,
             this.beforeDisconnect$,
             messenger
         );
 
-        this._properties = this.propertiesFactoryService.create(
+        this._properties = this.propertiesFeatureFactory.create(
             this.device.name ?? '',
             dataStream,
             this.beforeDisconnect$,
@@ -138,7 +143,7 @@ export class Hub implements IHub {
             this.logger
         );
 
-        this._motor = this.motorFeatureFactoryService.createCommandsFeature(
+        this._motor = this.commandsFeatureFactory.createCommandsFeature(
             dataStream,
             messenger,
             this.beforeDisconnect$

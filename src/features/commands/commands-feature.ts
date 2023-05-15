@@ -1,7 +1,7 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction, Subscription, filter, take } from 'rxjs';
 
 import { MOTOR_ACC_DEC_DEFAULT_PROFILE_ID, MOTOR_LIMITS, MessageType, MotorProfile, MotorServoEndState, } from '../../constants';
-import { ICommandsFeature, PortCommandExecutionStatus } from './i-commands-feature';
+import { ICommandsFeature, PortCommandExecutionStatus } from '../../hub';
 import { PortOutputCommandFeedbackInboundMessage, RawMessage } from '../../types';
 import { IOutboundMessenger } from '../i-outbound-messenger';
 import { IPortOutputCommandOutboundMessageFactory } from './i-port-output-command-outbound-message-factory';

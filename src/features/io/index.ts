@@ -1,4 +1,3 @@
-export * from './i-io-feature';
 export * from './io-feature-factory';
 export * from './attached-io-replies-parser';
 export * from './port-information-reply-parser';

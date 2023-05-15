@@ -5,10 +5,9 @@ import { filter, interval, take } from 'rxjs';
 
 import { connectHub } from '../register';
 import { LoggingMiddleware } from '../middleware';
-import { IHub } from '../hub';
+import { IHub, PortCommandExecutionStatus } from '../hub';
 import { WebLogger } from './web-logger';
 import { AttachIoEvent, MotorProfile, MotorServoEndState } from '../constants';
-import { PortCommandExecutionStatus } from '../features';
 
 let hub: IHub | undefined;
 
