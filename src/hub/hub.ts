@@ -1,6 +1,6 @@
 import { NEVER, Observable, Subject, fromEvent, map, shareReplay, take, takeUntil, tap } from 'rxjs';
 
-import { IMessageMiddleware } from '../middleware';
+import { IMessageMiddleware } from './i-message-middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory } from '../messages';

@@ -3,8 +3,15 @@ import { NEVER, Observable } from 'rxjs';
 
 import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HubScannerFactory } from './hub-scanner';
-import { COMMANDS_FEATURE_FACTORY, HubFactory, IHub, OUTBOUND_MESSAGE_FACTORY } from './hub';
-import { IMessageMiddleware } from './middleware';
+import {
+    COMMANDS_FEATURE_FACTORY,
+    HUB_PROPERTY_FEATURE_FACTORY,
+    HubFactory,
+    IHub,
+    IMessageMiddleware,
+    IO_FEATURE_FACTORY,
+    OUTBOUND_MESSAGE_FACTORY
+} from './hub';
 import {
     AttachedIoReplyParser,
     HubPropertiesOutboundMessageFactory,
@@ -40,8 +47,6 @@ import {
     PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER,
     PORT_VALUE_SPEED_REPLY_PARSER
 } from './features';
-import { HUB_PROPERTY_FEATURE_FACTORY } from './hub/i-hub-properties-feature-factory';
-import { IO_FEATURE_FACTORY } from './hub/i-io-feature-factory';
 import { ConnectionErrorFactory } from './errors';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });

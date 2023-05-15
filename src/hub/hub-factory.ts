@@ -6,7 +6,7 @@ import { Hub } from './hub';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
 import { ConnectionErrorFactory } from '../errors';
 import { CharacteristicDataStreamFactory } from '../messages';
-import { IMessageMiddleware } from '../middleware';
+import { IMessageMiddleware } from './i-message-middleware';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
 import { HUB_PROPERTY_FEATURE_FACTORY, IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';

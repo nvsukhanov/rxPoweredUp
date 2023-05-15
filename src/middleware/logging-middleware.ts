@@ -1,4 +1,4 @@
-import { IMessageMiddleware } from './i-message-middleware';
+import { IMessageMiddleware } from '../hub';
 import { MessageType } from '../constants';
 import { ILogger } from '../i-logger';
 import { RawMessage } from '../types';

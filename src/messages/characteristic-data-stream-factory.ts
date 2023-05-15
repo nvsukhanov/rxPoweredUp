@@ -3,7 +3,7 @@ import { injectable } from 'tsyringe';
 
 import { InboundMessageDissector } from './inbound-message-dissector';
 import { MessageType } from '../constants';
-import { IMessageMiddleware } from '../middleware';
+import { IMessageMiddleware } from '../hub';
 import { RawMessage } from '../types';
 
 @injectable()

@@ -7,3 +7,4 @@ export * from './i-commands-feature';
 export * from './i-commands-feature-factory';
 export * from './i-io-feature';
 export * from './i-io-feature-factory';
+export * from './i-message-middleware';
