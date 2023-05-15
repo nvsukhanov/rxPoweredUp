@@ -1,12 +1,12 @@
 import { Observable, filter, from, map, share, switchMap, take, tap } from 'rxjs';
 
 import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
-import { HubPropertiesOutboundMessageFactory } from '../../messages';
 import { ConnectionErrorFactory } from '../../errors';
 import { ILogger } from '../../logging';
 import { HubPropertyInboundMessage } from '../../types';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IOutboundMessenger } from '../i-outbound-messenger';
+import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 
 export class HubPropertiesFeature implements IHubPropertiesFeature {
     public batteryLevel$ = this.createPropertyStream(HubProperty.batteryVoltage);
@@ -19,7 +19,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
 
     constructor(
         private _advertisingName: string,
-        private readonly messageFactoryService: HubPropertiesOutboundMessageFactory,
+        private readonly messageFactoryService: IHubPropertiesMessageFactory,
         private readonly messenger: IOutboundMessenger,
         private readonly logging: ILogger,
         private readonly inboundMessages: Observable<HubPropertyInboundMessage>,

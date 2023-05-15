@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import { inject, injectable } from 'tsyringe';
 
-import { HubPropertiesOutboundMessageFactory } from '../../messages';
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
 import { ConnectionErrorFactory } from '../../errors';
@@ -12,13 +11,14 @@ import { IOutboundMessenger } from '../i-outbound-messenger';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
 import { HUB_PROPERTIES_REPLIES_PARSER } from './hub-properties-reply-parser';
 import { IReplyParser } from '../i-reply-parser';
+import { HUB_PROPERTIES_MESSAGE_FACTORY, IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 
 @injectable()
 export class HubPropertiesFeatureFactory {
     constructor(
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
-        @inject(HUB_PROPERTIES_REPLIES_PARSER) private readonly replyParserService: IReplyParser<MessageType.properties>,
-        private readonly messageFactoryService: HubPropertiesOutboundMessageFactory,
+        @inject(HUB_PROPERTIES_REPLIES_PARSER) private readonly replyParser: IReplyParser<MessageType.properties>,
+        @inject(HUB_PROPERTIES_MESSAGE_FACTORY) private readonly messageFactory: IHubPropertiesMessageFactory,
         private readonly errorsFactory: ConnectionErrorFactory
     ) {
     }
@@ -32,12 +32,12 @@ export class HubPropertiesFeatureFactory {
     ): IHubPropertiesFeature {
         const replies$ = this.messageListenerFactory.create(
             characteristicDataStream,
-            this.replyParserService,
+            this.replyParser,
             onHubDisconnected,
         );
         return new HubPropertiesFeature(
             advertisingName,
-            this.messageFactoryService,
+            this.messageFactory,
             messenger,
             logger,
             replies$,

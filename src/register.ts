@@ -7,6 +7,7 @@ import { HubFactory, IHub, OUTBOUND_MESSAGE_FACTORY } from './hub';
 import { IMessageMiddleware } from './middleware';
 import {
     AttachedIoReplyParser,
+    HubPropertiesOutboundMessageFactory,
     HubPropertiesReplyParser,
     OutboundMessengerFactory,
     PortInformationReplyParser,
@@ -21,6 +22,7 @@ import {
 } from './messages';
 import {
     ATTACHED_IO_REPLIES_PARSER,
+    HUB_PROPERTIES_MESSAGE_FACTORY,
     HUB_PROPERTIES_REPLIES_PARSER,
     INBOUND_MESSAGE_LISTENER_FACTORY,
     InboundMessageListenerFactory,
@@ -49,6 +51,7 @@ container.register(PORT_MODE_INFORMATION_REPLY_PARSER, PortModeInformationReplyP
 container.register(PORT_INFORMATION_REQUEST_MESSAGE_FACTORY, PortInformationRequestOutboundMessageFactory);
 container.register(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY, PortModeInformationRequestOutboundMessageFactory);
 container.register(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY, PortInputFormatSetupSingleOutboundMessageFactory);
+container.register(HUB_PROPERTIES_MESSAGE_FACTORY, HubPropertiesOutboundMessageFactory);
 
 export async function connectHub(
     bluetooth: Bluetooth,
