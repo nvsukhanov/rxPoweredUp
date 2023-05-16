@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 
-import { RawMessage } from '../../types';
+import { RawPortOutputCommandMessage } from '../../types';
 import {
     MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
     MOTOR_LIMITS,
@@ -24,7 +24,7 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
         profile: MotorUseProfile = MotorUseProfile.dontUseProfiles,
         startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
-    ): RawMessage<MessageType.portOutputCommand> {
+    ): RawPortOutputCommandMessage {
         this.ensureSpeedIsWithinLimits(speed);
         this.ensurePowerIsWithinLimits(power);
 
@@ -32,6 +32,7 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
             header: {
                 messageType: MessageType.portOutputCommand,
             },
+            portId,
             payload: new Uint8Array([
                 portId,
                 startupMode | completionMode,
@@ -52,7 +53,7 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
         profile: MotorUseProfile = MotorUseProfile.dontUseProfiles,
         startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
-    ): RawMessage<MessageType.portOutputCommand> {
+    ): RawPortOutputCommandMessage {
         this.ensureSpeedIsWithinLimits(speed);
         this.ensurePowerIsWithinLimits(power);
         this.ensureAbsolutePositionIsWithinLimits(absolutePosition);
@@ -61,6 +62,7 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
             header: {
                 messageType: MessageType.portOutputCommand,
             },
+            portId,
             payload: new Uint8Array([
                 portId,
                 startupMode | completionMode,
@@ -77,13 +79,14 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
     public presetEncoder(
         portId: number,
         absolutePosition: number,
-    ): RawMessage<MessageType.portOutputCommand> {
+    ): RawPortOutputCommandMessage {
         this.ensureAbsolutePositionIsWithinLimits(absolutePosition);
 
         return {
             header: {
                 messageType: MessageType.portOutputCommand,
             },
+            portId,
             payload: new Uint8Array([
                 portId,
                 PortOperationStartupInformation.bufferIfNecessary | PortOperationCompletionInformation.commandFeedback,
@@ -100,12 +103,13 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
         profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
         startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
-    ): RawMessage<MessageType.portOutputCommand> {
+    ): RawPortOutputCommandMessage {
         this.ensureAccDecTimeIsWithinLimits(timeMs);
         return {
             header: {
                 messageType: MessageType.portOutputCommand,
             },
+            portId,
             payload: new Uint8Array([
                 portId,
                 startupMode | completionMode,
@@ -122,12 +126,13 @@ export class PortOutputCommandOutboundMessageFactory implements IPortOutputComma
         profileId: number = MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
         startupMode: PortOperationStartupInformation = PortOperationStartupInformation.bufferIfNecessary,
         completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
-    ): RawMessage<MessageType.portOutputCommand> {
+    ): RawPortOutputCommandMessage {
         this.ensureAccDecTimeIsWithinLimits(timeMs);
         return {
             header: {
                 messageType: MessageType.portOutputCommand,
             },
+            portId,
             payload: new Uint8Array([
                 portId,
                 startupMode | completionMode,
