@@ -8,7 +8,6 @@ import { IHubPropertiesFeature } from './i-hub-properties-feature';
 
 export interface IHubPropertiesFeatureFactory {
     create(
-        advertisingName: string,
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger,

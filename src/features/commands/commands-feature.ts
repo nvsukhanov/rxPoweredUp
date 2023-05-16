@@ -1,15 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { MOTOR_ACC_DEC_DEFAULT_PROFILE_ID, MOTOR_LIMITS, MessageType, MotorServoEndState, MotorUseProfile, } from '../../constants';
-import {
-    GoToAbsoluteDegreeOptions,
-    IOutboundMessenger,
-    IPortOutputCommandsFeature,
-    PortCommandExecutionStatus,
-    SetAccelerationTimeOptions,
-    SetDecelerationTimeOptions,
-    SetSpeedOptions
-} from '../../hub';
+import { GoToAbsoluteDegreeOptions, IOutboundMessenger, IPortOutputCommandsFeature, PortCommandExecutionStatus, SetSpeedOptions } from '../../hub';
 import { RawMessage } from '../../types';
 import { IPortOutputCommandOutboundMessageFactory } from './i-port-output-command-outbound-message-factory';
 
@@ -22,26 +14,24 @@ export class CommandsFeature implements IPortOutputCommandsFeature {
 
     public setAccelerationTime(
         portId: number,
-        time: number,
-        options?: SetAccelerationTimeOptions
+        timeMs: number,
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.setAccelerationTime(
             portId,
-            time,
-            options?.profileId ?? MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+            timeMs,
+            MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
         );
         return this.execute(message);
     }
 
     public setDecelerationTime(
         portId: number,
-        time: number,
-        options?: SetDecelerationTimeOptions
+        timeMs: number,
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.setDecelerationTime(
             portId,
-            time,
-            options?.profileId ?? MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+            timeMs,
+            MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
         );
         return this.execute(message);
     }
@@ -76,7 +66,6 @@ export class CommandsFeature implements IPortOutputCommandsFeature {
         return this.execute(message);
     }
 
-    // sets absolute zero degree position of motor (relative to current position)
     public setAbsoluteZeroRelativeToCurrentPosition(
         portId: number,
         absolutePosition: number,

@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export interface IDisposable {
-    dispose(): Promise<void>;
+    dispose(): Observable<void>;
 }

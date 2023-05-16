@@ -1,4 +1,4 @@
-export * from './io';
+export * from './ports';
 export * from './hub-properties';
 export * from './commands';
 export * from './i-inbound-message-listener-factory';

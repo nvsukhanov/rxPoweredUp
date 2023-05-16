@@ -22,7 +22,6 @@ export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory
     }
 
     public create(
-        advertisingName: string,
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger,
@@ -34,7 +33,6 @@ export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory
             onHubDisconnected,
         );
         return new HubPropertiesFeature(
-            advertisingName,
             this.messageFactory,
             messenger,
             logger,

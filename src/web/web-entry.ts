@@ -30,6 +30,14 @@ function onConnected(nextHub: IHub): void {
     setControlsState(true);
     const hubDisconnectHandle = (): unknown => nextHub.disconnect().subscribe(() => console.log('disconnected'));
 
+    nextHub.properties.requestBatteryLevel().subscribe((v) => {
+        console.log('batteryLevel', v);
+    });
+
+    nextHub.properties.buttonState.subscribe((b) => {
+        console.log('buttonState', b);
+    });
+
     nextHub.ports.onIoAttach(0).subscribe((r) => {
         nextHub.commands.setAccelerationTime(r.portId, 200).subscribe((t) => {
             console.log('setAccelerationTime', r.portId, PortCommandExecutionStatus[t]);

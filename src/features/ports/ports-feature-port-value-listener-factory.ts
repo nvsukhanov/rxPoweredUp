@@ -5,7 +5,7 @@ import { PortValueInboundMessage, RawMessage } from '../../types';
 import { IInboundMessageListenerFactory } from '../i-inbound-message-listener-factory';
 import { IReplyParser } from '../i-reply-parser';
 
-export class IoFeaturePortValueListenerFactory {
+export class PortsFeaturePortValueListenerFactory {
     private readonly portValueParsers: { [m in PortModeName]?: IReplyParser<MessageType.portValueSingle> } = {
         [PortModeName.absolutePosition]: this.portValueAbsolutePositionReplyParserService,
         [PortModeName.speed]: this.portValueSpeedReplyParserService

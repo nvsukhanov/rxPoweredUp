@@ -1,4 +1,4 @@
-export * from './io-feature-factory';
+export * from './ports-feature-factory';
 export * from './attached-io-replies-parser';
 export * from './port-information-reply-parser';
 export * from './port-value-absolute-position-reply-parser';
