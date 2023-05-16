@@ -57,7 +57,7 @@ export class PortsFeature implements IPortsFeature {
             )) as Observable<AttachedIODetachInboundMessage>;
     }
 
-    public requestPortValue(
+    public getPortValue(
         portId: number,
         modeId: number,
         portModeName: PortModeName
@@ -116,7 +116,7 @@ export class PortsFeature implements IPortsFeature {
         return result;
     }
 
-    public requestPortModes(
+    public getPortModes(
         portId: number
     ): Observable<PortModeInboundMessage> {
         return this.messenger.sendWithResponse(
@@ -128,7 +128,7 @@ export class PortsFeature implements IPortsFeature {
         );
     }
 
-    public requestPortModeInformation<T extends PortModeInformationType>(
+    public getPortModeInformation<T extends PortModeInformationType>(
         portId: number,
         mode: number,
         modeInformationType: T

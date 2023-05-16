@@ -32,11 +32,11 @@ export interface IPortsFeature {
 
     /**
      * Reads the value of a port for a given mode.
-     * modeId specifies the mode to read the value from (see requestPortModeInformation)
+     * modeId specifies the mode to read the value from (see getPortModeInformation)
      * portModeName specifies value parsing method.
-     * In order to read value of a port, you need to know the modeId and portModeName, which can be obtained by calling requestPortModes
-     * and requestPortModeInformation. For example, to read the absolute position of a motor, you need to call requestPortModes,
-     * then requestPortModeInformation with modeId from the previous call and PortModeInformationType.name, and then call requestPortValue
+     * In order to read value of a port, you need to know the modeId and portModeName, which can be obtained by calling getPortModes
+     * and getPortModeInformation. For example, to read the absolute position of a motor, you need to call getPortModes,
+     * then getPortModeInformation with modeId from the previous call and PortModeInformationType.name, and then call getPortValue
      * with modeId from the first call and PortModeName.absolutePosition.
      * OR
      * It seems like it is possible to use well-known modeIds and portModeNames, e.g. 0 and 'absolutePosition' for motors.
@@ -45,7 +45,7 @@ export interface IPortsFeature {
      * @param modeId
      * @param portModeName
      */
-    requestPortValue(
+    getPortValue(
         portId: number,
         modeId: number,
         portModeName: PortModeName
@@ -55,7 +55,7 @@ export interface IPortsFeature {
      * Reads port modes and capabilities for a given port.
      * @param portId
      */
-    requestPortModes(
+    getPortModes(
         portId: number
     ): Observable<PortModeInboundMessage>;
 
@@ -65,7 +65,7 @@ export interface IPortsFeature {
      * @param mode
      * @param modeInformationType
      */
-    requestPortModeInformation<T extends PortModeInformationType>(
+    getPortModeInformation<T extends PortModeInformationType>(
         portId: number,
         mode: number,
         modeInformationType: T

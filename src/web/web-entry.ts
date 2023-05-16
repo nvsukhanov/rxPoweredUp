@@ -7,6 +7,7 @@ import { connectHub } from '../register';
 import { LoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
 import { WebLogger } from './web-logger';
+import { HubType } from '../constants';
 
 let hub: IHub | undefined;
 
@@ -30,12 +31,16 @@ function onConnected(nextHub: IHub): void {
     setControlsState(true);
     const hubDisconnectHandle = (): unknown => nextHub.disconnect().subscribe(() => console.log('disconnected'));
 
-    nextHub.properties.requestBatteryLevel().subscribe((v) => {
+    nextHub.properties.getBatteryLevel().subscribe((v) => {
         console.log('batteryLevel', v);
     });
 
     nextHub.properties.buttonState.subscribe((b) => {
         console.log('buttonState', b);
+    });
+
+    nextHub.properties.getSystemTypeId().subscribe((v) => {
+        console.log('systemTypeId', HubType[v]);
     });
 
     nextHub.ports.onIoAttach(0).subscribe((r) => {

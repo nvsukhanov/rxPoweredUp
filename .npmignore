@@ -7,3 +7,4 @@ src/
 .eslintrc.json
 dist/web-entry.*
 *.map
+.github
