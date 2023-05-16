@@ -10,8 +10,9 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
-    "sourceMap": true,
-    "declaration": true,
+    "sourceMap": false,
+    "declaration": false,
+    "removeComments": true,
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -22,8 +23,7 @@
     "useDefineForClassFields": true,
     "skipLibCheck": true,
     "lib": [
-      "ES2022",
-      "dom"
+      "ES2022"
     ],
     "types": [
       "web-bluetooth",
@@ -34,6 +34,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/web"
   ]
 }
