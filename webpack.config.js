@@ -8,8 +8,11 @@ module.exports = {
         rules: [
             {
                 test: /\.ts?$/,
-                use: 'ts-loader',
+                loader: 'ts-loader',
                 exclude: /node_modules/,
+                options: {
+                    configFile: 'tsconfig.dev.json'
+                }
             }
         ],
     },
