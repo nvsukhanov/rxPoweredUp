@@ -11,13 +11,13 @@ import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
 import { IPortOutputCommandsFeatureFactory } from './i-port-output-commands-feature-factory';
 import { IPortOutputCommandsFeature } from './i-port-output-commands-feature';
-import { IIoFeatureFactory } from './i-io-feature-factory';
-import { IIoFeature } from './i-io-feature';
+import { IPortsFeatureFactory } from './i-ports-feature-factory';
+import { IPortsFeature } from './i-ports-feature';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
 
-    private _ports: IIoFeature | undefined;
+    private _ports: IPortsFeature | undefined;
 
     private _motor: IPortOutputCommandsFeature | undefined;
 
@@ -38,7 +38,7 @@ export class Hub implements IHub {
         private readonly hubConnectionErrorFactory: IHubConnectionErrorsFactory,
         private readonly outboundMessengerFactory: IOutboundMessengerFactory,
         private readonly propertiesFeatureFactory: IHubPropertiesFeatureFactory,
-        private readonly ioFeatureFactory: IIoFeatureFactory,
+        private readonly ioFeatureFactory: IPortsFeatureFactory,
         private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
         private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
         private readonly incomingMessageMiddleware: IMessageMiddleware[] = [],
@@ -47,7 +47,7 @@ export class Hub implements IHub {
     ) {
     }
 
-    public get ports(): IIoFeature {
+    public get ports(): IPortsFeature {
         if (!this._ports) {
             throw new Error('Hub not connected');
         }
@@ -118,9 +118,8 @@ export class Hub implements IHub {
             tap(() => this._beforeDisconnect.next()),
             tap(() => this._beforeDisconnect.complete()),
             switchMap(() => from(this._primaryCharacteristic?.stopNotifications() ?? Promise.resolve())),
-            switchMap(() => from(this._properties?.dispose() ?? Promise.resolve())),
+            switchMap(() => this._properties?.dispose() ?? of(void 0)),
             tap(() => {
-                this._properties?.dispose();
                 this.logger.debug('Stopped primary characteristic notifications');
                 this.device.gatt.disconnect();
                 this.logger.debug('Disconnected');
@@ -153,7 +152,6 @@ export class Hub implements IHub {
         );
 
         this._properties = this.propertiesFeatureFactory.create(
-            this.device.name ?? '',
             dataStream,
             this.beforeDisconnect,
             messenger,

@@ -4,14 +4,14 @@ import { InjectionToken } from 'tsyringe';
 import { RawMessage } from '../types';
 import { MessageType } from '../constants';
 import { IOutboundMessenger } from './i-outbound-messenger';
-import { IIoFeature } from './i-io-feature';
+import { IPortsFeature } from './i-ports-feature';
 
-export interface IIoFeatureFactory {
+export interface IPortsFeatureFactory {
     create(
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger
-    ): IIoFeature;
+    ): IPortsFeature;
 }
 
-export const IO_FEATURE_FACTORY: InjectionToken<IIoFeatureFactory> = Symbol('IO_FEATURE_FACTORY');
+export const PORTS_FEATURE_FACTORY: InjectionToken<IPortsFeatureFactory> = Symbol('PORTS_FEATURE_FACTORY');

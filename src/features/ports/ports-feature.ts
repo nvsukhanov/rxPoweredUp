@@ -1,7 +1,7 @@
 import { Observable, exhaustMap, filter, share, take } from 'rxjs';
 
 import { MessageType, PortModeInformationType, PortModeName } from '../../constants';
-import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
+import { PortsFeaturePortValueListenerFactory } from './ports-feature-port-value-listener-factory';
 import {
     AttachedIOAttachVirtualInboundMessage,
     AttachedIODetachInboundMessage,
@@ -11,12 +11,12 @@ import {
     PortModeInformationInboundMessage,
     PortValueInboundMessage
 } from '../../types';
-import { IIoFeature, IOutboundMessenger } from '../../hub';
+import { IOutboundMessenger, IPortsFeature } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
 
-export class IoFeature implements IIoFeature {
+export class PortsFeature implements IPortsFeature {
     private portValueStreamMap = new Map<string, Observable<PortValueInboundMessage>>();
 
     private portValueModeState = new Map<number, number>();
@@ -26,7 +26,7 @@ export class IoFeature implements IIoFeature {
         private readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>,
         private readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>,
         private readonly portInformationRequestMessageFactory: IPortInformationRequestMessageFactory,
-        private readonly portValueInboundListenerFactory: IoFeaturePortValueListenerFactory,
+        private readonly portValueInboundListenerFactory: PortsFeaturePortValueListenerFactory,
         private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
         private readonly portInputFormatSetupMessageFactory: IPortInputFormatSetupMessageFactory,
         private readonly messenger: IOutboundMessenger,
@@ -57,7 +57,7 @@ export class IoFeature implements IIoFeature {
             )) as Observable<AttachedIODetachInboundMessage>;
     }
 
-    public getPortValue(
+    public requestPortValue(
         portId: number,
         modeId: number,
         portModeName: PortModeName
@@ -116,7 +116,7 @@ export class IoFeature implements IIoFeature {
         return result;
     }
 
-    public getPortModes(
+    public requestPortModes(
         portId: number
     ): Observable<PortModeInboundMessage> {
         return this.messenger.sendWithResponse(
@@ -128,7 +128,7 @@ export class IoFeature implements IIoFeature {
         );
     }
 
-    public getPortModeInformation<T extends PortModeInformationType>(
+    public requestPortModeInformation<T extends PortModeInformationType>(
         portId: number,
         mode: number,
         modeInformationType: T

@@ -1,4 +1,4 @@
-import { Observable, Subject, Subscription, take } from 'rxjs';
+import { Observable, Subject, Subscription, of, take } from 'rxjs';
 
 import { IDisposable, PortOutputCommandFeedback, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { MessageType, OutboundMessageTypes } from '../../constants';
@@ -121,7 +121,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         return queueItem.outputStream;
     }
 
-    public dispose(): Promise<void> {
+    public dispose(): Observable<void> {
         if (this.isDisposed) {
             throw new Error('Already disposed');
         }
@@ -136,7 +136,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
             }
         });
         this.queue.splice(0, this.queue.length);
-        return Promise.resolve(void 0);
+        return of(void 0);
     }
 
     private enqueueCommand(

@@ -11,8 +11,8 @@ import {
     HubFactory,
     IHub,
     IMessageMiddleware,
-    IO_FEATURE_FACTORY,
-    OUTBOUND_MESSAGE_FACTORY
+    OUTBOUND_MESSAGE_FACTORY,
+    PORTS_FEATURE_FACTORY
 } from './hub';
 import {
     AttachedIoReplyParser,
@@ -39,7 +39,6 @@ import {
     HubPropertiesFeatureFactory,
     INBOUND_MESSAGE_LISTENER_FACTORY,
     InboundMessageListenerFactory,
-    IoFeatureFactory,
     PORT_INFORMATION_REPLY_PARSER,
     PORT_INFORMATION_REQUEST_MESSAGE_FACTORY,
     PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY,
@@ -48,7 +47,8 @@ import {
     PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER,
     PORT_OUTPUT_COMMAND_MESSAGE_FACTORY,
     PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER,
-    PORT_VALUE_SPEED_REPLY_PARSER
+    PORT_VALUE_SPEED_REPLY_PARSER,
+    PortsFeatureFactory
 } from './features';
 import { ConnectionErrorFactory } from './errors';
 import { HUB_SCANNER_ERROR_FACTORY } from './hub-scanner/i-hub-scanner-error-factory';
@@ -70,7 +70,7 @@ container.register(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY, PortInputFormatSetup
 container.register(HUB_PROPERTIES_MESSAGE_FACTORY, HubPropertiesOutboundMessageFactory);
 container.register(HUB_PROPERTY_FEATURE_FACTORY, HubPropertiesFeatureFactory);
 container.register(COMMANDS_FEATURE_FACTORY, CommandsFeatureFactory);
-container.register(IO_FEATURE_FACTORY, IoFeatureFactory);
+container.register(PORTS_FEATURE_FACTORY, PortsFeatureFactory);
 container.register(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_CONNECTION_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_SCANNER_ERROR_FACTORY, ConnectionErrorFactory);

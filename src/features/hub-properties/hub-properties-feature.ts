@@ -1,32 +1,48 @@
-import { Observable, filter, from, map, share, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, distinctUntilChanged, filter, from, map, of, share, switchMap } from 'rxjs';
 
 import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
-import { HubPropertyInboundMessage, IDisposable, ILogger } from '../../types';
+import {
+    HubPropertyAdvertisingNameInboundMessage,
+    HubPropertyBatteryInboundMessage,
+    HubPropertyButtonStateInboundMessage,
+    HubPropertyInboundMessage,
+    HubPropertyPrimaryMacAddressInboundMessage,
+    HubPropertyRssiInboundMessage,
+    IDisposable,
+    ILogger
+} from '../../types';
 import { IHubPropertiesFeature, IOutboundMessenger } from '../../hub';
 import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 import { IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 
 export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable {
-    public batteryLevel$ = this.createPropertyStream(HubProperty.batteryVoltage);
+    public batteryLevel = this.createPropertyStream(HubProperty.batteryVoltage).pipe(
+        map((r) => r.level),
+        distinctUntilChanged(),
+        share()
+    );
 
-    public rssiLevel$ = this.createPropertyStream(HubProperty.RSSI);
+    public rssiLevel = this.createPropertyStream(HubProperty.RSSI).pipe(
+        map((r) => r.level),
+        distinctUntilChanged(),
+        share()
+    );
 
-    public buttonState$ = this.createPropertyStream(HubProperty.button);
+    public buttonState = this.createPropertyStream(HubProperty.button).pipe(
+        map((r) => r.isPressed),
+        distinctUntilChanged(),
+        share()
+    );
 
-    private readonly characteristicUnsubscribeHandlers = new Map<SubscribableHubProperties, () => Promise<void>>();
+    private readonly characteristicUnsubscribeHandlers = new Map<SubscribableHubProperties, () => Observable<void>>();
 
     constructor(
-        private _advertisingName: string,
         private readonly messageFactoryService: IHubPropertiesMessageFactory,
         private readonly messenger: IOutboundMessenger,
         private readonly logging: ILogger,
         private readonly inboundMessages: Observable<HubPropertyInboundMessage>,
         private readonly errorsFactory: IHubPropertiesFeatureErrorsFactory
     ) {
-    }
-
-    public get advertisingName(): string {
-        return this._advertisingName;
     }
 
     public setHubAdvertisingName(
@@ -38,42 +54,79 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const charCodes = advertisingName.split('').map((char) => char.charCodeAt(0));
         const message = this.messageFactoryService.setProperty(HubProperty.advertisingName, charCodes);
 
-        const requestStream = this.messenger.sendWithoutResponse(message);
-
-        requestStream.subscribe(() => this._advertisingName = advertisingName);
-
-        return requestStream;
+        return this.messenger.sendWithoutResponse(message);
     }
 
-    public async dispose(): Promise<void> {
-        for (const unsubscribeHandler of this.characteristicUnsubscribeHandlers.values()) {
-            await unsubscribeHandler();
-        }
-    }
-
-    public getPropertyValue<T extends HubProperty>(
-        property: T
-    ): Observable<HubPropertyInboundMessage & { propertyType: T }> {
-        const message = this.messageFactoryService.requestPropertyUpdate(property);
-        const replies = this.inboundMessages.pipe(
-            filter((reply) => reply.propertyType === property),
-            map((reply) => reply as HubPropertyInboundMessage & { propertyType: T }),
+    public dispose(): Observable<void> {
+        return combineLatest([ ...this.characteristicUnsubscribeHandlers.values() ].map((f) => f())).pipe(
+            map(() => void 0)
         );
-        return this.messenger.sendWithResponse(message, replies);
     }
 
-    private async sendSubscribeMessage(
+    public requestAdvertisingName(): Observable<string> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.advertisingName);
+        const reply = this.inboundMessages.pipe(
+            filter((reply) => reply.propertyType === HubProperty.advertisingName),
+        ) as Observable<HubPropertyAdvertisingNameInboundMessage>;
+        return this.messenger.sendWithResponse(message, reply).pipe(
+            map((reply) => reply.advertisingName),
+        );
+    }
+
+    public requestBatteryLevel(): Observable<number> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.batteryVoltage);
+        const reply = this.inboundMessages.pipe(
+            filter((reply) => reply.propertyType === HubProperty.batteryVoltage)
+        ) as Observable<HubPropertyBatteryInboundMessage>;
+        return this.messenger.sendWithResponse(message, reply).pipe(
+            map((reply) => reply.level),
+        );
+    }
+
+    public requestButtonState(): Observable<boolean> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.button);
+        const reply = this.inboundMessages.pipe(
+            filter((reply) => reply.propertyType === HubProperty.button)
+        ) as Observable<HubPropertyButtonStateInboundMessage>;
+        return this.messenger.sendWithResponse(message, reply).pipe(
+            map((reply) => reply.isPressed),
+        );
+    }
+
+    public requestPrimaryMacAddress(): Observable<string> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.primaryMacAddress);
+        const reply = this.inboundMessages.pipe(
+            filter((reply) => reply.propertyType === HubProperty.primaryMacAddress)
+        ) as Observable<HubPropertyPrimaryMacAddressInboundMessage>;
+        return this.messenger.sendWithResponse(message, reply).pipe(
+            map((reply) => reply.macAddress),
+        );
+    }
+
+    public requestRSSILevel(): Observable<number> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.RSSI);
+        const reply = this.inboundMessages.pipe(
+            filter((reply) => reply.propertyType === HubProperty.RSSI)
+        ) as Observable<HubPropertyRssiInboundMessage>;
+        return this.messenger.sendWithResponse(message, reply).pipe(
+            map((reply) => reply.level),
+        );
+    }
+
+    private sendSubscribeMessage(
         property: SubscribableHubProperties
-    ): Promise<void> {
+    ): Observable<void> {
         if (this.characteristicUnsubscribeHandlers.has(property)) {
-            return;
+            return of(void 0);
         }
         const message = this.messageFactoryService.createSubscriptionMessage(property);
-        this.messenger.sendWithoutResponse(message);
-        this.characteristicUnsubscribeHandlers.set(property, async (): Promise<void> => {
+
+        this.characteristicUnsubscribeHandlers.set(property, () => {
             this.messageFactoryService.createUnsubscriptionMessage(property);
-            await this.messenger.sendWithoutResponse(message);
+            return this.messenger.sendWithoutResponse(message);
         });
+
+        return this.messenger.sendWithoutResponse(message);
     }
 
     private createPropertyStream<T extends SubscribableHubProperties>(
@@ -82,10 +135,6 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         return new Observable<HubPropertyInboundMessage & { propertyType: T }>((subscriber) => {
             this.logging.debug('subscribing to property stream', HubProperty[trackedProperty]);
             const sub = from(this.sendSubscribeMessage(trackedProperty)).pipe(
-                tap(() => {
-                    const message = this.messageFactoryService.requestPropertyUpdate(trackedProperty);
-                    this.messenger.sendWithoutResponse(message);
-                }),
                 switchMap(() => this.inboundMessages),
                 filter((reply) => reply.propertyType === trackedProperty),
             ).subscribe((message) => {
@@ -96,8 +145,6 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
                 this.logging.debug('unsubscribing from property stream', HubProperty[trackedProperty]);
                 sub.unsubscribe();
             };
-        }).pipe(
-            share()
-        );
+        });
     }
 }

@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs';
 import { inject, injectable } from 'tsyringe';
 
-import { IoFeature } from './io-feature';
+import { PortsFeature } from './ports-feature';
 import { MessageType } from '../../constants';
-import { IoFeaturePortValueListenerFactory } from './io-feature-port-value-listener-factory';
+import { PortsFeaturePortValueListenerFactory } from './ports-feature-port-value-listener-factory';
 import { RawMessage } from '../../types';
-import { IIoFeature, IIoFeatureFactory, IOutboundMessenger } from '../../hub';
+import { IOutboundMessenger, IPortsFeature, IPortsFeatureFactory } from '../../hub';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
 import { PORT_INFORMATION_REPLY_PARSER } from './port-information-reply-parser';
 import { IReplyParser } from '../i-reply-parser';
@@ -19,7 +19,7 @@ import { IPortInputFormatSetupMessageFactory, PORT_INPUT_FORMAT_SETUP_MESSAGE_FA
 import { AttachedIoRepliesCache } from './attached-io-replies-cache';
 
 @injectable()
-export class IoFeatureFactory implements IIoFeatureFactory {
+export class PortsFeatureFactory implements IPortsFeatureFactory {
     constructor(
         @inject(PORT_INFORMATION_REQUEST_MESSAGE_FACTORY) private readonly portInformationRequestMessageFactory: IPortInformationRequestMessageFactory,
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
@@ -37,14 +37,14 @@ export class IoFeatureFactory implements IIoFeatureFactory {
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger
-    ): IIoFeature {
+    ): IPortsFeature {
         const portInformationReplies$ = this.messageListenerFactory.create(
             characteristicDataStream,
             this.portInformationRequestReplyParser,
             onHubDisconnected,
         );
 
-        const portValueListenerFactory = new IoFeaturePortValueListenerFactory(
+        const portValueListenerFactory = new PortsFeaturePortValueListenerFactory(
             this.portValueAbsolutePositionReplyParser,
             this.portValueSpeedReplyParser,
             this.messageListenerFactory,
@@ -69,7 +69,7 @@ export class IoFeatureFactory implements IIoFeatureFactory {
             onHubDisconnected
         );
 
-        return new IoFeature(
+        return new PortsFeature(
             portInformationReplies$,
             attachedIOCache.replies$,
             portModeInformationReplies$,
