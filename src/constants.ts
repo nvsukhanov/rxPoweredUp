@@ -14,6 +14,11 @@ export enum MessageType {
     portOutputCommandFeedback = 0x82, // 130
 }
 
+export type OutboundMessageTypes = MessageType.properties
+    | MessageType.portInformationRequest
+    | MessageType.portModeInformationRequest
+    | MessageType.portInputFormatSetupSingle;
+
 export enum PortModeInformationType {
     name = 0x00,
     rawRange = 0x01,

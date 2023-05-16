@@ -1,12 +1,17 @@
 import { InjectionToken } from 'tsyringe';
+import { Observable } from 'rxjs';
 
-import { IMessageMiddleware } from './i-message-middleware';
 import { IOutboundMessenger } from './i-outbound-messenger';
+import { RawMessage } from '../types';
+import { MessageType } from '../constants';
+import { IMessageMiddleware } from './i-message-middleware';
 
 export interface IOutboundMessengerFactory {
     create(
+        characteristicDataStream: Observable<RawMessage<MessageType>>,
         characteristic: BluetoothRemoteGATTCharacteristic,
-        messageMiddleware: IMessageMiddleware[],
+        messageMiddleware: ReadonlyArray<IMessageMiddleware>,
+        onDisconnected$: Observable<void>
     ): IOutboundMessenger;
 }
 

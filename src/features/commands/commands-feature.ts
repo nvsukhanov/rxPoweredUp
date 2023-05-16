@@ -1,4 +1,4 @@
-import { MonoTypeOperatorFunction, Observable, OperatorFunction, Subscription, filter, take } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { MOTOR_ACC_DEC_DEFAULT_PROFILE_ID, MOTOR_LIMITS, MessageType, MotorServoEndState, MotorUseProfile, } from '../../constants';
 import {
@@ -10,14 +10,13 @@ import {
     SetDecelerationTimeOptions,
     SetSpeedOptions
 } from '../../hub';
-import { PortOutputCommandFeedbackInboundMessage, RawMessage } from '../../types';
+import { RawMessage } from '../../types';
 import { IPortOutputCommandOutboundMessageFactory } from './i-port-output-command-outbound-message-factory';
 
 export class CommandsFeature implements IPortOutputCommandsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: IPortOutputCommandOutboundMessageFactory,
-        private readonly inboundMessages: Observable<PortOutputCommandFeedbackInboundMessage>
     ) {
     }
 
@@ -31,7 +30,7 @@ export class CommandsFeature implements IPortOutputCommandsFeature {
             time,
             options?.profileId ?? MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
         );
-        return this.execute(message, portId);
+        return this.execute(message);
     }
 
     public setDecelerationTime(
@@ -44,7 +43,7 @@ export class CommandsFeature implements IPortOutputCommandsFeature {
             time,
             options?.profileId ?? MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
         );
-        return this.execute(message, portId);
+        return this.execute(message);
     }
 
     public setSpeed(
@@ -58,7 +57,7 @@ export class CommandsFeature implements IPortOutputCommandsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
         );
-        return this.execute(message, portId);
+        return this.execute(message);
     }
 
     public goToAbsoluteDegree(
@@ -74,7 +73,7 @@ export class CommandsFeature implements IPortOutputCommandsFeature {
             options?.endState ?? MotorServoEndState.hold,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
         );
-        return this.execute(message, portId);
+        return this.execute(message);
     }
 
     // sets absolute zero degree position of motor (relative to current position)
@@ -95,77 +94,12 @@ export class CommandsFeature implements IPortOutputCommandsFeature {
             -absolutePosition,
         );
 
-        return this.execute(message, portId);
+        return this.execute(message);
     }
 
     private execute(
         message: RawMessage<MessageType.portOutputCommand>,
-        portId: number
     ): Observable<PortCommandExecutionStatus> {
-        return this.messenger.sendWithResponse(
-            message,
-            this.inboundMessages.pipe(
-                // here we provide a single message (filtered by port id) to messenger and then wait for a single reply
-                this.prepareSignalForMessenger(portId),
-            )
-        ).pipe(
-            // then we map-and-forward this reply to the caller and then switch to replies stream in order to provide
-            // command completion status
-            this.capturePortCommandFeedbackReplies(portId)
-        );
-    }
-
-    private prepareSignalForMessenger(
-        portId: number,
-    ): MonoTypeOperatorFunction<PortOutputCommandFeedbackInboundMessage> {
-        return (source: Observable<PortOutputCommandFeedbackInboundMessage>) => source.pipe(
-            filter((message: PortOutputCommandFeedbackInboundMessage) => message.portId === portId),
-            take(1)
-        );
-    }
-
-    // this method is used to capture command completion status from messenger, and then switch to message listener
-    // in order to provide command completion status to the caller and complete the stream when command has reached its terminal state
-    private capturePortCommandFeedbackReplies(
-        portId: number,
-    ): OperatorFunction<PortOutputCommandFeedbackInboundMessage, PortCommandExecutionStatus> {
-        return (source: Observable<PortOutputCommandFeedbackInboundMessage>) => new Observable<PortCommandExecutionStatus>((observer) => {
-            let remainingRepliesSubscription: Subscription;
-            const originalStreamSubscription = source.subscribe({
-                // this reply comes from messenger
-                next: (message: PortOutputCommandFeedbackInboundMessage) => {
-                    if (message.feedback.bufferEmptyCommandInProgress) {
-                        observer.next(PortCommandExecutionStatus.InProgress);
-                        originalStreamSubscription.unsubscribe();
-
-                        // all following replies come from message listener
-                        // this complicated logic is used to mitigate race condition that could happen if we just feed filtered replies
-                        // directly to messenger. Maybe there is a better way to do this?
-                        remainingRepliesSubscription = this.inboundMessages.pipe(
-                            filter((r) => r.portId === portId),
-                        ).subscribe((remainingReply) => {
-                            if (remainingReply.feedback.executionError) {
-                                observer.next(PortCommandExecutionStatus.ExecutionError);
-                                observer.complete();
-                            } else if (remainingReply.feedback.currentCommandDiscarded) {
-                                observer.next(PortCommandExecutionStatus.Discarded);
-                                observer.complete();
-                            } else if (remainingReply.feedback.bufferEmptyCommandCompleted || remainingReply.feedback.busyOrFull) {
-                                observer.next(PortCommandExecutionStatus.Completed);
-                                observer.complete();
-                            }
-                        });
-                    } else if (message.feedback.bufferEmptyCommandCompleted) {
-                        observer.next(PortCommandExecutionStatus.Completed);
-                        observer.complete();
-                    }
-                },
-                error: (error) => observer.error(error)
-            });
-            return () => {
-                remainingRepliesSubscription?.unsubscribe();
-                originalStreamSubscription.unsubscribe();
-            };
-        });
+        return this.messenger.sendPortOutputCommand(message);
     }
 }

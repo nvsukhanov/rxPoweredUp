@@ -1,7 +1,7 @@
 import { InjectionToken } from 'tsyringe';
 
-import { MessageType, MotorServoEndState, MotorUseProfile, PortOperationCompletionInformation, PortOperationStartupInformation } from '../../constants';
-import { RawMessage } from '../../types';
+import { MotorServoEndState, MotorUseProfile, PortOperationCompletionInformation, PortOperationStartupInformation } from '../../constants';
+import { RawPortOutputCommandMessage } from '../../types';
 
 export interface IPortOutputCommandOutboundMessageFactory {
     startRotation(
@@ -11,7 +11,7 @@ export interface IPortOutputCommandOutboundMessageFactory {
         useProfile?: MotorUseProfile,
         startupMode?: PortOperationStartupInformation,
         completionMode?: PortOperationCompletionInformation,
-    ): RawMessage<MessageType.portOutputCommand>;
+    ): RawPortOutputCommandMessage;
 
     goToAbsolutePosition(
         portId: number,
@@ -22,12 +22,12 @@ export interface IPortOutputCommandOutboundMessageFactory {
         useProfile?: MotorUseProfile,
         startupMode?: PortOperationStartupInformation,
         completionMode?: PortOperationCompletionInformation,
-    ): RawMessage<MessageType.portOutputCommand>;
+    ): RawPortOutputCommandMessage;
 
     presetEncoder(
         portId: number,
         absolutePosition: number,
-    ): RawMessage<MessageType.portOutputCommand>;
+    ): RawPortOutputCommandMessage;
 
     setAccelerationTime(
         portId: number,
@@ -35,7 +35,7 @@ export interface IPortOutputCommandOutboundMessageFactory {
         profileId?: number,
         startupMode?: PortOperationStartupInformation,
         completionMode?: PortOperationCompletionInformation,
-    ): RawMessage<MessageType.portOutputCommand>;
+    ): RawPortOutputCommandMessage;
 
     setDecelerationTime(
         portId: number,
@@ -43,7 +43,7 @@ export interface IPortOutputCommandOutboundMessageFactory {
         profileId?: number,
         startupMode?: PortOperationStartupInformation,
         completionMode?: PortOperationCompletionInformation,
-    ): RawMessage<MessageType.portOutputCommand>;
+    ): RawPortOutputCommandMessage;
 }
 
 export const PORT_OUTPUT_COMMAND_MESSAGE_FACTORY: InjectionToken<IPortOutputCommandOutboundMessageFactory> = Symbol('IPortOutputCommandOutboundMessageFactory');

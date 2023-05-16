@@ -179,17 +179,19 @@ export type PortModeInformationInboundMessage =
 
 export type PortInformationInboundMessageTypes = PortModeInboundMessage;
 
+export type PortOutputCommandFeedback = {
+    bufferEmptyCommandInProgress: boolean;
+    bufferEmptyCommandCompleted: boolean;
+    currentCommandDiscarded: boolean;
+    idle: boolean;
+    busyOrFull: boolean;
+    executionError: boolean;
+}
+
 export type PortOutputCommandFeedbackInboundMessage = {
     messageType: MessageType.portOutputCommandFeedback;
     portId: number;
-    feedback: {
-        bufferEmptyCommandInProgress: boolean;
-        bufferEmptyCommandCompleted: boolean;
-        currentCommandDiscarded: boolean;
-        idle: boolean;
-        busyOrFull: boolean;
-        executionError: boolean;
-    }
+    feedback: PortOutputCommandFeedback;
 }
 
 export type InboundMessage =

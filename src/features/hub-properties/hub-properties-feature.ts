@@ -1,4 +1,4 @@
-import { Observable, filter, from, map, share, switchMap, take, tap } from 'rxjs';
+import { Observable, filter, from, map, share, switchMap, tap } from 'rxjs';
 
 import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
 import { HubPropertyInboundMessage, IDisposable, ILogger } from '../../types';
@@ -58,7 +58,6 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const replies = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === property),
             map((reply) => reply as HubPropertyInboundMessage & { propertyType: T }),
-            take(1)
         );
         return this.messenger.sendWithResponse(message, replies);
     }

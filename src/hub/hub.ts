@@ -120,6 +120,7 @@ export class Hub implements IHub {
             switchMap(() => from(this._primaryCharacteristic?.stopNotifications() ?? Promise.resolve())),
             switchMap(() => from(this._properties?.dispose() ?? Promise.resolve())),
             tap(() => {
+                this._properties?.dispose();
                 this.logger.debug('Stopped primary characteristic notifications');
                 this.device.gatt.disconnect();
                 this.logger.debug('Disconnected');
@@ -136,8 +137,14 @@ export class Hub implements IHub {
             shareReplay({ bufferSize: 1, refCount: true })
         );
 
-        const messenger = this.outboundMessengerFactory.create(primaryCharacteristic, this.outgoingMessageMiddleware);
         const dataStream = this.characteristicsDataStreamFactory.create(primaryCharacteristic, this.incomingMessageMiddleware);
+
+        const messenger = this.outboundMessengerFactory.create(
+            dataStream,
+            primaryCharacteristic,
+            this.outgoingMessageMiddleware,
+            this._beforeDisconnect
+        );
 
         this._ports = this.ioFeatureFactory.create(
             dataStream,
@@ -155,8 +162,7 @@ export class Hub implements IHub {
 
         this._motor = this.commandsFeatureFactory.createCommandsFeature(
             dataStream,
-            messenger,
-            this.beforeDisconnect
+            messenger
         );
 
         await primaryCharacteristic.startNotifications();

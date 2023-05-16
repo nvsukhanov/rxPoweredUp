@@ -1,16 +1,21 @@
 import { Observable } from 'rxjs';
 
-import { RawMessage } from '../types';
-import { MessageType } from '../constants';
+import { IDisposable, RawMessage } from '../types';
+import { MessageType, OutboundMessageTypes } from '../constants';
+import { PortCommandExecutionStatus } from './i-port-output-commands-feature';
 
-export interface IOutboundMessenger {
+export interface IOutboundMessenger extends IDisposable {
     sendWithResponse<TResponse>(
-        message: RawMessage<MessageType>,
+        message: RawMessage<OutboundMessageTypes>,
         responseStream: Observable<TResponse>,
     ): Observable<TResponse>
 
     sendWithoutResponse(
-        message: RawMessage<MessageType>,
+        message: RawMessage<OutboundMessageTypes>,
     ): Observable<void>
+
+    sendPortOutputCommand(
+        message: RawMessage<MessageType.portOutputCommand>,
+    ): Observable<PortCommandExecutionStatus>;
 }
 
