@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs';
 
+import { HubType } from '../constants';
+
 export interface IHubPropertiesFeature {
     /**
      * Emits the battery level of the hub on subscription and whenever it changes.
@@ -20,30 +22,35 @@ export interface IHubPropertiesFeature {
      * Reads the advertising name of the hub.
      * The advertising name is a user-friendly name that is used to identify the hub.
      */
-    requestAdvertisingName(): Observable<string>;
+    getAdvertisingName(): Observable<string>;
 
     /**
      * Reads the battery level of the hub.
      */
-    requestBatteryLevel(): Observable<number>;
+    getBatteryLevel(): Observable<number>;
 
     /**
      * Reads the RSSI (Received Signal Strength Indicator) level of the hub.
      * It's not a dBm value, but still useful for comparing signal strength between hubs.
      * The more negative the value, the stronger the signal.
      */
-    requestRSSILevel(): Observable<number>;
+    getRSSILevel(): Observable<number>;
 
     /**
      * Reads the button state of the hub (true - pressed, false - released).
      */
-    requestButtonState(): Observable<boolean>;
+    getButtonState(): Observable<boolean>;
+
+    /**
+     * Reads the system type ID of the hub
+     */
+    getSystemTypeId(): Observable<HubType>;
 
     /**
      * Reads the primary MAC address of the hub.
      * Can be used as a unique identifier for the hub.
      */
-    requestPrimaryMacAddress(): Observable<string>;
+    getPrimaryMacAddress(): Observable<string>;
 
     /**
      * Sets the advertising name of the hub.

@@ -1,10 +1,10 @@
 {
   "name": "@nvsukhanov/poweredup-api",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A Typescript interface to LEGO Powered Up hubs",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run clean && tsc -p ./tsconfig.d.json && tsc -p ./tsconfig.json",
+    "build": "npm run clean && tsc -p tsconfig.prod.d.json && tsc -p tsconfig.prod.json",
     "clean": "rimraf dist",
     "lint": "eslint src/ --ext .ts",
     "test": "jest --detectOpenHandles --forceExit",

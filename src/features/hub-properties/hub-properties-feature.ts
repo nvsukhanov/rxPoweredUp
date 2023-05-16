@@ -1,6 +1,6 @@
 import { Observable, combineLatest, distinctUntilChanged, filter, from, map, of, share, switchMap } from 'rxjs';
 
-import { HubProperty, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
+import { HubProperty, HubType, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
 import {
     HubPropertyAdvertisingNameInboundMessage,
     HubPropertyBatteryInboundMessage,
@@ -8,6 +8,7 @@ import {
     HubPropertyInboundMessage,
     HubPropertyPrimaryMacAddressInboundMessage,
     HubPropertyRssiInboundMessage,
+    HubPropertySystemTypeIdInboundMessage,
     IDisposable,
     ILogger
 } from '../../types';
@@ -63,7 +64,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         );
     }
 
-    public requestAdvertisingName(): Observable<string> {
+    public getAdvertisingName(): Observable<string> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.advertisingName);
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.advertisingName),
@@ -73,7 +74,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         );
     }
 
-    public requestBatteryLevel(): Observable<number> {
+    public getBatteryLevel(): Observable<number> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.batteryVoltage);
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.batteryVoltage)
@@ -83,7 +84,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         );
     }
 
-    public requestButtonState(): Observable<boolean> {
+    public getButtonState(): Observable<boolean> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.button);
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.button)
@@ -93,7 +94,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         );
     }
 
-    public requestPrimaryMacAddress(): Observable<string> {
+    public getPrimaryMacAddress(): Observable<string> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.primaryMacAddress);
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.primaryMacAddress)
@@ -103,13 +104,23 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         );
     }
 
-    public requestRSSILevel(): Observable<number> {
+    public getRSSILevel(): Observable<number> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.RSSI);
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.RSSI)
         ) as Observable<HubPropertyRssiInboundMessage>;
         return this.messenger.sendWithResponse(message, reply).pipe(
             map((reply) => reply.level),
+        );
+    }
+
+    public getSystemTypeId(): Observable<HubType> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.systemTypeId);
+        const reply = this.inboundMessages.pipe(
+            filter((reply) => reply.propertyType === HubProperty.systemTypeId)
+        ) as Observable<HubPropertySystemTypeIdInboundMessage>;
+        return this.messenger.sendWithResponse(message, reply).pipe(
+            map((reply) => reply.hubType),
         );
     }
 
