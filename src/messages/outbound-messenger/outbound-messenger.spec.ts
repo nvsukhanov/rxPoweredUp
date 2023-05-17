@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Subject } from 'rxjs';
+import { NEVER, Subject } from 'rxjs';
 import { instance, mock, when } from 'ts-mockito';
 
 import { OutboundMessenger } from './outbound-messenger';
@@ -45,6 +45,7 @@ describe('OutboundMessenger', () => {
 
         subject = new OutboundMessenger(
             portOutputCommandFeedbackStream,
+            NEVER,
             instance(characteristicMock),
             instance(packetBuilderMock),
             []
