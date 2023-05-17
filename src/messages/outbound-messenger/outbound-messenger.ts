@@ -1,6 +1,6 @@
 import { Observable, Subject, Subscription, of, take } from 'rxjs';
 
-import { IDisposable, PortOutputCommandFeedback, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { IDisposable, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { MessageType, OutboundMessageTypes } from '../../constants';
 import { IMessageMiddleware, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
 import { PacketBuilder } from './packet-builder';
@@ -129,7 +129,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         this.feedbackHandlingSubscription?.unsubscribe();
         this.queue.forEach((i) => {
             if (i.type === TaskType.portOutputCommand) {
-                i.outputStream.next(PortCommandExecutionStatus.Discarded);
+                i.outputStream.next(PortCommandExecutionStatus.discarded);
                 i.outputStream.complete();
             } else {
                 i.outputStream.complete();
@@ -206,75 +206,70 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     private handlePortOutputCommandFeedback(
         feedbackMessage: PortOutputCommandFeedbackInboundMessage
     ): void {
-        // The feedback can include information about two port output commands simultaneously - the last one that was sent and the one that
-        // was discarded by that last command.
+        // The feedback can hold information about multiple port output commands simultaneously,
+        // that's why we should iterate over all of them and try to find the corresponding task in the queue.
+        // Method seems too complicated. // TODO: move queue to a separate class, use strategy pattern for different feedback types
 
-        // Here we filter the queue to find the commands that correspond to the feedback message
-        // (in the feedback stream there can be messages from other ports as well)
-        const commandTasksFromQueue = this.queue.filter(item => {
-            return item.type === TaskType.portOutputCommand && item.message.portId === feedbackMessage.portId;
-        }) as TaskPortOutputCommandQueueItem[];
-
-        // If feedback tells us that some command has reached it's terminal state, we
-        // 1. Assume that terminal state corresponds to the first port output command in the queue that has an InProgress or Send state
-        // (because sometimes commands can transition to terminal state without being "in progress")
-        // 2. Emit the corresponding status to the command's output stream
-        // 3. Remove the command from the queue
-        if (this.isFeedbackTerminal(feedbackMessage.feedback)) {
-            const terminalStatus = this.mapFeedbackToTerminalStatus(feedbackMessage.feedback);
-            const command = commandTasksFromQueue.find(item => item.state === TaskState.inProgress || item.state === TaskState.waitingForResponse);
+        // We should find the first task that is in progress OR waiting for response
+        // (in case of response that transition task to 'discarded' state, completely skipping 'inProgress' state)
+        // and make it discarded, then remove from queue
+        if (feedbackMessage.feedback.currentCommandDiscarded) {
+            const command = this.getPortTasksFromQueue(feedbackMessage.portId)
+                                .find((t) => t.state === TaskState.inProgress || t.state === TaskState.waitingForResponse);
             if (command) {
-                command.outputStream.next(terminalStatus);
+                command.outputStream.next(PortCommandExecutionStatus.discarded);
                 command.outputStream.complete();
                 this.removeCommandFromQueue(command);
-            } else {
-                // TODO: graceful error handling
-                throw new Error('Completed feedback received but no command were in progress');
             }
         }
-
-        // If feedback tells us that some command is is process - we
-        // 1. Assume that the command is the first port output command in the queue that has a Sent state (not InProgress yet)
-        // 2. Set the command's state to InProgress
-        // 3. Emit the InProgress status to the command's output stream
-        if (this.isFeedbackInProgress(feedbackMessage.feedback)) {
-            const command = commandTasksFromQueue.find(item => item.state === TaskState.waitingForResponse);
+        if (feedbackMessage.feedback.bufferEmptyCommandCompleted) {
+            // We should find the first task that is in progress OR waiting for response
+            // (in case of response that transition task to 'completed', skipping 'inProgress' state)
+            // and make it completed, then remove from queue
+            const command = this.getPortTasksFromQueue(feedbackMessage.portId)
+                                .find((t) => t.state === TaskState.inProgress || t.state === TaskState.waitingForResponse);
+            if (command) {
+                command.outputStream.next(PortCommandExecutionStatus.completed);
+                command.outputStream.complete();
+                this.removeCommandFromQueue(command);
+            }
+        }
+        if (feedbackMessage.feedback.busyOrFull) { // weird, somehow that indicates that all remaining tasks are completed
+            // That state indicates that there are no more tasks in the queue,
+            // so we can mark all remaining tasks as completed and truncate the queue
+            this.getPortTasksFromQueue(feedbackMessage.portId).forEach((t) => {
+                t.outputStream.next(PortCommandExecutionStatus.completed);
+                t.outputStream.complete();
+            });
+            this.queue.splice(0, this.queue.length);
+        }
+        if (feedbackMessage.feedback.executionError) {
+            // That state indicates that the task that was sent to the hub cannot be executed.
+            const command = this.getPortTasksFromQueue(feedbackMessage.portId)
+                                .find((t) => t.state === TaskState.inProgress || t.state === TaskState.waitingForResponse);
+            if (command) {
+                command.outputStream.next(PortCommandExecutionStatus.executionError);
+                command.outputStream.complete();
+                this.removeCommandFromQueue(command);
+            }
+        }
+        if (feedbackMessage.feedback.bufferEmptyCommandInProgress) {
+            // That state indicates that the task that was sent to the hub was accepted and is being executed.
+            const command = this.getPortTasksFromQueue(feedbackMessage.portId)
+                                .find((t) => t.state === TaskState.waitingForResponse);
             if (command) {
                 command.state = TaskState.inProgress;
-                command.outputStream.next(PortCommandExecutionStatus.InProgress);
-            } else {
-                // TODO: graceful error handling
-                throw new Error('InProgress feedback received but no command were waiting for feedback');
+                command.outputStream.next(PortCommandExecutionStatus.inProgress);
             }
         }
     }
 
-    private isFeedbackInProgress(
-        feedback: PortOutputCommandFeedback
-    ): boolean {
-        return feedback.bufferEmptyCommandInProgress;
-    }
-
-    private isFeedbackTerminal(
-        feedback: PortOutputCommandFeedback
-    ): boolean {
-        return feedback.bufferEmptyCommandCompleted || feedback.currentCommandDiscarded || feedback.executionError;
-    }
-
-    private mapFeedbackToTerminalStatus(
-        feedback: PortOutputCommandFeedback
-    ): PortCommandExecutionStatus.Completed | PortCommandExecutionStatus.Discarded | PortCommandExecutionStatus.ExecutionError {
-        // somehow busyOrFull is a terminal state, in contrast to the docs and it's name
-        if (feedback.bufferEmptyCommandCompleted || feedback.busyOrFull) {
-            return PortCommandExecutionStatus.Completed;
-        }
-        if (feedback.currentCommandDiscarded) {
-            return PortCommandExecutionStatus.Discarded;
-        }
-        if (feedback.executionError) {
-            return PortCommandExecutionStatus.ExecutionError;
-        }
-        throw new Error('Feedback is not terminal');
+    private getPortTasksFromQueue(
+        portId: number
+    ): TaskPortOutputCommandQueueItem[] {
+        return this.queue.filter(item => {
+            return item.type === TaskType.portOutputCommand && item.message.portId === portId;
+        }) as TaskPortOutputCommandQueueItem[];
     }
 
     private removeCommandFromQueue(
