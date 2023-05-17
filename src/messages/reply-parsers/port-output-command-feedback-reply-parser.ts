@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 
-import { IReplyParser } from '../../features';
+import { IReplyParser } from '../../hub';
 import { MessageType, PortCommandFeedbackMask } from '../../constants';
 import { PortOutputCommandFeedbackInboundMessage, RawMessage } from '../../types';
 

@@ -12,6 +12,10 @@ import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outboun
 import { HUB_PROPERTY_FEATURE_FACTORY, IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
 import { COMMANDS_FEATURE_FACTORY, IPortOutputCommandsFeatureFactory } from './i-port-output-commands-feature-factory';
 import { IPortsFeatureFactory, PORTS_FEATURE_FACTORY } from './i-ports-feature-factory';
+import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from './i-inbound-message-listener-factory';
+import { GENERIC_ERRORS_REPLIES_PARSER } from './generic-errors-reply-parser';
+import { MessageType } from '../constants';
+import { IReplyParser } from './i-reply-parser';
 
 @injectable()
 export class HubFactory {
@@ -23,6 +27,8 @@ export class HubFactory {
         @inject(PORTS_FEATURE_FACTORY) private readonly ioFeatureFactoryService: IPortsFeatureFactory,
         @inject(CHARACTERISTIC_DATA_STREAM_FACTORY) private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
         @inject(COMMANDS_FEATURE_FACTORY) private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
+        @inject(GENERIC_ERRORS_REPLIES_PARSER) private readonly genericErrorsReplyParser: IReplyParser<MessageType.genericError>,
+        @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
     ) {
     }
 
@@ -42,6 +48,8 @@ export class HubFactory {
             this.ioFeatureFactoryService,
             this.characteristicsDataStreamFactory,
             this.commandsFeatureFactory,
+            this.genericErrorsReplyParser,
+            this.messageListenerFactory,
             incomingMessageMiddleware,
             outgoingMessageMiddleware,
             externalDisconnectEvents$

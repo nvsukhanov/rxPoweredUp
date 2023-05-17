@@ -2,9 +2,17 @@ import { Observable } from 'rxjs';
 import { inject, injectable } from 'tsyringe';
 
 import { RawMessage } from '../../types';
-import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY, IReplyParser, PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
+import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
 import { MessageType } from '../../constants';
-import { IMessageMiddleware, IOutboundMessenger, IOutboundMessengerFactory } from '../../hub';
+import {
+    GenericError,
+    IInboundMessageListenerFactory,
+    IMessageMiddleware,
+    INBOUND_MESSAGE_LISTENER_FACTORY,
+    IOutboundMessenger,
+    IOutboundMessengerFactory,
+    IReplyParser
+} from '../../hub';
 import { OutboundMessenger } from './outbound-messenger';
 import { PacketBuilder } from './packet-builder';
 
@@ -19,6 +27,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
 
     public create(
         characteristicDataStream: Observable<RawMessage<MessageType>>,
+        genericErrorsStream: Observable<GenericError>,
         characteristic: BluetoothRemoteGATTCharacteristic,
         messageMiddleware: ReadonlyArray<IMessageMiddleware>,
         onDisconnected$: Observable<void>
@@ -31,6 +40,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
 
         return new OutboundMessenger(
             commandsFeedbackStream,
+            genericErrorsStream,
             characteristic,
             this.packetBuilder,
             messageMiddleware

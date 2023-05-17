@@ -1,8 +1,8 @@
 import { Observable, Subject, Subscription, of, take } from 'rxjs';
 
 import { IDisposable, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
-import { MessageType, OutboundMessageTypes } from '../../constants';
-import { IMessageMiddleware, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
+import { GenericErrorCode, MessageType, OutboundMessageTypes } from '../../constants';
+import { GenericError, IMessageMiddleware, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
 import { PacketBuilder } from './packet-builder';
 
 // TaskWithoutResponseQueueItem state transitions:
@@ -62,10 +62,13 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
 
     private feedbackHandlingSubscription?: Subscription;
 
+    private genericErrorsSubscription?: Subscription;
+
     private isDisposed = false;
 
     constructor(
         private readonly portOutputCommandFeedbackStream: Observable<PortOutputCommandFeedbackInboundMessage>,
+        private readonly genericErrorsStream: Observable<GenericError>,
         private readonly characteristic: BluetoothRemoteGATTCharacteristic,
         private readonly packetBuilder: PacketBuilder,
         private readonly messageMiddleware: ReadonlyArray<IMessageMiddleware>,
@@ -110,6 +113,12 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
             });
         }
 
+        if (!this.genericErrorsSubscription) {
+            this.genericErrorsSubscription = this.genericErrorsStream.subscribe((error) => {
+                this.handleGenericError(error);
+            });
+        }
+
         const queueItem: TaskPortOutputCommandQueueItem = {
             type: TaskType.portOutputCommand,
             message,
@@ -127,6 +136,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         }
         this.isDisposed = true;
         this.feedbackHandlingSubscription?.unsubscribe();
+        this.genericErrorsSubscription?.unsubscribe();
         this.queue.forEach((i) => {
             if (i.type === TaskType.portOutputCommand) {
                 i.outputStream.next(PortCommandExecutionStatus.discarded);
@@ -200,6 +210,41 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
                     command.outputStream.complete();
                 });
                 break;
+        }
+    }
+
+    private handleGenericError(
+        error: GenericError
+    ): void {
+        // There is a little information about generic error in documentation, so the implementation is intuitive
+        switch (error.code) {
+            case GenericErrorCode.commandNotRecognized:
+            case GenericErrorCode.bufferOverflow:
+            case GenericErrorCode.invalidUse:
+            case GenericErrorCode.timeout:
+                this.terminateTaskByGenericErrors(error.commandType);
+                break;
+        }
+    }
+    
+    private terminateTaskByGenericErrors(
+        commandType: MessageType
+    ): void {
+        const command = this.queue.find((t) => t.state === TaskState.waitingForResponse && t.message.header.messageType === commandType);
+        if (command) {
+            switch (command.type) {
+                case TaskType.portOutputCommand:
+                    command.outputStream.next(PortCommandExecutionStatus.executionError);
+                    command.outputStream.complete();
+                    break;
+                case TaskType.withResponse:
+                    command.outputStream.error(new Error('Command not recognized'));
+                    break;
+                case TaskType.withoutResponse:
+                    command.outputStream.error(new Error('Command not recognized'));
+                    break;
+            }
+            this.removeCommandFromQueue(command);
         }
     }
 

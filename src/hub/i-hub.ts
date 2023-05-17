@@ -3,8 +3,21 @@ import { Observable } from 'rxjs';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IPortOutputCommandsFeature } from './i-port-output-commands-feature';
 import { IPortsFeature } from './i-ports-feature';
+import { GenericErrorCode, MessageType } from '../constants';
+
+export type GenericError = {
+    commandType: MessageType;
+    code: GenericErrorCode;
+}
 
 export interface IHub {
+    /**
+     * Emits when a generic error is received from the hub.
+     * Generic errors are errors that are not specific to a feature.
+     * e.g when a port output command for a port without an attached it is sent to the hub, the stream will emit:
+     * { commandType: MessageType.portOutputCommandFeedback, code: GenericErrorCode.invalidUse }
+     */
+    readonly genericErrors: Observable<GenericError>;
     /**
      * Provides a way to access the ports information of the hub.
      * e.g. listen to port attach/detach events, request port value, etc.
