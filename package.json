@@ -1,6 +1,6 @@
 {
   "name": "@nvsukhanov/poweredup-api",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A Typescript interface to LEGO Powered Up hubs",
   "main": "dist/index.js",
   "scripts": {

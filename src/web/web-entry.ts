@@ -31,6 +31,10 @@ function onConnected(nextHub: IHub): void {
     setControlsState(true);
     const hubDisconnectHandle = (): unknown => nextHub.disconnect().subscribe(() => console.log('disconnected'));
 
+    nextHub.genericErrors.subscribe((e) => {
+        console.log('got generic error', e);
+    });
+
     nextHub.properties.getBatteryLevel().subscribe((v) => {
         console.log('batteryLevel', v);
     });
@@ -71,7 +75,6 @@ const angleStep = 90;
 let currentAngle = 0;
 
 function incrementAngle(): void {
-    console.log('in', hub?.commands);
     currentAngle += angleStep;
     const targetAngle = currentAngle;
     console.log('starting settings angle', targetAngle);

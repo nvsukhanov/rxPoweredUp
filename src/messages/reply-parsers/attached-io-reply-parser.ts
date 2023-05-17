@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 
 import { AttachIoEvent, MessageType } from '../../constants';
-import { IReplyParser } from '../../features';
+import { IReplyParser } from '../../hub';
 import {
     AttachedIOAttachVirtualInboundMessage,
     AttachedIODetachInboundMessage,

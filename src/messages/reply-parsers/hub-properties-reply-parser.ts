@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 
 import { HUB_DEVICE_TYPE_MAP, HubProperty, HubType, MessageType } from '../../constants';
-import { IReplyParser } from '../../features';
+import { IReplyParser } from '../../hub';
 import {
     HubPropertyAdvertisingNameInboundMessage,
     HubPropertyBatteryInboundMessage,

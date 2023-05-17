@@ -1,4 +1,14 @@
-import { AttachIoEvent, HubProperty, HubType, IOType, MessageType, PortInformationReplyType, PortModeInformationType, PortModeName } from '../constants';
+import {
+    AttachIoEvent,
+    GenericErrorCode,
+    HubProperty,
+    HubType,
+    IOType,
+    MessageType,
+    PortInformationReplyType,
+    PortModeInformationType,
+    PortModeName
+} from '../constants';
 
 export type HubPropertyBaseInboundMessage = {
     messageType: MessageType.properties,
@@ -194,6 +204,12 @@ export type PortOutputCommandFeedbackInboundMessage = {
     feedback: PortOutputCommandFeedback;
 }
 
+export type GenericErrorInboundMessage = {
+    messageType: MessageType.genericError;
+    commandType: MessageType;
+    code: GenericErrorCode;
+}
+
 export type InboundMessage =
     HubPropertyInboundMessage
     | AttachedIOInboundMessage
@@ -201,3 +217,4 @@ export type InboundMessage =
     | PortValueInboundMessage
     | PortModeInformationInboundMessage
     | PortOutputCommandFeedbackInboundMessage
+    | GenericErrorInboundMessage;

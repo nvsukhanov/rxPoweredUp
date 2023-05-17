@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 
-import { IReplyParser } from '../../../features';
+import { IReplyParser } from '../../../hub';
 import { MessageType, PortModeName } from '../../../constants';
 import { PortValueSpeedInboundMessage, RawMessage } from '../../../types';
 import { convertUint8ToSignedInt } from '../../../helpers';

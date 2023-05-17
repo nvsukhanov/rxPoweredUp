@@ -11,3 +11,7 @@ export * from './i-ports-feature-factory';
 export * from './i-message-middleware';
 export * from './i-characteristic-data-stream-factory';
 export * from './i-hub-connection-errors-factory';
+export * from './generic-errors-reply-parser';
+export * from './i-inbound-message-listener-factory';
+export * from './inbound-message-listener-factory';
+export * from './i-reply-parser';

@@ -1,11 +1,11 @@
-import { NEVER, Observable, Subject, catchError, from, fromEvent, map, of, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs';
+import { NEVER, Observable, Subject, catchError, from, fromEvent, map, of, share, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { IMessageMiddleware } from './i-message-middleware';
-import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID } from '../constants';
+import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
 import { BluetoothDeviceWithGatt, IDisposable, ILegoHubConfig, ILogger } from '../types';
-import { IHub } from './i-hub';
+import { GenericError, IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
@@ -13,6 +13,8 @@ import { IPortOutputCommandsFeatureFactory } from './i-port-output-commands-feat
 import { IPortOutputCommandsFeature } from './i-port-output-commands-feature';
 import { IPortsFeatureFactory } from './i-ports-feature-factory';
 import { IPortsFeature } from './i-ports-feature';
+import { IInboundMessageListenerFactory } from './i-inbound-message-listener-factory';
+import { IReplyParser } from './i-reply-parser';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
@@ -29,6 +31,8 @@ export class Hub implements IHub {
 
     private _primaryCharacteristic?: BluetoothRemoteGATTCharacteristic;
 
+    private _genericErrors?: Observable<GenericError>;
+
     private _disconnected$?: Observable<void>;
 
     constructor(
@@ -41,10 +45,19 @@ export class Hub implements IHub {
         private readonly ioFeatureFactory: IPortsFeatureFactory,
         private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
         private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
+        private readonly replyParser: IReplyParser<MessageType.genericError>,
+        private readonly messageListenerFactory: IInboundMessageListenerFactory,
         private readonly incomingMessageMiddleware: IMessageMiddleware[] = [],
         private readonly outgoingMessageMiddleware: IMessageMiddleware[] = [],
         private readonly externalDisconnectEvents$: Observable<unknown> = NEVER
     ) {
+    }
+
+    public get genericErrors(): Observable<GenericError> {
+        if (!this._genericErrors) {
+            throw new Error('Hub not connected');
+        }
+        return this._genericErrors;
     }
 
     public get ports(): IPortsFeature {
@@ -138,8 +151,18 @@ export class Hub implements IHub {
 
         const dataStream = this.characteristicsDataStreamFactory.create(primaryCharacteristic, this.incomingMessageMiddleware);
 
+        this._genericErrors = this.messageListenerFactory.create(
+            dataStream,
+            this.replyParser,
+            this._beforeDisconnect
+        ).pipe(
+            map((r) => ({ commandType: r.commandType, code: r.code })),
+            share()
+        );
+
         const messenger = this.outboundMessengerFactory.create(
             dataStream,
+            this._genericErrors,
             primaryCharacteristic,
             this.outgoingMessageMiddleware,
             this._beforeDisconnect

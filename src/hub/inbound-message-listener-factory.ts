@@ -1,10 +1,10 @@
 import { Observable, filter, map, share, takeUntil } from 'rxjs';
 import { injectable } from 'tsyringe';
 
-import { MessageType } from '../../constants';
-import { IReplyParser } from '../i-reply-parser';
-import { InboundMessage, RawMessage } from '../../types';
-import { IInboundMessageListenerFactory } from '..';
+import { MessageType } from '../constants';
+import { IReplyParser } from './i-reply-parser';
+import { InboundMessage, RawMessage } from '../types';
+import { IInboundMessageListenerFactory } from './i-inbound-message-listener-factory';
 
 @injectable()
 export class InboundMessageListenerFactory implements IInboundMessageListenerFactory {

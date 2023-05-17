@@ -4,6 +4,7 @@ export const HUB_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
 export enum MessageType {
     properties = 0x01,
     attachedIO = 0x04,
+    genericError = 0x05,
     portInformationRequest = 0x21, // 33
     portModeInformationRequest = 0x22, // 34
     portInputFormatSetupSingle = 0x41, // 65
@@ -180,6 +181,17 @@ export enum PortCommandFeedbackMask {
     idle = 0x08,                         // 0b001000 // 8
     busyOrFull = 0x10,                   // 0b010000 // 16
     executionError = 0x20,               // 0b100000 // 32 // missing in docs but present in responses (i.g. servo unable to reach position)
+}
+
+export enum GenericErrorCode {
+    ACK = 0x01,
+    MACK = 0x02,
+    bufferOverflow = 0x03,
+    timeout = 0x04,
+    commandNotRecognized = 0x05,
+    invalidUse = 0x06,
+    overcurrent = 0x07,
+    internalError = 0x08,
 }
 
 export const MOTOR_ACC_DEC_DEFAULT_PROFILE_ID = 0;

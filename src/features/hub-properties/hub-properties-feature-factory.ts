@@ -4,10 +4,9 @@ import { inject, injectable } from 'tsyringe';
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
 import { ILogger, RawMessage } from '../../types';
-import { IHubPropertiesFeatureFactory, IOutboundMessenger } from '../../hub';
-import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../i-inbound-message-listener-factory';
+import { IHubPropertiesFeatureFactory, IOutboundMessenger, IReplyParser } from '../../hub';
+import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../../hub/i-inbound-message-listener-factory';
 import { HUB_PROPERTIES_REPLIES_PARSER } from './hub-properties-reply-parser';
-import { IReplyParser } from '../i-reply-parser';
 import { HUB_PROPERTIES_MESSAGE_FACTORY, IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 import { HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 

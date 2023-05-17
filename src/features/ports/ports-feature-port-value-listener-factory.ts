@@ -2,8 +2,7 @@ import { Observable } from 'rxjs';
 
 import { MessageType, PortModeName } from '../../constants';
 import { PortValueInboundMessage, RawMessage } from '../../types';
-import { IInboundMessageListenerFactory } from '../i-inbound-message-listener-factory';
-import { IReplyParser } from '../i-reply-parser';
+import { IInboundMessageListenerFactory, IReplyParser } from '../../hub';
 
 export class PortsFeaturePortValueListenerFactory {
     private readonly portValueParsers: { [m in PortModeName]?: IReplyParser<MessageType.portValueSingle> } = {
