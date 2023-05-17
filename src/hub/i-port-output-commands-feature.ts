@@ -3,10 +3,10 @@ import { Observable } from 'rxjs';
 import { MotorServoEndState, MotorUseProfile } from '../constants';
 
 export enum PortCommandExecutionStatus {
-    InProgress,
-    Discarded,
-    Completed,
-    ExecutionError,
+    inProgress,
+    discarded,
+    completed,
+    executionError,
 }
 
 export type SetSpeedOptions = {
