@@ -114,7 +114,7 @@ export class Hub implements IHub {
             }),
             take(1),
             catchError((e) => {
-                this.logger.error('Hub connection failed', e);
+                this.logger.error('Hub connection failed');
                 this.device.gatt.disconnect();
                 this._isConnected = false;
                 throw e;
@@ -165,7 +165,8 @@ export class Hub implements IHub {
             this._genericErrors,
             primaryCharacteristic,
             this.outgoingMessageMiddleware,
-            this._beforeDisconnect
+            this._beforeDisconnect,
+            this.logger
         );
 
         this._ports = this.ioFeatureFactory.create(

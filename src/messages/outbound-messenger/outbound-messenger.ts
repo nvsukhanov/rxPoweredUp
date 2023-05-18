@@ -1,9 +1,10 @@
-import { Observable, ReplaySubject, Subject, Subscription, from, of, retry, switchMap, take, takeUntil, timeout } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription, TimeoutError, catchError, from, of, retry, switchMap, take, takeUntil, timeout } from 'rxjs';
 
-import { IDisposable, ILegoHubConfig, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { IDisposable, ILegoHubConfig, ILogger, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { GenericErrorCode, MessageType, OutboundMessageTypes } from '../../constants';
 import { GenericError, IMessageMiddleware, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
 import { PacketBuilder } from './packet-builder';
+import { formatMessageForDump } from '../../helpers';
 
 // TaskWithoutResponseQueueItem state transitions:
 // pending -> terminal state: [sent]
@@ -72,6 +73,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
         private readonly characteristic: BluetoothRemoteGATTCharacteristic,
         private readonly packetBuilder: PacketBuilder,
         private readonly messageMiddleware: ReadonlyArray<IMessageMiddleware>,
+        private readonly logger: ILogger,
         private readonly config: ILegoHubConfig
     ) {
     }
@@ -200,7 +202,19 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
                 switchMap(() => this.portOutputCommandFeedbackStream)
             )),
             timeout(this.config.messageSendTimeout),
+            catchError((e) => {
+                if (e instanceof TimeoutError) {
+                    this.logTimeoutError(command);
+                }
+                throw e;
+            }),
             retry(this.config.maxMessageSendRetries),
+            catchError((e) => {
+                if (e instanceof TimeoutError) {
+                    this.logMaxRetriesReachedError(command);
+                }
+                throw e;
+            }),
             take(1)
         ).subscribe({
             error: (e) => {
@@ -217,7 +231,19 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
         of(null).pipe(
             switchMap(() => this.sendMessage(command.message)),
             timeout(this.config.messageSendTimeout),
+            catchError((e) => {
+                if (e instanceof TimeoutError) {
+                    this.logger.warn(`timeout: ${formatMessageForDump(command.message)}`);
+                }
+                throw e;
+            }),
             retry(this.config.maxMessageSendRetries),
+            catchError((e) => {
+                if (e instanceof TimeoutError) {
+                    this.logMaxRetriesReachedError(command);
+                }
+                throw e;
+            }),
             take(1)
         ).subscribe({
             next: () => {
@@ -260,7 +286,19 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
                 switchMap(() => earlyStreamCapture),
             )),
             timeout(this.config.messageSendTimeout),
+            catchError((e) => {
+                if (e instanceof TimeoutError) {
+                    this.logTimeoutError(command);
+                }
+                throw e;
+            }),
             retry(this.config.maxMessageSendRetries),
+            catchError((e) => {
+                if (e instanceof TimeoutError) {
+                    this.logMaxRetriesReachedError(command);
+                }
+                throw e;
+            }),
             take(1)
         ).subscribe({
             error: (e) => {
@@ -392,5 +430,17 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
         const packet = this.packetBuilder.buildPacket(resultingMessage);
 
         return this.characteristic.writeValueWithoutResponse(packet);
+    }
+
+    private logTimeoutError(
+        command: TaskPortOutputCommandQueueItem | TaskWithoutResponseQueueItem | TaskWithResponseQueueItem<unknown>,
+    ): void {
+        this.logger.warn(`send timeout: ${formatMessageForDump(command.message)}`);
+    }
+
+    private logMaxRetriesReachedError(
+        command: TaskPortOutputCommandQueueItem | TaskWithoutResponseQueueItem | TaskWithResponseQueueItem<unknown>,
+    ): void {
+        this.logger.error(`failed to send ${formatMessageForDump(command.message)}`);
     }
 }

@@ -10,7 +10,7 @@ export interface ILegoHubConfig {
 export const DEFAULT_CONFIG: ILegoHubConfig = {
     maxGattConnectRetries: 5,
     minimumAllowedIOPollInterval: 100,
-    maxMessageSendRetries: 5,
+    maxMessageSendRetries: 4,
     messageSendTimeout: 300
 };
 

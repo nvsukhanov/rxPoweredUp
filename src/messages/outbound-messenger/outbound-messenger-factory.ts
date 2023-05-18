@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { inject, injectable } from 'tsyringe';
 
-import { ILegoHubConfig, LEGO_HUB_CONFIG, RawMessage } from '../../types';
+import { ILegoHubConfig, ILogger, LEGO_HUB_CONFIG, RawMessage } from '../../types';
 import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
 import { MessageType } from '../../constants';
 import {
@@ -31,7 +31,8 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         genericErrorsStream: Observable<GenericError>,
         characteristic: BluetoothRemoteGATTCharacteristic,
         messageMiddleware: ReadonlyArray<IMessageMiddleware>,
-        onDisconnected$: Observable<void>
+        onDisconnected$: Observable<void>,
+        logger: ILogger
     ): IOutboundMessenger {
         const commandsFeedbackStream = this.messageListenerFactory.create(
             characteristicDataStream,
@@ -45,7 +46,8 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
             characteristic,
             this.packetBuilder,
             messageMiddleware,
-            this.config
+            logger,
+            this.config,
         );
     }
 }
