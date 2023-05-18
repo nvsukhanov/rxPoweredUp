@@ -1,6 +1,6 @@
-import { Observable, ReplaySubject, Subject, Subscription, of, take } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription, of, retry, switchMap, take, takeUntil, timeout } from 'rxjs';
 
-import { IDisposable, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { IDisposable, ILegoHubConfig, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { GenericErrorCode, MessageType, OutboundMessageTypes } from '../../constants';
 import { GenericError, IMessageMiddleware, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
 import { PacketBuilder } from './packet-builder';
@@ -72,6 +72,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         private readonly characteristic: BluetoothRemoteGATTCharacteristic,
         private readonly packetBuilder: PacketBuilder,
         private readonly messageMiddleware: ReadonlyArray<IMessageMiddleware>,
+        private readonly config: ILegoHubConfig
     ) {
     }
 
@@ -162,8 +163,9 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
                 // Assuming that here would be some reply or termination state.
                 // In case of TaskWithoutResponse it will be an empty emission.
                 take(1)
-            ).subscribe(() => {
-                this.executeCommand(command);
+            ).subscribe({
+                next: () => this.executeCommand(command),
+                error: () => this.executeCommand(command)
             });
         } else {
             this.executeCommand(command);
@@ -173,26 +175,31 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     private executeCommand(
         command: TaskPortOutputCommandQueueItem | TaskWithoutResponseQueueItem | TaskWithResponseQueueItem<unknown>
     ): void {
+        if (this.isDisposed) {
+            return;
+        }
         switch (command.type) {
             case TaskType.portOutputCommand:
                 // This comes earlier than the actual sending
                 // because sometimes we receive feedback before the sending promise is resolved
                 // (hub responds faster then microtask queue is processed?)
                 command.state = TaskState.waitingForResponse;
-                if (this.isDisposed) {
-                    return;
-                }
-                this.sendMessage(command.message);
+                this.sendMessageWithRetries(command.message).catch((e) => {
+                    this.removeCommandFromQueue(command);
+                    command.outputStream.error(e);
+                    command.outputStream.complete();
+                });
                 break;
             case TaskType.withResponse:
                 command.state = TaskState.waitingForResponse;
-                if (this.isDisposed) {
-                    return;
-                }
+
                 // We should start listening for replies BEFORE we send the message,
                 // because sometimes we receive feedback before the sending promise is resolved
                 // (hub responds faster then microtask queue is processed?)
+                // eslint-disable-next-line no-case-declarations
+                const errorReceived = new Subject<Error>();
                 command.inputStream.pipe(
+                    takeUntil(errorReceived),
                     take(1) // we expect exactly one response for each message sent
                 ).subscribe((response) => {
                     // On receiving a response we should re-emit it to the output stream and complete it
@@ -200,10 +207,19 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
                     command.outputStream.next(response);
                     command.outputStream.complete();
                 });
-                this.sendMessage(command.message);
+                this.sendMessageWithRetries(command.message).catch((e) => {
+                    this.removeCommandFromQueue(command);
+                    command.outputStream.error(e);
+                    command.outputStream.complete();
+                    errorReceived.next(e);
+                });
                 break;
             case TaskType.withoutResponse:
-                this.sendMessage(command.message).then(() => {
+                this.sendMessageWithRetries(command.message).catch((e) => {
+                    this.removeCommandFromQueue(command);
+                    command.outputStream.error(e);
+                    command.outputStream.complete();
+                }).then(() => {
                     this.removeCommandFromQueue(command);
                     command.outputStream.next(void 0);
                     command.outputStream.complete();
@@ -322,8 +338,8 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         this.queue.splice(this.queue.findIndex((c) => c === command), 1);
     }
 
-    private sendMessage(
-        message: RawMessage<MessageType>
+    private sendMessageWithRetries(
+        message: RawMessage<MessageType>,
     ): Promise<void> {
         if (this.isDisposed) {
             throw new Error('Cannot send message - messenger is disposed');
@@ -331,7 +347,27 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         const resultingMessage = this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message);
         const packet = this.packetBuilder.buildPacket(resultingMessage);
 
-        // We ignore returned promise here because we strictly rely on feedback.
-        return this.characteristic.writeValueWithoutResponse(packet);
+        let resolveHandle: () => void;
+        let rejectHandle: (e: Error) => void;
+        const result = new Promise<void>((resolve, reject) => {
+            resolveHandle = resolve;
+            rejectHandle = reject;
+        });
+
+        of(null).pipe(
+            switchMap(() => this.characteristic.writeValueWithoutResponse(packet)),
+            timeout(this.config.messageSendTimeout),
+            retry(this.config.maxMessageSendRetries),
+            take(1)
+        ).subscribe({
+            complete: () => {
+                resolveHandle();
+            },
+            error: (e) => {
+                rejectHandle(e);
+            }
+        });
+
+        return result;
     }
 }
