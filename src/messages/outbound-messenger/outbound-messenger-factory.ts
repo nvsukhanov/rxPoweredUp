@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { inject, injectable } from 'tsyringe';
 
-import { RawMessage } from '../../types';
+import { ILegoHubConfig, LEGO_HUB_CONFIG, RawMessage } from '../../types';
 import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
 import { MessageType } from '../../constants';
 import {
@@ -21,6 +21,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
     constructor(
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER) private readonly feedbackIReplyParser: IReplyParser<MessageType.portOutputCommandFeedback>,
+        @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig,
         private readonly packetBuilder: PacketBuilder,
     ) {
     }
@@ -43,7 +44,8 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
             genericErrorsStream,
             characteristic,
             this.packetBuilder,
-            messageMiddleware
+            messageMiddleware,
+            this.config
         );
     }
 }
