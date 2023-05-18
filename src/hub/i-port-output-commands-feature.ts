@@ -57,6 +57,23 @@ export interface IPortOutputCommandsFeature {
     /**
      * Rotates the motor to the specified absolute degree (relative to absolute zero).
      * Positive values are calculated clockwise, negative values are calculated counter-clockwise.
+     * WARNING! Two sequential calls to this method may result in an infinite motor rotation until the next command is sent to the motor
+     * after some time (or after motor has rotated for a while?).
+     * This could happen if two commands has been sent in quick succession. Consider the following example:
+     * nextHub.ports.onIoAttach(0).pipe(
+     *    switchMap(() => nextHub.ports.goToAbsoluteDegree(0, -180).pipe(take(1))), // (1) - notice that we don't wait for the command to complete
+     *    switchMap(() => nextHub.ports.goToAbsoluteDegree(0, 0)), // (2)
+     * )
+     * The communication would look like this:
+     * send: (1) - "motor at port 0, go to -180 degrees"
+     * // wait until InProgress status for task (1) is received
+     * receive: (1) - InProgress // motor starts rotating
+     * send: (2) - "motor at port 0, go to 0 degrees"
+     * // wait until InProgress status for task (2) is received
+     * receive: (1) - Discarded, (2) - InProgress
+     * we would expect that a motor will start rotating counter-clockwise for a moment, then stop and rotate clockwise to 0 degrees
+     * (or at least do nothing), but in reality it will rotate counter-clockwise infinitely until the next command is sent to the motor.
+     * TODO: need workaround for this issue, seems like a bug in the firmware
      * @param portId
      * @param absoluteDegree - must be in range from -2147483647 to 2147483647
      * @param options
