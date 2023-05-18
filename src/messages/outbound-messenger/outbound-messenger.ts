@@ -1,4 +1,4 @@
-import { Observable, Subject, Subscription, of, take } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription, of, take } from 'rxjs';
 
 import { IDisposable, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { GenericErrorCode, MessageType, OutboundMessageTypes } from '../../constants';
@@ -54,7 +54,7 @@ type TaskPortOutputCommandQueueItem = {
     type: TaskType.portOutputCommand;
     message: RawPortOutputCommandMessage;
     state: TaskState;
-    outputStream: Subject<PortCommandExecutionStatus>;
+    outputStream: ReplaySubject<PortCommandExecutionStatus>;
 }
 
 export class OutboundMessenger implements IOutboundMessenger, IDisposable {
@@ -82,7 +82,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
             type: TaskType.withoutResponse,
             message,
             state: TaskState.pending,
-            outputStream: new Subject<void>()
+            outputStream: new ReplaySubject<void>(1)
         };
 
         this.enqueueCommand(queueItem);
@@ -98,7 +98,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
             message,
             state: TaskState.pending,
             inputStream: responseStream,
-            outputStream: new Subject<TResponse>()
+            outputStream: new ReplaySubject<TResponse>(1)
         };
         this.enqueueCommand(queueItem as TaskWithResponseQueueItem<unknown>);
         return queueItem.outputStream;
@@ -123,7 +123,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
             type: TaskType.portOutputCommand,
             message,
             state: TaskState.pending,
-            outputStream: new Subject<PortCommandExecutionStatus>()
+            outputStream: new ReplaySubject<PortCommandExecutionStatus>(1)
         };
 
         this.enqueueCommand(queueItem);
@@ -155,7 +155,6 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         const lastCommand = this.queue.at(-1);
 
         this.queue.push(command);
-
         if (lastCommand) {
             // We should ensure that the next command is sent strictly AFTER the previous one has received ANY feedback.
             // Not doing so will result in a broken queue (we won't be able to map feedback to executed tasks correctly).
@@ -226,7 +225,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
                 break;
         }
     }
-    
+
     private terminateTaskByGenericErrors(
         commandType: MessageType
     ): void {

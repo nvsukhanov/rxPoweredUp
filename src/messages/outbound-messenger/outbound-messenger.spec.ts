@@ -52,10 +52,6 @@ describe('OutboundMessenger', () => {
         );
     });
 
-    it('should be created', () => {
-        expect(subject).toBeTruthy();
-    });
-
     /*
      * Test for halting issue:
      * out message type '0x81 (portOutputCommand)', payload 0x01 0x11 0x0d 0x00 0x00 0x00 0x00 0x64 0x64 0x7e 0x00
@@ -118,5 +114,26 @@ describe('OutboundMessenger', () => {
         });
         fourthResponseHandle();
         fifthResponseHandle();
+    });
+
+    it('should not wait for the previous command to reach it`s terminal state before sending the next command', (done) => {
+        const firstMessage = createPortOutputCommandMessage(1);
+        const secondMessage = createPortOutputCommandMessage(2);
+
+        const firstPacket = Symbol() as unknown as Uint8Array;
+        const secondPacket = Symbol() as unknown as Uint8Array;
+
+        const firstResponseHandle = (): void => portOutputCommandFeedbackStream.next(convertFeedbackReply(firstMessage.portId, Uint8Array.from([ 0x01 ])));
+
+        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+        when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
+
+        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
+        when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done());
+
+        subject.sendPortOutputCommand(firstMessage).subscribe(() => {
+            subject.sendPortOutputCommand(secondMessage).subscribe();
+        });
+        firstResponseHandle();
     });
 });
