@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, Subject, Subscription, of, retry, switchMap, take, takeUntil, timeout } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription, from, of, retry, switchMap, take, takeUntil, timeout } from 'rxjs';
 
 import { IDisposable, ILegoHubConfig, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { GenericErrorCode, MessageType, OutboundMessageTypes } from '../../constants';
@@ -57,7 +57,7 @@ type TaskPortOutputCommandQueueItem = {
     outputStream: ReplaySubject<PortCommandExecutionStatus>;
 }
 
-export class OutboundMessenger implements IOutboundMessenger, IDisposable {
+export class OutboundMessenger implements IOutboundMessenger, IDisposable { // TODO: decompose this class into smaller pieces
     private readonly queue: Array<TaskPortOutputCommandQueueItem | TaskWithoutResponseQueueItem | TaskWithResponseQueueItem<unknown>> = [];
 
     private feedbackHandlingSubscription?: Subscription;
@@ -180,52 +180,96 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         }
         switch (command.type) {
             case TaskType.portOutputCommand:
-                // This comes earlier than the actual sending
-                // because sometimes we receive feedback before the sending promise is resolved
-                // (hub responds faster then microtask queue is processed?)
-                command.state = TaskState.waitingForResponse;
-                this.sendMessageWithRetries(command.message).catch((e) => {
-                    this.removeCommandFromQueue(command);
-                    command.outputStream.error(e);
-                    command.outputStream.complete();
-                });
+                this.executePortOutputCommand(command);
                 break;
             case TaskType.withResponse:
-                command.state = TaskState.waitingForResponse;
-
-                // We should start listening for replies BEFORE we send the message,
-                // because sometimes we receive feedback before the sending promise is resolved
-                // (hub responds faster then microtask queue is processed?)
-                // eslint-disable-next-line no-case-declarations
-                const errorReceived = new Subject<Error>();
-                command.inputStream.pipe(
-                    takeUntil(errorReceived),
-                    take(1) // we expect exactly one response for each message sent
-                ).subscribe((response) => {
-                    // On receiving a response we should re-emit it to the output stream and complete it
-                    this.removeCommandFromQueue(command);
-                    command.outputStream.next(response);
-                    command.outputStream.complete();
-                });
-                this.sendMessageWithRetries(command.message).catch((e) => {
-                    this.removeCommandFromQueue(command);
-                    command.outputStream.error(e);
-                    command.outputStream.complete();
-                    errorReceived.next(e);
-                });
+                this.executeCommandWithResponse(command);
                 break;
             case TaskType.withoutResponse:
-                this.sendMessageWithRetries(command.message).catch((e) => {
-                    this.removeCommandFromQueue(command);
-                    command.outputStream.error(e);
-                    command.outputStream.complete();
-                }).then(() => {
-                    this.removeCommandFromQueue(command);
-                    command.outputStream.next(void 0);
-                    command.outputStream.complete();
-                });
+                this.executeCommandWithoutResponse(command);
                 break;
         }
+    }
+
+    private executePortOutputCommand(
+        command: TaskPortOutputCommandQueueItem
+    ): void {
+        command.state = TaskState.waitingForResponse;
+        of(null).pipe(
+            switchMap(() => from(this.sendMessage(command.message)).pipe(
+                switchMap(() => this.portOutputCommandFeedbackStream)
+            )),
+            timeout(this.config.messageSendTimeout),
+            retry(this.config.maxMessageSendRetries),
+            take(1)
+        ).subscribe({
+            error: (e) => {
+                this.removeCommandFromQueue(command);
+                command.outputStream.error(e);
+                command.outputStream.complete();
+            }
+        });
+    }
+
+    private executeCommandWithoutResponse(
+        command: TaskWithoutResponseQueueItem
+    ): void {
+        of(null).pipe(
+            switchMap(() => this.sendMessage(command.message)),
+            timeout(this.config.messageSendTimeout),
+            retry(this.config.maxMessageSendRetries),
+            take(1)
+        ).subscribe({
+            next: () => {
+                this.removeCommandFromQueue(command);
+                command.outputStream.next(void 0);
+                command.outputStream.complete();
+            },
+            error: (e) => {
+                this.removeCommandFromQueue(command);
+                command.outputStream.error(e);
+                command.outputStream.complete();
+            }
+        });
+    }
+
+    private executeCommandWithResponse(
+        command: TaskWithResponseQueueItem<unknown>
+    ): void {
+        command.state = TaskState.waitingForResponse;
+
+        const earlyStreamCapture = new ReplaySubject<unknown>(1);
+        const errorReceived = new Subject<Error>();
+
+        // We should start listening for replies BEFORE we send the message,
+        // because sometimes we receive feedback before the sending promise is resolved
+        // (hub responds faster then microtask queue is processed?)
+        command.inputStream.pipe(
+            takeUntil(errorReceived),
+            take(1) // we expect exactly one response for each message sent
+        ).subscribe((response) => {
+            earlyStreamCapture.next(response);
+            // On receiving a response we should re-emit it to the output stream and complete it
+            this.removeCommandFromQueue(command);
+            command.outputStream.next(response);
+            command.outputStream.complete();
+        });
+
+        of(null).pipe(
+            switchMap(() => from(this.sendMessage(command.message)).pipe(
+                switchMap(() => earlyStreamCapture),
+            )),
+            timeout(this.config.messageSendTimeout),
+            retry(this.config.maxMessageSendRetries),
+            take(1)
+        ).subscribe({
+            error: (e) => {
+                this.removeCommandFromQueue(command);
+                command.outputStream.error(e);
+                command.outputStream.complete();
+                errorReceived.next(e);
+            }
+        });
     }
 
     private handleGenericError(
@@ -338,7 +382,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         this.queue.splice(this.queue.findIndex((c) => c === command), 1);
     }
 
-    private sendMessageWithRetries(
+    private sendMessage(
         message: RawMessage<MessageType>,
     ): Promise<void> {
         if (this.isDisposed) {
@@ -347,27 +391,6 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         const resultingMessage = this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message);
         const packet = this.packetBuilder.buildPacket(resultingMessage);
 
-        let resolveHandle: () => void;
-        let rejectHandle: (e: Error) => void;
-        const result = new Promise<void>((resolve, reject) => {
-            resolveHandle = resolve;
-            rejectHandle = reject;
-        });
-
-        of(null).pipe(
-            switchMap(() => this.characteristic.writeValueWithoutResponse(packet)),
-            timeout(this.config.messageSendTimeout),
-            retry(this.config.maxMessageSendRetries),
-            take(1)
-        ).subscribe({
-            complete: () => {
-                resolveHandle();
-            },
-            error: (e) => {
-                rejectHandle(e);
-            }
-        });
-
-        return result;
+        return this.characteristic.writeValueWithoutResponse(packet);
     }
 }
