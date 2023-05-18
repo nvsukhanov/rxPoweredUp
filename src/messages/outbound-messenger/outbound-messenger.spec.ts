@@ -10,6 +10,8 @@ import { concatUint8Arrays } from '../../helpers';
 import { PortOutputCommandFeedbackReplyParser } from '../reply-parsers';
 import { PortCommandExecutionStatus } from '../../hub';
 
+jest.useFakeTimers();
+
 function createPortOutputCommandMessage(id: number): RawPortOutputCommandMessage {
     return {
         id,
@@ -180,6 +182,7 @@ describe('OutboundMessenger', () => {
                 done();
             }
         });
+        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
     });
 
     it('should retry sending the command with sendPortOutputCommand on error', (done) => {
@@ -238,6 +241,7 @@ describe('OutboundMessenger', () => {
                 done();
             }
         });
+        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
     });
 
     it('should retry sending the command with sendWithResponse on error', (done) => {
@@ -294,6 +298,7 @@ describe('OutboundMessenger', () => {
                 done();
             }
         });
+        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
     });
 
     it('should retry sending the command with sendWithoutResponse on error', (done) => {
