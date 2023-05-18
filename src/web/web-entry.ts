@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import { interval, take } from 'rxjs';
 
 import { connectHub } from '../register';
-import { LoggingMiddleware } from '../middleware';
+import { MessageLoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
 import { WebLogger } from './web-logger';
 import { HubType } from '../constants';
@@ -14,8 +14,8 @@ let hub: IHub | undefined;
 async function connect(): Promise<void> {
     connectHub(
         navigator.bluetooth,
-        [ new LoggingMiddleware(new WebLogger('<'), 'all') ],
-        [ new LoggingMiddleware(new WebLogger('>'), 'all') ]
+        [ new MessageLoggingMiddleware(new WebLogger('<'), 'all') ],
+        [ new MessageLoggingMiddleware(new WebLogger('>'), 'all') ]
     ).subscribe((hub) => {
         onConnected(hub);
     });

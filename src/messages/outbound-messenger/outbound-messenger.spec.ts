@@ -3,7 +3,7 @@ import { NEVER, Subject, TimeoutError, catchError, of } from 'rxjs';
 import { instance, mock, verify, when } from 'ts-mockito';
 
 import { OutboundMessenger } from './outbound-messenger';
-import { ILegoHubConfig, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { ILegoHubConfig, ILogger, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { PacketBuilder } from './packet-builder';
 import { MessageType, OutboundMessageTypes } from '../../constants';
 import { concatUint8Arrays } from '../../helpers';
@@ -49,12 +49,14 @@ describe('OutboundMessenger', () => {
     let portOutputCommandFeedbackStream: Subject<PortOutputCommandFeedbackInboundMessage>;
     let characteristicMock: BluetoothRemoteGATTCharacteristic;
     let packetBuilderMock: PacketBuilder;
+    let loggerMock: ILogger;
     let config: ILegoHubConfig;
 
     beforeEach(() => {
         portOutputCommandFeedbackStream = new Subject();
         characteristicMock = mock<BluetoothRemoteGATTCharacteristic>();
         packetBuilderMock = mock(PacketBuilder);
+        loggerMock = mock<ILogger>();
 
         config = {
             maxMessageSendRetries: 5,
@@ -67,6 +69,7 @@ describe('OutboundMessenger', () => {
             instance(characteristicMock),
             instance(packetBuilderMock),
             [],
+            instance(loggerMock),
             config
         );
     });

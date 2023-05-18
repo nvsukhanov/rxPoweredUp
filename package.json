@@ -9,7 +9,7 @@
     "lint": "eslint src/ --ext .ts",
     "test": "jest --detectOpenHandles --forceExit",
     "start": "webpack-dev-server --mode development",
-    "ci": "npm install && npm run lint && npm run test && npm run build",
+    "ci": "npm run lint && npm run test && npm run build",
     "prepare": "npm run lint && npm run test && npm run build"
   },
   "author": "Nikolai Sukhanov <nvsukhanov@outlook.com>",

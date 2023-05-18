@@ -1,3 +1,6 @@
+import { RawMessage } from './types';
+import { MessageType } from './constants';
+
 export function readBitAtPosition(value: number, position: number): boolean {
     return (value & (1 << position)) !== 0;
 }
@@ -36,4 +39,14 @@ export function concatUint8Arrays(...a: Uint8Array[]): Uint8Array {
         offset += arr.length;
     }
     return result;
+}
+
+export function formatMessageForDump(message: RawMessage<MessageType>): string {
+    const messageType = `${numberToHexString(message.header.messageType)} (${MessageType[message.header.messageType]})`;
+    const payload = [ ...message.payload ].map((v) => numberToHexString(v)).join(' ');
+    return `message type '${messageType}', payload ${payload}`;
+}
+
+export function numberToHexString(number: number): string { // TODO: deduplicate code
+    return `0x${number.toString(16).padStart(2, '0')}`;
 }
