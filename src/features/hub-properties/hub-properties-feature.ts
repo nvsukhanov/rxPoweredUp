@@ -59,9 +59,13 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
     }
 
     public dispose(): Observable<void> {
-        return combineLatest([ ...this.characteristicUnsubscribeHandlers.values() ].map((f) => f())).pipe(
-            map(() => void 0)
-        );
+        if (this.characteristicUnsubscribeHandlers.size) {
+            return combineLatest([ ...this.characteristicUnsubscribeHandlers.values() ].map((f) => f())).pipe(
+                map(() => void 0)
+            );
+        } else {
+            return of(void 0);
+        }
     }
 
     public getAdvertisingName(): Observable<string> {

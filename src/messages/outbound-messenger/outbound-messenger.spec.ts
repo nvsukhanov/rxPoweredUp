@@ -10,6 +10,8 @@ import { concatUint8Arrays } from '../../helpers';
 import { PortOutputCommandFeedbackReplyParser } from '../reply-parsers';
 import { PortCommandExecutionStatus } from '../../hub';
 
+jest.useFakeTimers();
+
 function createPortOutputCommandMessage(id: number): RawPortOutputCommandMessage {
     return {
         id,
@@ -141,6 +143,7 @@ describe('OutboundMessenger', () => {
         const secondPacket = Symbol() as unknown as Uint8Array;
 
         const firstResponseHandle = (): void => portOutputCommandFeedbackStream.next(convertFeedbackReply(firstMessage.portId, Uint8Array.from([ 0x01 ])));
+        // const secondResponseHandle = (): void => portOutputCommandFeedbackStream.next(convertFeedbackReply(firstMessage.portId, Uint8Array.from([ 0x01 ])));
 
         when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
         when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
@@ -148,21 +151,30 @@ describe('OutboundMessenger', () => {
         when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
         when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
 
-        subject.sendPortOutputCommand(firstMessage).subscribe(() => {
-            subject.sendPortOutputCommand(secondMessage).subscribe();
+        subject.sendPortOutputCommand(firstMessage).subscribe({
+            next: () => subject.sendPortOutputCommand(secondMessage).subscribe({
+                error: (e) => {
+                    if (!(e instanceof TimeoutError)) {
+                        throw e;
+                    }
+                }
+            }),
+            error: (e) => {
+                if (!(e instanceof TimeoutError)) {
+                    throw e;
+                }
+            }
         });
         firstResponseHandle();
     });
 
-    it('should retry sending the command with sendPortOutputCommand if the reply is not received', (done) => {
+    it('should retry sending the command with sendPortOutputCommand if the reply was not received', (done) => {
         const firstMessage = createPortOutputCommandMessage(1);
 
         const firstPacket = Symbol() as unknown as Uint8Array;
 
         when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => new Promise(() => {
-            // do nothing
-        }));
+        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
         subject.sendPortOutputCommand(firstMessage).subscribe({
             error: (e) => {
                 expect(e).toBeInstanceOf(TimeoutError);
@@ -170,6 +182,7 @@ describe('OutboundMessenger', () => {
                 done();
             }
         });
+        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
     });
 
     it('should retry sending the command with sendPortOutputCommand on error', (done) => {
@@ -205,7 +218,13 @@ describe('OutboundMessenger', () => {
         subject.sendPortOutputCommand(firstMessage).pipe(
             catchError(() => of(null))
         ).subscribe();
-        subject.sendPortOutputCommand(secondMessage).subscribe();
+        subject.sendPortOutputCommand(secondMessage).subscribe({
+            error: (e) => {
+                if (!(e instanceof TimeoutError)) {
+                    throw e;
+                }
+            }
+        });
     });
 
     it('should retry sending the command with sendWithResponse if the reply was not received', (done) => {
@@ -214,9 +233,7 @@ describe('OutboundMessenger', () => {
         const firstPacket = Symbol() as unknown as Uint8Array;
 
         when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => new Promise(() => {
-            // do nothing
-        }));
+        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
         subject.sendWithResponse(firstMessage, NEVER).subscribe({
             error: (e) => {
                 expect(e).toBeInstanceOf(TimeoutError);
@@ -224,6 +241,7 @@ describe('OutboundMessenger', () => {
                 done();
             }
         });
+        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
     });
 
     it('should retry sending the command with sendWithResponse on error', (done) => {
@@ -259,10 +277,11 @@ describe('OutboundMessenger', () => {
         subject.sendWithResponse(firstMessage, NEVER).pipe(
             catchError(() => of(null))
         ).subscribe();
-        subject.sendWithResponse(secondMessage, NEVER).subscribe();
+        subject.sendWithResponse(secondMessage, NEVER).pipe(
+            catchError(() => of(null))
+        ).subscribe();
     });
 
-    //
     it('should retry sending the command with sendWithoutResponse if the reply was not received', (done) => {
         const firstMessage = createGenericMessage(1);
 
@@ -279,6 +298,7 @@ describe('OutboundMessenger', () => {
                 done();
             }
         });
+        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
     });
 
     it('should retry sending the command with sendWithoutResponse on error', (done) => {
