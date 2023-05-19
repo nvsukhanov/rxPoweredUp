@@ -1,6 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { NEVER, Observable } from 'rxjs';
-import { Logger } from 'tslog';
+import { Observable } from 'rxjs';
 
 import { Hub } from './hub';
 import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
@@ -14,8 +13,9 @@ import { COMMANDS_FEATURE_FACTORY, IPortOutputCommandsFeatureFactory } from './i
 import { IPortsFeatureFactory, PORTS_FEATURE_FACTORY } from './i-ports-feature-factory';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from './i-inbound-message-listener-factory';
 import { GENERIC_ERRORS_REPLIES_PARSER } from './generic-errors-reply-parser';
-import { MessageType } from '../constants';
+import { LogLevel, MessageType } from '../constants';
 import { IReplyParser } from './i-reply-parser';
+import { IPrefixedConsoleLoggerFactory, PREFIXED_CONSOLE_LOGGER_FACTORY } from './i-prefixed-console-logger-factory';
 
 @injectable()
 export class HubFactory {
@@ -29,18 +29,20 @@ export class HubFactory {
         @inject(COMMANDS_FEATURE_FACTORY) private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
         @inject(GENERIC_ERRORS_REPLIES_PARSER) private readonly genericErrorsReplyParser: IReplyParser<MessageType.genericError>,
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
+        @inject(PREFIXED_CONSOLE_LOGGER_FACTORY) private readonly loggerFactory: IPrefixedConsoleLoggerFactory
     ) {
     }
 
     public create(
         device: BluetoothDeviceWithGatt,
-        incomingMessageMiddleware: IMessageMiddleware[] = [],
-        outgoingMessageMiddleware: IMessageMiddleware[] = [],
-        externalDisconnectEvents$: Observable<unknown> = NEVER
+        incomingMessageMiddleware: IMessageMiddleware[],
+        outgoingMessageMiddleware: IMessageMiddleware[],
+        externalDisconnectEvents$: Observable<unknown>,
+        logLevel: LogLevel = LogLevel.Warning
     ): IHub {
         return new Hub(
             device,
-            new Logger({ name: device.name ?? device.id }),
+            this.loggerFactory.createLogger(device.name ?? device.id, logLevel),
             this.config,
             this.connectionErrorFactory,
             this.outboundMessengerFactory,

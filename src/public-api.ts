@@ -6,3 +6,4 @@ export { MessageLoggingMiddleware } from './middleware';
 
 export * from './hub/public-api';
 export { connectHub } from './register';
+export * from './logger/public-api';

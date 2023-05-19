@@ -6,16 +6,19 @@ import { interval, take } from 'rxjs';
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
-import { WebLogger } from './web-logger';
-import { HubType } from '../constants';
+import { HubType, LogLevel } from '../constants';
+import { PrefixedConsoleLogger } from '../logger';
 
 let hub: IHub | undefined;
 
 async function connect(): Promise<void> {
     connectHub(
         navigator.bluetooth,
-        [ new MessageLoggingMiddleware(new WebLogger('<'), 'all') ],
-        [ new MessageLoggingMiddleware(new WebLogger('>'), 'all') ]
+        {
+            incomingMessageMiddleware: [ new MessageLoggingMiddleware(new PrefixedConsoleLogger('<', LogLevel.Debug), 'all') ],
+            outgoingMessageMiddleware: [ new MessageLoggingMiddleware(new PrefixedConsoleLogger('>', LogLevel.Debug), 'all') ],
+            logLevel: LogLevel.Debug
+        }
     ).subscribe((hub) => {
         onConnected(hub);
     });
