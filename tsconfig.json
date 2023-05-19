@@ -1,16 +1,40 @@
 {
-  "extends": "./tsconfig.prod.json",
+  "compileOnSave": false,
   "compilerOptions": {
-    "sourceMap": true,
-    "removeComments": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "sourceMap": false,
+    "declaration": false,
+    "removeComments": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "useDefineForClassFields": true,
+    "skipLibCheck": true,
     "lib": [
-      "ES2022",
-      "dom"
+      "ES2022"
+    ],
+    "types": [
+      "web-bluetooth",
+      "jest",
+      "node"
     ]
   },
   "exclude": [
     "node_modules",
     "dist",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/web"
   ]
 }

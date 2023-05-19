@@ -1,6 +1,5 @@
 package-lock.json
 webpack.config.js
-tsconfig.json
 .idea/
 src/
 .editorconfig
@@ -8,3 +7,5 @@ src/
 dist/web-entry.*
 *.map
 .github
+tsconfig.d.json
+tsconfig.dev.json
