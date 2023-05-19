@@ -17,7 +17,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
-        filename: 'poweredup-api.js',
+        filename: 'rxpoweredup.js',
         path: path.resolve(__dirname, 'dist'),
     },
 
