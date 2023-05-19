@@ -1,10 +1,12 @@
 {
   "name": "@nvsukhanov/rxpoweredup",
   "version": "0.0.15",
-  "description": "A Typescript interface to LEGO Powered Up hubs",
+  "description": "A Typescript RxJS-based library for controlling LEGO Powered UP MOCs",
   "main": "dist/index.js",
+  "private": false,
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npm run clean && tsc -p tsconfig.prod.d.json && tsc -p tsconfig.prod.json",
+    "build": "npm run clean && tsc -p tsconfig.d.json && tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "lint": "eslint src/ --ext .ts",
     "test": "jest --detectOpenHandles --forceExit",
