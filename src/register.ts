@@ -15,7 +15,8 @@ import {
     INBOUND_MESSAGE_LISTENER_FACTORY,
     InboundMessageListenerFactory,
     OUTBOUND_MESSAGE_FACTORY,
-    PORTS_FEATURE_FACTORY
+    PORTS_FEATURE_FACTORY,
+    PREFIXED_CONSOLE_LOGGER_FACTORY
 } from './hub';
 import {
     AttachedIoReplyParser,
@@ -53,6 +54,8 @@ import {
     PortsFeatureFactory
 } from './features';
 import { ConnectionErrorFactory } from './errors';
+import { PrefixedConsoleLoggerFactory } from './logger';
+import { LogLevel } from './constants';
 
 container.register(LEGO_HUB_CONFIG, { useValue: DEFAULT_CONFIG });
 container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
@@ -77,17 +80,29 @@ container.register(HUB_CONNECTION_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_SCANNER_ERROR_FACTORY, ConnectionErrorFactory);
 container.register(CHARACTERISTIC_DATA_STREAM_FACTORY, CharacteristicDataStreamFactory);
 container.register(GENERIC_ERRORS_REPLIES_PARSER, GenericErrorReplyParser);
+container.register(PREFIXED_CONSOLE_LOGGER_FACTORY, PrefixedConsoleLoggerFactory);
+
+export type ConnectHubOptions = {
+    incomingMessageMiddleware?: IMessageMiddleware[];
+    outgoingMessageMiddleware?: IMessageMiddleware[];
+    externalDisconnectEvents?: Observable<unknown>;
+    logLevel?: LogLevel;
+}
 
 export function connectHub(
     bluetooth: Bluetooth,
-    incomingMessageMiddleware: IMessageMiddleware[] = [],
-    outgoingMessageMiddleware: IMessageMiddleware[] = [],
-    externalDisconnectEvents: Observable<unknown> = NEVER
+    options?: ConnectHubOptions
 ): Observable<IHub> {
     const scannerFactory = container.resolve(HubScannerFactory).create(bluetooth);
     const hubFactory = container.resolve(HubFactory);
     return scannerFactory.discoverHub().pipe(
-        map((device) => hubFactory.create(device, incomingMessageMiddleware, outgoingMessageMiddleware, externalDisconnectEvents)),
+        map((device) => hubFactory.create(
+            device,
+            options?.incomingMessageMiddleware ?? [],
+            options?.outgoingMessageMiddleware ?? [],
+            options?.externalDisconnectEvents ?? NEVER,
+            options?.logLevel
+        )),
         switchMap((hub) => hub.connect().pipe(map(() => hub)))
     );
 }

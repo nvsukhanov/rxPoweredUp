@@ -1,4 +1,4 @@
-import { NEVER, Observable, Subject, catchError, from, fromEvent, map, of, share, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, catchError, from, fromEvent, map, of, share, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { IMessageMiddleware } from './i-message-middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
@@ -47,9 +47,9 @@ export class Hub implements IHub {
         private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
         private readonly replyParser: IReplyParser<MessageType.genericError>,
         private readonly messageListenerFactory: IInboundMessageListenerFactory,
-        private readonly incomingMessageMiddleware: IMessageMiddleware[] = [],
-        private readonly outgoingMessageMiddleware: IMessageMiddleware[] = [],
-        private readonly externalDisconnectEvents$: Observable<unknown> = NEVER
+        private readonly incomingMessageMiddleware: IMessageMiddleware[],
+        private readonly outgoingMessageMiddleware: IMessageMiddleware[],
+        private readonly externalDisconnectEvents$: Observable<unknown>
     ) {
     }
 

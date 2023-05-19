@@ -1,6 +1,6 @@
 {
   "name": "@nvsukhanov/rxpoweredup",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A Typescript RxJS-based library for controlling LEGO Powered UP MOCs",
   "main": "dist/index.js",
   "private": false,
@@ -38,7 +38,6 @@
   },
   "dependencies": {
     "rxjs": "^7.8.1",
-    "tslog": "^4.8.2",
     "tsyringe": "^4.7.0"
   },
   "peerDependencies": {

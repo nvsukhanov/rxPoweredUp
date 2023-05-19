@@ -15,3 +15,4 @@ export * from './generic-errors-reply-parser';
 export * from './i-inbound-message-listener-factory';
 export * from './inbound-message-listener-factory';
 export * from './i-reply-parser';
+export * from './i-prefixed-console-logger-factory';
