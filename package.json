@@ -4,6 +4,7 @@
   "description": "A Typescript RxJS-based library for controlling LEGO Powered UP MOCs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "private": false,
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.d.json && tsc -p tsconfig.json",
     "clean": "rimraf dist",
