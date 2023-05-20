@@ -42,6 +42,7 @@ type TaskWithResponseQueueItem<TResponse> = {
     state: TaskState.pending | TaskState.waitingForResponse;
     inputStream: Observable<TResponse>;
     outputStream: Subject<TResponse>;
+    executionStream: Observable<TResponse>;
 }
 
 type TaskWithoutResponseQueueItem = {
@@ -49,6 +50,7 @@ type TaskWithoutResponseQueueItem = {
     message: RawMessage<OutboundMessageTypes>;
     state: TaskState.pending;
     outputStream: Subject<void>;
+    executionStream: Observable<void>;
 }
 
 type TaskPortOutputCommandQueueItem = {
@@ -56,6 +58,7 @@ type TaskPortOutputCommandQueueItem = {
     message: RawPortOutputCommandMessage;
     state: TaskState;
     outputStream: ReplaySubject<PortCommandExecutionStatus>;
+    executionStream: Observable<PortCommandExecutionStatus>;
 }
 
 export class OutboundMessenger implements IOutboundMessenger, IDisposable { // TODO: decompose this class into smaller pieces
@@ -81,30 +84,48 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
     public sendWithoutResponse(
         message: RawMessage<OutboundMessageTypes>
     ): Observable<void> {
+        let isQueued = false;
+
         const queueItem: TaskWithoutResponseQueueItem = {
             type: TaskType.withoutResponse,
             message,
             state: TaskState.pending,
-            outputStream: new ReplaySubject<void>(1)
+            outputStream: new ReplaySubject<void>(1),
+            executionStream: new Observable<void>((observer) => {
+                if (!isQueued) {
+                    this.enqueueCommand(queueItem);
+                    isQueued = true;
+                }
+                const sub = queueItem.outputStream.subscribe(observer);
+                return () => sub.unsubscribe();
+            })
         };
 
-        this.enqueueCommand(queueItem);
-        return queueItem.outputStream;
+        return queueItem.executionStream;
     }
 
     public sendWithResponse<TResponse>(
         message: RawMessage<OutboundMessageTypes>,
         responseStream: Observable<TResponse>,
     ): Observable<TResponse> {
+        let isQueued = false;
+
         const queueItem: TaskWithResponseQueueItem<TResponse> = {
             type: TaskType.withResponse,
             message,
             state: TaskState.pending,
             inputStream: responseStream,
-            outputStream: new ReplaySubject<TResponse>(1)
+            outputStream: new ReplaySubject<TResponse>(1),
+            executionStream: new Observable<TResponse>((observer) => {
+                if (!isQueued) {
+                    this.enqueueCommand(queueItem as TaskWithResponseQueueItem<unknown>);
+                    isQueued = true;
+                }
+                const sub = queueItem.outputStream.subscribe(observer);
+                return () => sub.unsubscribe();
+            })
         };
-        this.enqueueCommand(queueItem as TaskWithResponseQueueItem<unknown>);
-        return queueItem.outputStream;
+        return queueItem.executionStream;
     }
 
     public sendPortOutputCommand(
@@ -122,15 +143,25 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
             });
         }
 
+        const outputStream = new ReplaySubject<PortCommandExecutionStatus>(1);
+        let isQueued = false;
+
         const queueItem: TaskPortOutputCommandQueueItem = {
             type: TaskType.portOutputCommand,
             message,
             state: TaskState.pending,
-            outputStream: new ReplaySubject<PortCommandExecutionStatus>(1)
+            outputStream,
+            executionStream: new Observable<PortCommandExecutionStatus>((observer) => {
+                if (!isQueued) {
+                    this.enqueueCommand(queueItem);
+                    isQueued = true;
+                }
+                const sub = outputStream.subscribe(observer);
+                return () => sub.unsubscribe();
+            })
         };
 
-        this.enqueueCommand(queueItem);
-        return queueItem.outputStream;
+        return queueItem.executionStream;
     }
 
     public dispose(): Observable<void> {

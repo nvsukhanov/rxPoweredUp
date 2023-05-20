@@ -64,12 +64,12 @@ function onConnected(nextHub: IHub): void {
 
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle);
     document.getElementById('increment-angle')!.addEventListener('click', incrementAngle);
-    document.getElementById('sequential-increment-angle')!.addEventListener('click', sequentialIncrementAngle);
+    document.getElementById('sequential-increment-angle')!.addEventListener('click', rapidIncrementAngle);
 
     nextHub.disconnected.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
         document.getElementById('increment-angle')!.removeEventListener('click', incrementAngle);
-        document.getElementById('sequential-increment-angle')!.removeEventListener('click', sequentialIncrementAngle);
+        document.getElementById('sequential-increment-angle')!.removeEventListener('click', rapidIncrementAngle);
         onDisconnected();
     });
 }
@@ -94,9 +94,12 @@ function incrementAngle(): void {
     });
 }
 
-function sequentialIncrementAngle(): void {
+function rapidIncrementAngle(): void {
+    if (!hub) {
+        return;
+    }
     interval(1000 / 20).pipe(
-        take(10)
+        take(10),
     ).subscribe(() => incrementAngle());
 }
 
