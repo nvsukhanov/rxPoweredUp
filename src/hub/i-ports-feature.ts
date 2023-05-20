@@ -32,6 +32,8 @@ export interface IPortsFeature {
 
     /**
      * Reads the value of a port for a given mode.
+     * Stream completes when the response is received from the hub.
+     *
      * modeId specifies the mode to read the value from (see getPortModeInformation)
      * portModeName specifies value parsing method.
      * In order to read value of a port, you need to know the modeId and portModeName, which can be obtained by calling getPortModes
@@ -53,6 +55,8 @@ export interface IPortsFeature {
 
     /**
      * Reads port modes and capabilities for a given port.
+     * Stream completes when the response is received from the hub.
+     *
      * @param portId
      */
     getPortModes(
@@ -61,6 +65,8 @@ export interface IPortsFeature {
 
     /**
      * Reads information about a given mode for a given port (e.g. mode name ('absolutePosition', 'speed', etc.))
+     * Stream completes when the response is received from the hub.
+     *
      * @param portId
      * @param mode
      * @param modeInformationType
