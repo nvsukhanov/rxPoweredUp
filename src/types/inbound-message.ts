@@ -77,6 +77,13 @@ export type AttachedIODetachInboundMessage = {
 
 export type AttachedIOInboundMessage = AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage | AttachedIODetachInboundMessage;
 
+export type PortValuePositionInboundMessage = {
+    messageType: MessageType.portValueSingle;
+    portId: number;
+    modeName: PortModeName.position;
+    position: number;
+}
+
 export type PortValueAbsolutePositionInboundMessage = {
     messageType: MessageType.portValueSingle;
     portId: number;
@@ -91,7 +98,7 @@ export type PortValueSpeedInboundMessage = {
     speed: number;
 }
 
-export type PortValueInboundMessage = PortValueAbsolutePositionInboundMessage | PortValueSpeedInboundMessage;
+export type PortValueInboundMessage = PortValueAbsolutePositionInboundMessage | PortValueSpeedInboundMessage | PortValuePositionInboundMessage;
 
 export type PortModeInboundMessage = {
     messageType: MessageType.portInformation,

@@ -33,6 +33,7 @@ import {
     PortOutputCommandFeedbackReplyParser,
     PortOutputCommandOutboundMessageFactory,
     PortValueAbsolutePositionReplyParser,
+    PortValuePositionReplyParser,
     PortValueSpeedReplyParser
 } from './messages';
 import {
@@ -50,6 +51,7 @@ import {
     PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER,
     PORT_OUTPUT_COMMAND_MESSAGE_FACTORY,
     PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER,
+    PORT_VALUE_POSITION_REPLY_PARSER,
     PORT_VALUE_SPEED_REPLY_PARSER,
     PortsFeatureFactory
 } from './features';
@@ -67,6 +69,7 @@ container.register(PORT_INFORMATION_REPLY_PARSER, PortInformationReplyParser);
 container.register(ATTACHED_IO_REPLIES_PARSER, AttachedIoReplyParser);
 container.register(PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER, PortValueAbsolutePositionReplyParser);
 container.register(PORT_VALUE_SPEED_REPLY_PARSER, PortValueSpeedReplyParser);
+container.register(PORT_VALUE_POSITION_REPLY_PARSER, PortValuePositionReplyParser);
 container.register(PORT_MODE_INFORMATION_REPLY_PARSER, PortModeInformationReplyParser);
 container.register(PORT_INFORMATION_REQUEST_MESSAGE_FACTORY, PortInformationRequestOutboundMessageFactory);
 container.register(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY, PortModeInformationRequestOutboundMessageFactory);
