@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { NEVER, Subject, TimeoutError, catchError, of } from 'rxjs';
+import { NEVER, Subject, Subscription, TimeoutError, catchError, of } from 'rxjs';
 import { instance, mock, verify, when } from 'ts-mockito';
 
 import { OutboundMessenger } from './outbound-messenger';
@@ -51,8 +51,10 @@ describe('OutboundMessenger', () => {
     let packetBuilderMock: PacketBuilder;
     let loggerMock: ILogger;
     let config: ILegoHubConfig;
+    let subs: Subscription[];
 
     beforeEach(() => {
+        subs = [];
         portOutputCommandFeedbackStream = new Subject();
         characteristicMock = mock<BluetoothRemoteGATTCharacteristic>();
         packetBuilderMock = mock(PacketBuilder);
@@ -72,6 +74,11 @@ describe('OutboundMessenger', () => {
             instance(loggerMock),
             config
         );
+    });
+
+    afterEach(() => {
+        subs.forEach((s) => s.unsubscribe());
+        subs = [];
     });
 
     /*
@@ -118,13 +125,13 @@ describe('OutboundMessenger', () => {
 
         when(characteristicMock.writeValueWithoutResponse(fourthPacket)).thenResolve();
 
-        subject.sendPortOutputCommand(firstMessage).subscribe((v) => firstReplies.push(v));
+        subs.push(subject.sendPortOutputCommand(firstMessage).subscribe((v) => firstReplies.push(v)));
         firstResponseHandle();
-        subject.sendPortOutputCommand(secondMessage).subscribe((v) => secondReplies.push(v));
+        subs.push(subject.sendPortOutputCommand(secondMessage).subscribe((v) => secondReplies.push(v)));
         secondResponseHandle();
-        subject.sendPortOutputCommand(thirdMessage).subscribe((v) => thirdReplies.push(v));
+        subs.push(subject.sendPortOutputCommand(thirdMessage).subscribe((v) => thirdReplies.push(v)));
         thirdResponseHandle();
-        subject.sendPortOutputCommand(fourthMessage).subscribe({
+        subs.push(subject.sendPortOutputCommand(fourthMessage).subscribe({
             next: (v) => fourthReplies.push(v),
             complete: () => {
                 expect(firstReplies).toEqual([ PortCommandExecutionStatus.inProgress, PortCommandExecutionStatus.discarded ]);
@@ -133,210 +140,266 @@ describe('OutboundMessenger', () => {
                 expect(fourthReplies).toEqual([ PortCommandExecutionStatus.inProgress, PortCommandExecutionStatus.completed ]);
                 done();
             }
-        });
+        }));
         fourthResponseHandle();
         fifthResponseHandle();
     });
 
-    it('should not wait for the previous command to reach it`s terminal state before sending the next command', (done) => {
-        const firstMessage = createPortOutputCommandMessage(1);
-        const secondMessage = createPortOutputCommandMessage(2);
+    describe('sendPortOutputCommand', () => {
+        it('should not wait for the previous command to reach it`s terminal state before sending the next command', (done) => {
+            const firstMessage = createPortOutputCommandMessage(1);
+            const secondMessage = createPortOutputCommandMessage(2);
 
-        const firstPacket = Symbol() as unknown as Uint8Array;
-        const secondPacket = Symbol() as unknown as Uint8Array;
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            const secondPacket = Symbol() as unknown as Uint8Array;
 
-        const firstResponseHandle = (): void => portOutputCommandFeedbackStream.next(convertFeedbackReply(firstMessage.portId, Uint8Array.from([ 0x01 ])));
-        // const secondResponseHandle = (): void => portOutputCommandFeedbackStream.next(convertFeedbackReply(firstMessage.portId, Uint8Array.from([ 0x01 ])));
+            const firstResponseHandle = (): void => portOutputCommandFeedbackStream.next(convertFeedbackReply(firstMessage.portId, Uint8Array.from([ 0x01 ])));
 
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
 
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
-        when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
+            when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
 
-        subject.sendPortOutputCommand(firstMessage).subscribe({
-            next: () => subject.sendPortOutputCommand(secondMessage).subscribe({
+            subs.push(subject.sendPortOutputCommand(firstMessage).subscribe({
+                next: () => subs.push(subject.sendPortOutputCommand(secondMessage).subscribe({
+                    error: (e) => {
+                        if (!(e instanceof TimeoutError)) {
+                            throw e;
+                        }
+                    }
+                })),
                 error: (e) => {
                     if (!(e instanceof TimeoutError)) {
                         throw e;
                     }
                 }
-            }),
-            error: (e) => {
-                if (!(e instanceof TimeoutError)) {
-                    throw e;
+            }));
+            firstResponseHandle();
+        });
+
+        it('should retry sending the command if the reply was not received', (done) => {
+            const firstMessage = createPortOutputCommandMessage(1);
+
+            const firstPacket = Symbol() as unknown as Uint8Array;
+
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
+            subs.push(subject.sendPortOutputCommand(firstMessage).subscribe({
+                error: (e) => {
+                    expect(e).toBeInstanceOf(TimeoutError);
+                    verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
+                    done();
                 }
-            }
+            }));
+            jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
         });
-        firstResponseHandle();
-    });
 
-    it('should retry sending the command with sendPortOutputCommand if the reply was not received', (done) => {
-        const firstMessage = createPortOutputCommandMessage(1);
+        it('should retry sending the command on error', (done) => {
+            const firstMessage = createPortOutputCommandMessage(1);
 
-        const firstPacket = Symbol() as unknown as Uint8Array;
+            const firstPacket = Symbol() as unknown as Uint8Array;
 
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
-        subject.sendPortOutputCommand(firstMessage).subscribe({
-            error: (e) => {
-                expect(e).toBeInstanceOf(TimeoutError);
-                verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
-                done();
-            }
-        });
-        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
-    });
-
-    it('should retry sending the command with sendPortOutputCommand on error', (done) => {
-        const firstMessage = createPortOutputCommandMessage(1);
-
-        const firstPacket = Symbol() as unknown as Uint8Array;
-
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test3'));
-        subject.sendPortOutputCommand(firstMessage).subscribe({
-            error: (e) => {
-                expect(e).toBeInstanceOf(Error);
-                expect((e as Error).message).toBe('test3');
-                verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
-                done();
-            }
-        });
-    });
-
-    it('should execute next command with sendPortOutputCommand if the previous one was executed with error', (done) => {
-        const firstMessage = createPortOutputCommandMessage(1);
-        const secondMessage = createPortOutputCommandMessage(2);
-
-        const firstPacket = Symbol() as unknown as Uint8Array;
-        const secondPacket = Symbol() as unknown as Uint8Array;
-
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
-
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test4'));
-        when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
-
-        subject.sendPortOutputCommand(firstMessage).pipe(
-            catchError(() => of(null))
-        ).subscribe();
-        subject.sendPortOutputCommand(secondMessage).subscribe({
-            error: (e) => {
-                if (!(e instanceof TimeoutError)) {
-                    throw e;
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test3'));
+            subs.push(subject.sendPortOutputCommand(firstMessage).subscribe({
+                error: (e) => {
+                    expect(e).toBeInstanceOf(Error);
+                    expect((e as Error).message).toBe('test3');
+                    verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
+                    done();
                 }
-            }
+            }));
+        });
+
+        it('should execute next command if the previous one was executed with error', (done) => {
+            const firstMessage = createPortOutputCommandMessage(1);
+            const secondMessage = createPortOutputCommandMessage(2);
+
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            const secondPacket = Symbol() as unknown as Uint8Array;
+
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
+
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test4'));
+            when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
+
+            subs.push(subject.sendPortOutputCommand(firstMessage).pipe(
+                catchError(() => of(null))
+            ).subscribe());
+            subs.push(subject.sendPortOutputCommand(secondMessage).subscribe({
+                error: (e) => {
+                    if (!(e instanceof TimeoutError)) {
+                        throw e;
+                    }
+                }
+            }));
+        });
+
+        it('should not execute task before someone subscribes to the observable', () => {
+            let isSent = false;
+            const firstMessage = createPortOutputCommandMessage(1);
+
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => {
+                isSent = true;
+                return Promise.resolve();
+            });
+
+            const p = subject.sendPortOutputCommand(firstMessage);
+            expect(isSent).toBeFalsy();
+            subs.push(p.subscribe());
+            expect(isSent).toBeTruthy();
         });
     });
 
-    it('should retry sending the command with sendWithResponse if the reply was not received', (done) => {
-        const firstMessage = createGenericMessage(1);
+    describe('sendWithResponse', () => {
+        it('should retry sending the command if the reply was not received', (done) => {
+            const firstMessage = createGenericMessage(1);
 
-        const firstPacket = Symbol() as unknown as Uint8Array;
+            const firstPacket = Symbol() as unknown as Uint8Array;
 
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
-        subject.sendWithResponse(firstMessage, NEVER).subscribe({
-            error: (e) => {
-                expect(e).toBeInstanceOf(TimeoutError);
-                verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
-                done();
-            }
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
+            subs.push(subject.sendWithResponse(firstMessage, NEVER).subscribe({
+                error: (e) => {
+                    expect(e).toBeInstanceOf(TimeoutError);
+                    verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
+                    done();
+                }
+            }));
+            jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
         });
-        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
-    });
 
-    it('should retry sending the command with sendWithResponse on error', (done) => {
-        const firstMessage = createGenericMessage(1);
+        it('should retry sending the command on error', (done) => {
+            const firstMessage = createGenericMessage(1);
 
-        const firstPacket = Symbol() as unknown as Uint8Array;
+            const firstPacket = Symbol() as unknown as Uint8Array;
 
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test1'));
-        subject.sendWithResponse(firstMessage, NEVER).subscribe({
-            error: (e) => {
-                expect(e).toBeInstanceOf(Error);
-                expect((e as Error).message).toBe('test1');
-                verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
-                done();
-            }
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test1'));
+            subs.push(subject.sendWithResponse(firstMessage, NEVER).subscribe({
+                error: (e) => {
+                    expect(e).toBeInstanceOf(Error);
+                    expect((e as Error).message).toBe('test1');
+                    verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
+                    done();
+                }
+            }));
         });
-    });
 
-    it('should execute next command with sendWithResponse if the previous one was executed with error', (done) => {
-        const firstMessage = createGenericMessage(1);
-        const secondMessage = createGenericMessage(2);
+        it('should execute next command if the previous one was executed with error', (done) => {
+            const firstMessage = createGenericMessage(1);
+            const secondMessage = createGenericMessage(2);
 
-        const firstPacket = Symbol() as unknown as Uint8Array;
-        const secondPacket = Symbol() as unknown as Uint8Array;
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            const secondPacket = Symbol() as unknown as Uint8Array;
 
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
 
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test2'));
-        when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test2'));
+            when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
 
-        subject.sendWithResponse(firstMessage, NEVER).pipe(
-            catchError(() => of(null))
-        ).subscribe();
-        subject.sendWithResponse(secondMessage, NEVER).pipe(
-            catchError(() => of(null))
-        ).subscribe();
-    });
-
-    it('should retry sending the command with sendWithoutResponse if the reply was not received', (done) => {
-        const firstMessage = createGenericMessage(1);
-
-        const firstPacket = Symbol() as unknown as Uint8Array;
-
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => new Promise(() => {
-            // do nothing
-        }));
-        subject.sendWithoutResponse(firstMessage).subscribe({
-            error: (e) => {
-                expect(e).toBeInstanceOf(TimeoutError);
-                verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
-                done();
-            }
+            subs.push(subject.sendWithResponse(firstMessage, NEVER).pipe(
+                catchError(() => of(null))
+            ).subscribe());
+            subs.push(subject.sendWithResponse(secondMessage, NEVER).pipe(
+                catchError(() => of(null))
+            ).subscribe());
         });
-        jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
-    });
 
-    it('should retry sending the command with sendWithoutResponse on error', (done) => {
-        const firstMessage = createGenericMessage(1);
+        it('should not execute task before someone subscribes to the observable', () => {
+            let isSent = false;
+            const firstMessage = createGenericMessage(1);
 
-        const firstPacket = Symbol() as unknown as Uint8Array;
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => {
+                isSent = true;
+                return Promise.resolve();
+            });
 
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test1'));
-        subject.sendWithoutResponse(firstMessage).subscribe({
-            error: (e) => {
-                expect(e).toBeInstanceOf(Error);
-                expect((e as Error).message).toBe('test1');
-                verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
-                done();
-            }
+            const p = subject.sendWithResponse(firstMessage, NEVER);
+            expect(isSent).toBeFalsy();
+            subs.push(p.subscribe());
+            expect(isSent).toBeTruthy();
         });
     });
 
-    it('should execute next command with sendWithoutResponse if the previous one was executed with error', (done) => {
-        const firstMessage = createGenericMessage(1);
-        const secondMessage = createGenericMessage(2);
+    describe('sendWithoutResponse', () => {
+        it('should retry sending the command if the reply was not received', (done) => {
+            const firstMessage = createGenericMessage(1);
 
-        const firstPacket = Symbol() as unknown as Uint8Array;
-        const secondPacket = Symbol() as unknown as Uint8Array;
+            const firstPacket = Symbol() as unknown as Uint8Array;
 
-        when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
-        when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => new Promise(() => {
+                // do nothing
+            }));
+            subs.push(subject.sendWithoutResponse(firstMessage).subscribe({
+                error: (e) => {
+                    expect(e).toBeInstanceOf(TimeoutError);
+                    verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
+                    done();
+                }
+            }));
+            jest.advanceTimersByTime(config.messageSendTimeout * (config.maxMessageSendRetries + 1));
+        });
 
-        when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test2'));
-        when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
+        it('should retry sending the command on error', (done) => {
+            const firstMessage = createGenericMessage(1);
 
-        subject.sendWithoutResponse(firstMessage).pipe(
-            catchError(() => of(null))
-        ).subscribe();
-        subject.sendWithoutResponse(secondMessage).subscribe();
+            const firstPacket = Symbol() as unknown as Uint8Array;
+
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test1'));
+            subs.push(subject.sendWithoutResponse(firstMessage).subscribe({
+                error: (e) => {
+                    expect(e).toBeInstanceOf(Error);
+                    expect((e as Error).message).toBe('test1');
+                    verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
+                    done();
+                }
+            }));
+        });
+
+        it('should execute next command if the previous one was executed with error', (done) => {
+            const firstMessage = createGenericMessage(1);
+            const secondMessage = createGenericMessage(2);
+
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            const secondPacket = Symbol() as unknown as Uint8Array;
+
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
+
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test2'));
+            when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
+
+            subs.push(subject.sendWithoutResponse(firstMessage).pipe(
+                catchError(() => of(null))
+            ).subscribe());
+            subs.push(subject.sendWithoutResponse(secondMessage).subscribe());
+        });
+
+        it('should not execute sendWithoutResponse task before someone subscribes to the observable', () => {
+            let isSent = false;
+            const firstMessage = createGenericMessage(1);
+
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => {
+                isSent = true;
+                return Promise.resolve();
+            });
+
+            const p = subject.sendWithoutResponse(firstMessage);
+            expect(isSent).toBeFalsy();
+            subs.push(p.subscribe());
+            expect(isSent).toBeTruthy();
+        });
     });
 });
