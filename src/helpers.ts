@@ -30,6 +30,10 @@ export function convertUint32ToSignedInt(value: number): number {
     return value > 2147483647 ? value - 4294967296 : value;
 }
 
+export function convertUint16ToSignedInt(value: number): number {
+    return value > 32767 ? value - 65536 : value;
+}
+
 export function concatUint8Arrays(...a: Uint8Array[]): Uint8Array {
     const totalLength = a.reduce((acc, val) => acc + val.length, 0);
     const result = new Uint8Array(totalLength);

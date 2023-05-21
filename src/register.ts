@@ -5,7 +5,6 @@ import { DEFAULT_CONFIG, LEGO_HUB_CONFIG } from './types';
 import { HUB_SCANNER_ERROR_FACTORY, HubScannerFactory } from './hub-scanner';
 import {
     CHARACTERISTIC_DATA_STREAM_FACTORY,
-    COMMANDS_FEATURE_FACTORY,
     GENERIC_ERRORS_REPLIES_PARSER,
     HUB_CONNECTION_ERRORS_FACTORY,
     HUB_PROPERTY_FEATURE_FACTORY,
@@ -14,6 +13,7 @@ import {
     IMessageMiddleware,
     INBOUND_MESSAGE_LISTENER_FACTORY,
     InboundMessageListenerFactory,
+    MOTORS_FEATURE_FACTORY,
     OUTBOUND_MESSAGE_FACTORY,
     PORTS_FEATURE_FACTORY,
     PREFIXED_CONSOLE_LOGGER_FACTORY
@@ -38,11 +38,11 @@ import {
 } from './messages';
 import {
     ATTACHED_IO_REPLIES_PARSER,
-    CommandsFeatureFactory,
     HUB_PROPERTIES_FEATURE_ERRORS_FACTORY,
     HUB_PROPERTIES_MESSAGE_FACTORY,
     HUB_PROPERTIES_REPLIES_PARSER,
     HubPropertiesFeatureFactory,
+    MotorsFeatureFactory,
     PORT_INFORMATION_REPLY_PARSER,
     PORT_INFORMATION_REQUEST_MESSAGE_FACTORY,
     PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY,
@@ -76,7 +76,7 @@ container.register(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY, PortModeInform
 container.register(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY, PortInputFormatSetupSingleOutboundMessageFactory);
 container.register(HUB_PROPERTIES_MESSAGE_FACTORY, HubPropertiesOutboundMessageFactory);
 container.register(HUB_PROPERTY_FEATURE_FACTORY, HubPropertiesFeatureFactory);
-container.register(COMMANDS_FEATURE_FACTORY, CommandsFeatureFactory);
+container.register(MOTORS_FEATURE_FACTORY, MotorsFeatureFactory);
 container.register(PORTS_FEATURE_FACTORY, PortsFeatureFactory);
 container.register(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_CONNECTION_ERRORS_FACTORY, ConnectionErrorFactory);

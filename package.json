@@ -1,6 +1,6 @@
 {
   "name": "@nvsukhanov/rxpoweredup",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "A Typescript RxJS-based library for controlling LEGO Powered UP MOCs",
   "homepage": "https://github.com/nvsukhanov/rxPoweredUP/",
   "main": "dist/index.js",

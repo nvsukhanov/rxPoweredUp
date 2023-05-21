@@ -15,8 +15,9 @@ import { IOutboundMessenger, IPortsFeature } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
+import { IPortValueProvider } from '../motors';
 
-export class PortsFeature implements IPortsFeature {
+export class PortsFeature implements IPortsFeature, IPortValueProvider {
     private portValueStreamMap = new Map<string, Observable<PortValueInboundMessage>>();
 
     private portValueModeState = new Map<number, number>();

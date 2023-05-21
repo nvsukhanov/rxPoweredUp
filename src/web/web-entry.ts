@@ -1,8 +1,6 @@
 /* eslint-disable no-console,@typescript-eslint/no-non-null-assertion */
 import 'reflect-metadata';
 
-import { interval, take } from 'rxjs';
-
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
@@ -50,38 +48,36 @@ function onConnected(nextHub: IHub): void {
         console.log('systemTypeId', HubType[v]);
     });
 
-    nextHub.ports.onIoAttach(0).subscribe((r) => {
-        nextHub.commands.setAccelerationTime(r.portId, 200).subscribe((t) => {
-            console.log('setAccelerationTime', r.portId, PortCommandExecutionStatus[t]);
-        });
-        nextHub.commands.setDecelerationTime(r.portId, 200).subscribe((t) => {
-            console.log('setDecelerationTime', r.portId, PortCommandExecutionStatus[t]);
-        });
-        nextHub.commands.setAbsoluteZeroRelativeToCurrentPosition(r.portId, 0).subscribe((t) => {
-            console.log('setAbsoluteZeroRelativeToCurrentPosition', r.portId, PortCommandExecutionStatus[t]);
-        });
-    });
-
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle);
     document.getElementById('increment-angle')!.addEventListener('click', incrementAngle);
-    document.getElementById('sequential-increment-angle')!.addEventListener('click', rapidIncrementAngle);
+    document.getElementById('decrement-angle')!.addEventListener('click', decrementAngle);
+    document.getElementById('go-to-zero')!.addEventListener('click', goToZero);
+    document.getElementById('set-as-zero')!.addEventListener('click', setAsZero);
+    document.getElementById('read-pos')!.addEventListener('click', readPOS);
+    document.getElementById('read-apos')!.addEventListener('click', readAPOS);
+    document.getElementById('reset-zero')!.addEventListener('click', resetZero);
 
     nextHub.disconnected.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
         document.getElementById('increment-angle')!.removeEventListener('click', incrementAngle);
-        document.getElementById('sequential-increment-angle')!.removeEventListener('click', rapidIncrementAngle);
+        document.getElementById('decrement-angle')!.removeEventListener('click', decrementAngle);
+        document.getElementById('go-to-zero')!.removeEventListener('click', goToZero);
+        document.getElementById('set-as-zero')!.removeEventListener('click', setAsZero);
+        document.getElementById('read-pos')!.removeEventListener('click', readPOS);
+        document.getElementById('read-apos')!.removeEventListener('click', readAPOS);
+        document.getElementById('reset-zero')!.removeEventListener('click', resetZero);
         onDisconnected();
     });
 }
 
-const angleStep = 90;
+const angleStep = 10;
 let currentAngle = 0;
 
 function incrementAngle(): void {
     currentAngle += angleStep;
     const targetAngle = currentAngle;
-    console.log('starting settings angle', targetAngle);
-    hub?.commands.goToAbsoluteDegree(
+    console.log('incrementing angle to', targetAngle);
+    hub?.motors.goToPosition(
         0,
         targetAngle
     ).subscribe({
@@ -89,18 +85,74 @@ function incrementAngle(): void {
             console.log('settings angle', targetAngle, PortCommandExecutionStatus[r]);
         },
         complete: () => {
-            console.log('settings angle complete', targetAngle);
+            console.log('incrementing angle complete', targetAngle);
         }
     });
 }
 
-function rapidIncrementAngle(): void {
-    if (!hub) {
-        return;
-    }
-    interval(1000 / 20).pipe(
-        take(10),
-    ).subscribe(() => incrementAngle());
+function decrementAngle(): void {
+    currentAngle -= angleStep;
+    const targetAngle = currentAngle;
+    console.log('decrementing angle to', targetAngle);
+    hub?.motors.goToPosition(
+        0,
+        targetAngle
+    ).subscribe({
+        next: (r) => {
+            console.log('settings angle', targetAngle, PortCommandExecutionStatus[r]);
+        },
+        complete: () => {
+            console.log('decrementing angle complete', targetAngle);
+        }
+    });
+}
+
+function goToZero(): void {
+    hub?.motors.goToPosition(
+        0,
+        0
+    ).subscribe({
+        next: (r) => {
+            console.log('settings angle', 0, PortCommandExecutionStatus[r]);
+        },
+        complete: () => {
+            currentAngle = 0;
+            console.log('goToZero complete', 0);
+        }
+    });
+}
+
+function setAsZero(): void {
+    hub?.motors.setZeroPositionRelativeToCurrentPosition(
+        0,
+        0
+    ).subscribe({
+        next: (r) => {
+            console.log('setAsZero', 0, PortCommandExecutionStatus[r]);
+        },
+        complete: () => {
+            currentAngle = 0;
+            console.log('setAsZero complete', 0);
+        }
+    });
+}
+
+function readPOS(): void {
+    hub?.motors.getPosition(0).subscribe((r) => {
+        console.log('readPosition', r);
+    });
+}
+
+function readAPOS(): void {
+    hub?.motors.getAbsolutePosition(0).subscribe((r) => {
+        console.log('readAbsolutePosition', r);
+    });
+}
+
+function resetZero(): void {
+    hub?.motors.resetEncoder(0).subscribe((r) => {
+        console.log('resetZero', r);
+    });
 }
 
 function onDisconnected(): void {
