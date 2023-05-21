@@ -9,8 +9,8 @@ import { GenericError, IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
-import { IPortOutputCommandsFeatureFactory } from './i-port-output-commands-feature-factory';
-import { IPortOutputCommandsFeature } from './i-port-output-commands-feature';
+import { IMotorsFeatureFactory } from './i-motors-feature-factory';
+import { IMotorsFeature } from './i-motors-feature';
 import { IPortsFeatureFactory } from './i-ports-feature-factory';
 import { IPortsFeature } from './i-ports-feature';
 import { IInboundMessageListenerFactory } from './i-inbound-message-listener-factory';
@@ -21,7 +21,7 @@ export class Hub implements IHub {
 
     private _ports: IPortsFeature | undefined;
 
-    private _motor: IPortOutputCommandsFeature | undefined;
+    private _motors: IMotorsFeature | undefined;
 
     private _properties: (IHubPropertiesFeature & IDisposable) | undefined;
 
@@ -44,7 +44,7 @@ export class Hub implements IHub {
         private readonly propertiesFeatureFactory: IHubPropertiesFeatureFactory,
         private readonly ioFeatureFactory: IPortsFeatureFactory,
         private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
-        private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
+        private readonly commandsFeatureFactory: IMotorsFeatureFactory,
         private readonly replyParser: IReplyParser<MessageType.genericError>,
         private readonly messageListenerFactory: IInboundMessageListenerFactory,
         private readonly incomingMessageMiddleware: IMessageMiddleware[],
@@ -67,11 +67,11 @@ export class Hub implements IHub {
         return this._ports;
     }
 
-    public get commands(): IPortOutputCommandsFeature {
-        if (!this._motor) {
+    public get motors(): IMotorsFeature {
+        if (!this._motors) {
             throw new Error('Hub not connected');
         }
-        return this._motor;
+        return this._motors;
     }
 
     public get properties(): IHubPropertiesFeature {
@@ -182,9 +182,10 @@ export class Hub implements IHub {
             this.logger
         );
 
-        this._motor = this.commandsFeatureFactory.createCommandsFeature(
+        this._motors = this.commandsFeatureFactory.createCommandsFeature(
             dataStream,
-            messenger
+            messenger,
+            this._ports
         );
 
         await primaryCharacteristic.startNotifications();

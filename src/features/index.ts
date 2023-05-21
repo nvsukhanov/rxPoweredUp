@@ -1,4 +1,4 @@
 export * from './ports';
 export * from './hub-properties';
-export * from './commands';
+export * from './motors';
 

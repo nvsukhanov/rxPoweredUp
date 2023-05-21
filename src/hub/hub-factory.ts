@@ -9,7 +9,7 @@ import { IMessageMiddleware } from './i-message-middleware';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
 import { HUB_PROPERTY_FEATURE_FACTORY, IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
-import { COMMANDS_FEATURE_FACTORY, IPortOutputCommandsFeatureFactory } from './i-port-output-commands-feature-factory';
+import { IMotorsFeatureFactory, MOTORS_FEATURE_FACTORY } from './i-motors-feature-factory';
 import { IPortsFeatureFactory, PORTS_FEATURE_FACTORY } from './i-ports-feature-factory';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from './i-inbound-message-listener-factory';
 import { GENERIC_ERRORS_REPLIES_PARSER } from './generic-errors-reply-parser';
@@ -26,7 +26,7 @@ export class HubFactory {
         @inject(HUB_PROPERTY_FEATURE_FACTORY) private readonly hubPropertiesFactory: IHubPropertiesFeatureFactory,
         @inject(PORTS_FEATURE_FACTORY) private readonly ioFeatureFactoryService: IPortsFeatureFactory,
         @inject(CHARACTERISTIC_DATA_STREAM_FACTORY) private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
-        @inject(COMMANDS_FEATURE_FACTORY) private readonly commandsFeatureFactory: IPortOutputCommandsFeatureFactory,
+        @inject(MOTORS_FEATURE_FACTORY) private readonly commandsFeatureFactory: IMotorsFeatureFactory,
         @inject(GENERIC_ERRORS_REPLIES_PARSER) private readonly genericErrorsReplyParser: IReplyParser<MessageType.genericError>,
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PREFIXED_CONSOLE_LOGGER_FACTORY) private readonly loggerFactory: IPrefixedConsoleLoggerFactory

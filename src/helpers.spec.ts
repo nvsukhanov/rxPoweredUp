@@ -1,4 +1,11 @@
-import { concatUint8Arrays, concatUint8ToUint16, numberToUint32LEArray, readBitAtPosition, readNumberFromUint8LEArray } from './helpers';
+import {
+    concatUint8Arrays,
+    concatUint8ToUint16,
+    convertUint16ToSignedInt,
+    numberToUint32LEArray,
+    readBitAtPosition,
+    readNumberFromUint8LEArray
+} from './helpers';
 
 describe('Helpers', () => {
     describe('readBitAtPosition', () => {
@@ -53,6 +60,16 @@ describe('Helpers', () => {
                 new Uint8Array([ 0x01, 0x02 ]),
                 new Uint8Array([ 0x03, 0x04 ]))
             ).toEqual(new Uint8Array([ 0x01, 0x02, 0x03, 0x04 ]));
+        });
+    });
+
+    describe('convertUint16ToSignedInt', () => {
+        it('should convert a uint16 to a signed int', () => {
+            expect(convertUint16ToSignedInt(0b0000000000000000)).toBe(0);
+            expect(convertUint16ToSignedInt(0b0000000000000001)).toBe(1);
+            expect(convertUint16ToSignedInt(0b0111111111111111)).toBe(32767);
+            expect(convertUint16ToSignedInt(0b1000000000000000)).toBe(-32768);
+            expect(convertUint16ToSignedInt(0b1111111111111111)).toBe(-1);
         });
     });
 });

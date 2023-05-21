@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 import { IDisposable, RawMessage } from '../types';
 import { MessageType, OutboundMessageTypes } from '../constants';
-import { PortCommandExecutionStatus } from './i-port-output-commands-feature';
+import { PortCommandExecutionStatus } from './i-motors-feature';
 
 export interface IOutboundMessenger extends IDisposable {
     sendWithResponse<TResponse>(

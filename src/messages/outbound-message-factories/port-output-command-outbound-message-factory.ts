@@ -13,10 +13,10 @@ import {
     WriteDirectModeDataSubCommand
 } from '../../constants';
 import { numberToUint32LEArray } from '../../helpers';
-import { IPortOutputCommandOutboundMessageFactory } from '../../features';
+import { IMotorCommandsOutboundMessageFactory } from '../../features';
 
 @injectable()
-export class PortOutputCommandOutboundMessageFactory implements IPortOutputCommandOutboundMessageFactory {
+export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOutboundMessageFactory {
     public startRotation(
         portId: number,
         speed: number,

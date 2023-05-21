@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
-import { IPortOutputCommandsFeature } from './i-port-output-commands-feature';
+import { IMotorsFeature } from './i-motors-feature';
 import { IPortsFeature } from './i-ports-feature';
 import { GenericErrorCode, MessageType } from '../constants';
 
@@ -29,10 +29,10 @@ export interface IHub {
     readonly ports: IPortsFeature;
 
     /**
-     * Provides a way to send commands to devices attached to ports.
+     * Provides a way to send commands to motors attached to ports.
      * e.g. start motor, etc
      */
-    readonly commands: IPortOutputCommandsFeature;
+    readonly motors: IMotorsFeature;
 
     /**
      * Provides a way to access the properties of the hub.

@@ -3,14 +3,16 @@ import { InjectionToken } from 'tsyringe';
 
 import { RawMessage } from '../types';
 import { MessageType } from '../constants';
-import { IPortOutputCommandsFeature } from './i-port-output-commands-feature';
+import { IMotorsFeature } from './i-motors-feature';
 import { IOutboundMessenger } from './i-outbound-messenger';
+import { IPortValueProvider } from '../features';
 
-export interface IPortOutputCommandsFeatureFactory {
+export interface IMotorsFeatureFactory {
     createCommandsFeature(
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         messenger: IOutboundMessenger,
-    ): IPortOutputCommandsFeature;
+        portValueProvider: IPortValueProvider
+    ): IMotorsFeature;
 }
 
-export const COMMANDS_FEATURE_FACTORY: InjectionToken<IPortOutputCommandsFeatureFactory> = Symbol('COMMANDS_FEATURE_FACTORY');
+export const MOTORS_FEATURE_FACTORY: InjectionToken<IMotorsFeatureFactory> = Symbol('COMMANDS_FEATURE_FACTORY');

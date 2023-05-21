@@ -203,6 +203,13 @@ export enum LogLevel {
     Error = 3,
 }
 
+export const WELL_KNOWN_MOTOR_PORT_MODE_IDS = {
+    [PortModeName.power]: 0,
+    [PortModeName.speed]: 1,
+    [PortModeName.position]: 2,
+    [PortModeName.absolutePosition]: 3,
+} as const satisfies { [s in PortModeName]?: number };
+
 export type SubscribableHubProperties = HubProperty.RSSI | HubProperty.batteryVoltage | HubProperty.button | HubProperty.advertisingName;
 
 export type WritableHubProperties = HubProperty.advertisingName;

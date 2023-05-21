@@ -3,8 +3,8 @@ export { IHubPropertiesFeature } from './i-hub-properties-feature';
 export {
     PortCommandExecutionStatus,
     SetSpeedOptions,
-    GoToAbsoluteDegreeOptions,
-    IPortOutputCommandsFeature
-} from './i-port-output-commands-feature';
+    GoToPositionOptions,
+    IMotorsFeature
+} from './i-motors-feature';
 export { IPortsFeature } from './i-ports-feature';
 export { IMessageMiddleware } from './i-message-middleware';
