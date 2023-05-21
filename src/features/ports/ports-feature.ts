@@ -1,4 +1,4 @@
-import { Observable, exhaustMap, filter, share, take } from 'rxjs';
+import { Observable, concatWith, filter, last, take } from 'rxjs';
 
 import { MessageType, PortModeInformationType, PortModeName } from '../../constants';
 import { PortsFeaturePortValueListenerFactory } from './ports-feature-port-value-listener-factory';
@@ -7,6 +7,7 @@ import {
     AttachedIODetachInboundMessage,
     AttachedIOInboundMessage,
     AttachedIoAttachInboundMessage,
+    PortInputSetupSingleHandshakeInboundMessage,
     PortModeInboundMessage,
     PortModeInformationInboundMessage,
     PortValueInboundMessage
@@ -18,14 +19,11 @@ import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup
 import { IPortValueProvider } from '../motors';
 
 export class PortsFeature implements IPortsFeature, IPortValueProvider {
-    private portValueStreamMap = new Map<string, Observable<PortValueInboundMessage>>();
-
-    private portValueModeState = new Map<number, number>();
-
     constructor(
         private readonly portModeReplies$: Observable<PortModeInboundMessage>,
         private readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>,
         private readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>,
+        private readonly portValueSetupSingleHandshakeReplies$: Observable<PortInputSetupSingleHandshakeInboundMessage>,
         private readonly portInformationRequestMessageFactory: IPortInformationRequestMessageFactory,
         private readonly portValueInboundListenerFactory: PortsFeaturePortValueListenerFactory,
         private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
@@ -63,58 +61,25 @@ export class PortsFeature implements IPortsFeature, IPortValueProvider {
         modeId: number,
         portModeName: T
     ): Observable<PortValueInboundMessage & { modeName: T }> {
-        // ensure there are no active subscriptions for this port with different mode
-        const existingPortModeState = this.portValueModeState.get(portId);
-        if (existingPortModeState && existingPortModeState !== modeId) {
-            throw new Error(`Unable to get port ${portId} mode values for mode ${modeId}:
-             there are already active subscription for mode ${existingPortModeState}`);
-        }
+        const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
+            portId,
+            modeId,
+            false,
+        );
+        const portValueRequestMessage = this.portInformationRequestMessageFactory.createPortValueRequest(portId);
 
-        // retrieve cached stream if any
-        const portModeHash = `${portId}/${modeId}`;
-        const existingStream = this.portValueStreamMap.get(portModeHash);
-        if (existingStream) {
-            return existingStream as Observable<PortValueInboundMessage & { modeName: T }>;
-        }
-
-        // will throw if no listener can be created for this mode
-        const portValueReplies$ = this.portValueInboundListenerFactory.createForMode(
-            portModeName
+        const portValueHandshakeReplies$ = this.portValueSetupSingleHandshakeReplies$.pipe(
+            filter((r) => r.portId === portId && r.modeId === modeId),
+            take(1)
         );
 
-        const stream: Observable<PortValueInboundMessage> = new Observable((subscriber) => {
-            const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
-                portId,
-                modeId,
-                false,
-            );
-            const portValueRequestMessage = this.portInformationRequestMessageFactory.createPortValueRequest(portId);
+        const portValueReplies$ = this.portValueInboundListenerFactory.createForMode(portModeName);
 
-            // setting up port input format
-            // since we have share() operator below, this will be executed only once per port/mode
-            const sub = this.messenger.sendWithoutResponse(setPortInputFormatMessage).pipe(
-                // requesting port value
-                // since we have share() operator below, this will be executed only once per port/mode
-                exhaustMap(() => this.messenger.sendWithResponse(portValueRequestMessage, portValueReplies$)),
-            ).subscribe((v) => {
-                this.portValueModeState.delete(portId);
-                this.portValueStreamMap.delete(portModeHash);
-                subscriber.next(v);
-                subscriber.complete();
-            });
-            return () => {
-                this.portValueModeState.delete(portId);
-                this.portValueStreamMap.delete(portModeHash);
-                sub.unsubscribe();
-            };
-        });
-
-        const result = stream.pipe(share());
-        // each new subscriptions will create guarded stream of replies and store it in cache
-        this.portValueModeState.set(portId, modeId);
-        this.portValueStreamMap.set(portModeHash, result);
-
-        return result as Observable<PortValueInboundMessage & { modeName: T }>;
+        // TODO: following messages must not be interrupted by other setPortInputFormat messages.
+        return this.messenger.sendWithResponse(setPortInputFormatMessage, portValueHandshakeReplies$).pipe(
+            concatWith(this.messenger.sendWithResponse(portValueRequestMessage, portValueReplies$)),
+            last()
+        ) as Observable<PortValueInboundMessage & { modeName: T }>;
     }
 
     public getPortModes(

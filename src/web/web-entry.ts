@@ -1,6 +1,8 @@
 /* eslint-disable no-console,@typescript-eslint/no-non-null-assertion */
 import 'reflect-metadata';
 
+import { bufferCount, concatWith } from 'rxjs';
+
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
@@ -56,6 +58,7 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('read-pos')!.addEventListener('click', readPOS);
     document.getElementById('read-apos')!.addEventListener('click', readAPOS);
     document.getElementById('reset-zero')!.addEventListener('click', resetZero);
+    document.getElementById('read-pos-apos')!.addEventListener('click', readPOSandAPOS);
 
     nextHub.disconnected.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
@@ -66,6 +69,7 @@ function onConnected(nextHub: IHub): void {
         document.getElementById('read-pos')!.removeEventListener('click', readPOS);
         document.getElementById('read-apos')!.removeEventListener('click', readAPOS);
         document.getElementById('reset-zero')!.removeEventListener('click', resetZero);
+        document.getElementById('read-pos-apos')!.removeEventListener('click', readPOSandAPOS);
         onDisconnected();
     });
 }
@@ -147,6 +151,16 @@ function readAPOS(): void {
     hub?.motors.getAbsolutePosition(0).subscribe((r) => {
         console.log('readAbsolutePosition', r);
     });
+}
+
+function readPOSandAPOS(): void {
+    if (!hub) {
+        return;
+    }
+    hub.motors.getPosition(0).pipe(
+        concatWith(hub.motors.getAbsolutePosition(0)),
+        bufferCount(2)
+    ).subscribe((v) => console.log('POS and APOS', v));
 }
 
 function resetZero(): void {

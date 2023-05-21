@@ -27,6 +27,7 @@ import {
     OutboundMessengerFactory,
     PortInformationReplyParser,
     PortInformationRequestOutboundMessageFactory,
+    PortInputFormatSetupSingleHandshakeReplyParser,
     PortInputFormatSetupSingleOutboundMessageFactory,
     PortModeInformationReplyParser,
     PortModeInformationRequestOutboundMessageFactory,
@@ -46,6 +47,7 @@ import {
     PORT_INFORMATION_REPLY_PARSER,
     PORT_INFORMATION_REQUEST_MESSAGE_FACTORY,
     PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY,
+    PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER,
     PORT_MODE_INFORMATION_REPLY_PARSER,
     PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY,
     PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER,
@@ -71,6 +73,7 @@ container.register(PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER, PortValueAbsoluteP
 container.register(PORT_VALUE_SPEED_REPLY_PARSER, PortValueSpeedReplyParser);
 container.register(PORT_VALUE_POSITION_REPLY_PARSER, PortValuePositionReplyParser);
 container.register(PORT_MODE_INFORMATION_REPLY_PARSER, PortModeInformationReplyParser);
+container.register(PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER, PortInputFormatSetupSingleHandshakeReplyParser);
 container.register(PORT_INFORMATION_REQUEST_MESSAGE_FACTORY, PortInformationRequestOutboundMessageFactory);
 container.register(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY, PortModeInformationRequestOutboundMessageFactory);
 container.register(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY, PortInputFormatSetupSingleOutboundMessageFactory);
