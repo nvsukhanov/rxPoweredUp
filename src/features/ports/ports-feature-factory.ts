@@ -16,6 +16,7 @@ import { IPortInformationRequestMessageFactory, PORT_INFORMATION_REQUEST_MESSAGE
 import { IPortModeInformationRequestMessageFactory, PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory, PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from './i-port-input-format-setup-message-factory';
 import { AttachedIoRepliesCache } from './attached-io-replies-cache';
+import { PORT_VALUE_POSITION_REPLY_PARSER } from './port-value-position-reply-parser';
 
 @injectable()
 export class PortsFeatureFactory implements IPortsFeatureFactory {
@@ -25,6 +26,7 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
         @inject(PORT_INFORMATION_REPLY_PARSER) private readonly portInformationRequestReplyParser: IReplyParser<MessageType.portInformation>,
         @inject(ATTACHED_IO_REPLIES_PARSER) private readonly attachedIoReplyParser: IReplyParser<MessageType.attachedIO>,
         @inject(PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER) private readonly portValueAbsolutePositionReplyParser: IReplyParser<MessageType.portValueSingle>,
+        @inject(PORT_VALUE_POSITION_REPLY_PARSER) private readonly portValuePositionReplyParser: IReplyParser<MessageType.portValueSingle>,
         @inject(PORT_VALUE_SPEED_REPLY_PARSER) private readonly portValueSpeedReplyParser: IReplyParser<MessageType.portValueSingle>,
         @inject(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY) private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
         @inject(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY) private readonly portInputFormatSetupSingleMessageFactory: IPortInputFormatSetupMessageFactory,
@@ -46,6 +48,7 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
         const portValueListenerFactory = new PortsFeaturePortValueListenerFactory(
             this.portValueAbsolutePositionReplyParser,
             this.portValueSpeedReplyParser,
+            this.portValuePositionReplyParser,
             this.messageListenerFactory,
             characteristicDataStream,
             onHubDisconnected

@@ -57,11 +57,11 @@ export class PortsFeature implements IPortsFeature {
             )) as Observable<AttachedIODetachInboundMessage>;
     }
 
-    public getPortValue(
+    public getPortValue<T extends PortModeName>(
         portId: number,
         modeId: number,
-        portModeName: PortModeName
-    ): Observable<PortValueInboundMessage> {
+        portModeName: T
+    ): Observable<PortValueInboundMessage & { modeName: T }> {
         // ensure there are no active subscriptions for this port with different mode
         const existingPortModeState = this.portValueModeState.get(portId);
         if (existingPortModeState && existingPortModeState !== modeId) {
@@ -73,7 +73,7 @@ export class PortsFeature implements IPortsFeature {
         const portModeHash = `${portId}/${modeId}`;
         const existingStream = this.portValueStreamMap.get(portModeHash);
         if (existingStream) {
-            return existingStream;
+            return existingStream as Observable<PortValueInboundMessage & { modeName: T }>;
         }
 
         // will throw if no listener can be created for this mode
@@ -113,7 +113,7 @@ export class PortsFeature implements IPortsFeature {
         this.portValueModeState.set(portId, modeId);
         this.portValueStreamMap.set(portModeHash, result);
 
-        return result;
+        return result as Observable<PortValueInboundMessage & { modeName: T }>;
     }
 
     public getPortModes(

@@ -42,16 +42,16 @@ export interface IPortsFeature {
      * with modeId from the first call and PortModeName.absolutePosition.
      * OR
      * It seems like it is possible to use well-known modeIds and portModeNames, e.g. 0 and 'absolutePosition' for motors.
-     * But this method is fragile and may not work for all devices and be broken in future firmware versions.
+     * But this method is fragile and may not work for all devices and probably can be broken in future firmware versions.
      * @param portId
      * @param modeId
      * @param portModeName
      */
-    getPortValue(
+    getPortValue<T extends PortModeName>(
         portId: number,
         modeId: number,
-        portModeName: PortModeName
-    ): Observable<PortValueInboundMessage>;
+        portModeName: T
+    ): Observable<PortValueInboundMessage & { modeName: T }>;
 
     /**
      * Reads port modes and capabilities for a given port.
