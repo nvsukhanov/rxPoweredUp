@@ -5,3 +5,4 @@ export * from './port-mode-information-reply-parser';
 export * from './port-value';
 export * from './port-output-command-feedback-reply-parser';
 export * from './generic-error-reply-parser';
+export * from './port-input-format-setup-single-handshake-reply-parser';

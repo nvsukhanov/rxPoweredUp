@@ -5,8 +5,14 @@ import { PortsFeature } from './ports-feature';
 import { MessageType } from '../../constants';
 import { PortsFeaturePortValueListenerFactory } from './ports-feature-port-value-listener-factory';
 import { RawMessage } from '../../types';
-import { IOutboundMessenger, IPortsFeature, IPortsFeatureFactory, IReplyParser } from '../../hub';
-import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from '../../hub/i-inbound-message-listener-factory';
+import {
+    IInboundMessageListenerFactory,
+    INBOUND_MESSAGE_LISTENER_FACTORY,
+    IOutboundMessenger,
+    IPortsFeature,
+    IPortsFeatureFactory,
+    IReplyParser
+} from '../../hub';
 import { PORT_INFORMATION_REPLY_PARSER } from './port-information-reply-parser';
 import { ATTACHED_IO_REPLIES_PARSER } from './attached-io-replies-parser';
 import { PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER } from './port-value-absolute-position-reply-parser';
@@ -17,6 +23,7 @@ import { IPortModeInformationRequestMessageFactory, PORT_MODE_INFORMATION_REQUES
 import { IPortInputFormatSetupMessageFactory, PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from './i-port-input-format-setup-message-factory';
 import { AttachedIoRepliesCache } from './attached-io-replies-cache';
 import { PORT_VALUE_POSITION_REPLY_PARSER } from './port-value-position-reply-parser';
+import { PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER } from './port-input-format-setup-single-handshake-reply-parser';
 
 @injectable()
 export class PortsFeatureFactory implements IPortsFeatureFactory {
@@ -28,6 +35,8 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
         @inject(PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER) private readonly portValueAbsolutePositionReplyParser: IReplyParser<MessageType.portValueSingle>,
         @inject(PORT_VALUE_POSITION_REPLY_PARSER) private readonly portValuePositionReplyParser: IReplyParser<MessageType.portValueSingle>,
         @inject(PORT_VALUE_SPEED_REPLY_PARSER) private readonly portValueSpeedReplyParser: IReplyParser<MessageType.portValueSingle>,
+        @inject(PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER) // insanely long names mean this is a truly enterprise-grade code!
+        private readonly portInputFormatSetupSingleHandshakeReplyParser: IReplyParser<MessageType.portInputFormatSetupSingleHandshake>,
         @inject(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY) private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
         @inject(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY) private readonly portInputFormatSetupSingleMessageFactory: IPortInputFormatSetupMessageFactory,
         @inject(PORT_MODE_INFORMATION_REPLY_PARSER) private readonly portModeInformationReplyParserService: IReplyParser<MessageType.portModeInformation>,
@@ -66,6 +75,12 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
             onHubDisconnected,
         );
 
+        const portInputFormatSetupSingleReplies$ = this.messageListenerFactory.create(
+            characteristicDataStream,
+            this.portInputFormatSetupSingleHandshakeReplyParser,
+            onHubDisconnected,
+        );
+
         const attachedIOCache = new AttachedIoRepliesCache(
             attachedIOReplies$,
             onHubDisconnected
@@ -75,6 +90,7 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
             portInformationReplies$,
             attachedIOCache.replies$,
             portModeInformationReplies$,
+            portInputFormatSetupSingleReplies$,
             this.portInformationRequestMessageFactory,
             portValueListenerFactory,
             this.portModeInformationMessageFactory,

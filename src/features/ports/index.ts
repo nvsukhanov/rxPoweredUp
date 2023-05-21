@@ -8,3 +8,4 @@ export * from './i-port-information-request-message-factory';
 export * from './i-port-mode-information-request-message-factory';
 export * from './i-port-input-format-setup-message-factory';
 export * from './port-value-position-reply-parser';
+export * from './port-input-format-setup-single-handshake-reply-parser';

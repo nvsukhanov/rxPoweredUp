@@ -217,6 +217,14 @@ export type GenericErrorInboundMessage = {
     code: GenericErrorCode;
 }
 
+export type PortInputSetupSingleHandshakeInboundMessage = {
+    messageType: MessageType.portInputFormatSetupSingleHandshake;
+    portId: number;
+    modeId: number;
+    deltaInterval: number;
+    notificationEnabled: boolean;
+}
+
 export type InboundMessage =
     HubPropertyInboundMessage
     | AttachedIOInboundMessage
@@ -224,4 +232,5 @@ export type InboundMessage =
     | PortValueInboundMessage
     | PortModeInformationInboundMessage
     | PortOutputCommandFeedbackInboundMessage
-    | GenericErrorInboundMessage;
+    | GenericErrorInboundMessage
+    | PortInputSetupSingleHandshakeInboundMessage;

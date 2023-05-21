@@ -11,6 +11,7 @@ export enum MessageType {
     portInformation = 0x43, // 67
     portModeInformation = 0x44, // 68
     portValueSingle = 0x45, // 69
+    portInputFormatSetupSingleHandshake = 0x47, // 71
     portOutputCommand = 0x81, // 129
     portOutputCommandFeedback = 0x82, // 130
 }
