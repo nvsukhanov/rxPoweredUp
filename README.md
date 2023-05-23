@@ -37,7 +37,7 @@ const bluetooth = navigator.bluetooth;
 const hub = await firstValueFrom(connectHub(bluetooth, { logLevel: LogLevel.Debug }));
 
 // wait for IO to attach to port 0
-const io = await firstValueFrom(await hub.ports.onIoAttach(0));
+const io = await firstValueFrom(hub.ports.onIoAttach(0));
 
 // if IO is a specific motor, set speed to max for 1 second
 if (io.ioTypeId === IOType.largeTechnicMotor) {
