@@ -4,7 +4,6 @@ import { Hub } from './hub';
 import { BluetoothDeviceWithGatt } from '../types';
 import { HUB_CONNECTION_ERRORS_FACTORY, IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { CHARACTERISTIC_DATA_STREAM_FACTORY, ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
-import { IHub } from './i-hub';
 import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
 import { HUB_PROPERTY_FEATURE_FACTORY, IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
 import { IMotorsFeatureFactory, MOTORS_FEATURE_FACTORY } from './i-motors-feature-factory';
@@ -34,7 +33,7 @@ export class HubFactory {
     public create(
         device: BluetoothDeviceWithGatt,
         config: Partial<HubConfig> = {}
-    ): IHub {
+    ): Hub {
         const combinedConfig = this.mergeConfigs(config);
         return new Hub(
             device,

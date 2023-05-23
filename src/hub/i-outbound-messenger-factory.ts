@@ -5,8 +5,8 @@ import { IOutboundMessenger } from './i-outbound-messenger';
 import { ILogger, RawMessage } from '../types';
 import { MessageType } from '../constants';
 import { IMessageMiddleware } from './i-message-middleware';
-import { GenericError } from './i-hub';
 import { OutboundMessengerConfig } from './outbound-messenger-config';
+import { GenericError } from './generic-error';
 
 export interface IOutboundMessengerFactory {
     create(
