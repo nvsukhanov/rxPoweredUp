@@ -9,7 +9,6 @@ import {
     HUB_PROPERTY_FEATURE_FACTORY,
     HubConfig,
     HubFactory,
-    IHub,
     INBOUND_MESSAGE_LISTENER_FACTORY,
     InboundMessageListenerFactory,
     MOTORS_FEATURE_FACTORY,
@@ -58,6 +57,7 @@ import {
 } from './features';
 import { ConnectionErrorFactory } from './errors';
 import { PrefixedConsoleLoggerFactory } from './logger';
+import { Hub } from './hub/hub';
 
 container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
 container.register(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY, PortOutputCommandOutboundMessageFactory);
@@ -88,7 +88,7 @@ container.register(PREFIXED_CONSOLE_LOGGER_FACTORY, PrefixedConsoleLoggerFactory
 export function connectHub(
     bluetooth: Bluetooth,
     config?: Partial<HubConfig>
-): Observable<IHub> {
+): Observable<Hub> {
     const scannerFactory = container.resolve(HubScannerFactory).create(bluetooth);
     const hubFactory = container.resolve(HubFactory);
     return scannerFactory.discoverHub().pipe(
