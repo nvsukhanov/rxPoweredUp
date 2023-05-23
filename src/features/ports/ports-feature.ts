@@ -1,6 +1,6 @@
 import { Observable, concatWith, filter, last, take } from 'rxjs';
 
-import { MessageType, PortModeInformationType, PortModeName } from '../../constants';
+import { AttachIoEvent, PortModeInformationType, PortModeName } from '../../constants';
 import { PortsFeaturePortValueListenerFactory } from './ports-feature-port-value-listener-factory';
 import {
     AttachedIOAttachVirtualInboundMessage,
@@ -37,10 +37,13 @@ export class PortsFeature implements IPortsFeature, IPortValueProvider {
     ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage> {
         return this.attachedIoReplies$.pipe(
             filter((message) => {
-                if (portId === undefined) {
-                    return message.messageType === MessageType.attachedIO;
+                if (message.event !== AttachIoEvent.Attached && message.event !== AttachIoEvent.AttachedVirtual) {
+                    return false;
                 }
-                return message.portId === portId;
+                if (portId !== undefined) {
+                    return message.portId === portId;
+                }
+                return true;
             })
         ) as Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
     }
@@ -48,12 +51,15 @@ export class PortsFeature implements IPortsFeature, IPortValueProvider {
     public onIoDetach(portId?: number): Observable<AttachedIODetachInboundMessage> {
         return this.attachedIoReplies$.pipe(
             filter((message) => {
-                    if (portId === undefined) {
-                        return message.messageType === MessageType.attachedIO;
-                    }
+                if (message.event !== AttachIoEvent.Detached) {
+                    return false;
+                }
+                if (portId !== undefined) {
                     return message.portId === portId;
                 }
-            )) as Observable<AttachedIODetachInboundMessage>;
+                return true;
+            })
+        ) as Observable<AttachedIODetachInboundMessage>;
     }
 
     public getPortValue<T extends PortModeName>(

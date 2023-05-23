@@ -194,8 +194,6 @@ export type PortModeInformationInboundMessage =
     | PortModeInformationCapabilityBits
     | PortModeInformationValueFormat;
 
-export type PortInformationInboundMessageTypes = PortModeInboundMessage;
-
 export type PortOutputCommandFeedback = {
     bufferEmptyCommandInProgress: boolean;
     bufferEmptyCommandCompleted: boolean;
@@ -228,7 +226,7 @@ export type PortInputSetupSingleHandshakeInboundMessage = {
 export type InboundMessage =
     HubPropertyInboundMessage
     | AttachedIOInboundMessage
-    | PortInformationInboundMessageTypes
+    | PortModeInboundMessage
     | PortValueInboundMessage
     | PortModeInformationInboundMessage
     | PortOutputCommandFeedbackInboundMessage
