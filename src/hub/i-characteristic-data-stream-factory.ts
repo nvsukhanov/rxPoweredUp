@@ -1,14 +1,14 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from 'tsyringe';
 
-import { IMessageMiddleware } from './i-message-middleware';
 import { RawMessage } from '../types';
 import { MessageType } from '../constants';
+import { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
 
 export interface ICharacteristicDataStreamFactory {
     create(
         characteristic: BluetoothRemoteGATTCharacteristic,
-        messageMiddleware: IMessageMiddleware[]
+        config: CharacteristicDataStreamConfig
     ): Observable<RawMessage<MessageType>>;
 }
 

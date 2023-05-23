@@ -1,10 +1,9 @@
-import { Observable, Subject, catchError, from, fromEvent, map, of, share, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, catchError, from, fromEvent, map, of, share, shareReplay, switchMap, take, tap } from 'rxjs';
 
-import { IMessageMiddleware } from './i-message-middleware';
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
-import { BluetoothDeviceWithGatt, IDisposable, ILegoHubConfig, ILogger } from '../types';
+import { BluetoothDeviceWithGatt, IDisposable, ILogger } from '../types';
 import { GenericError, IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
@@ -15,6 +14,7 @@ import { IPortsFeatureFactory } from './i-ports-feature-factory';
 import { IPortsFeature } from './i-ports-feature';
 import { IInboundMessageListenerFactory } from './i-inbound-message-listener-factory';
 import { IReplyParser } from './i-reply-parser';
+import { HubConfig } from './hub-config';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
@@ -38,7 +38,7 @@ export class Hub implements IHub {
     constructor(
         private readonly device: BluetoothDeviceWithGatt,
         private readonly logger: ILogger,
-        private readonly config: ILegoHubConfig,
+        private readonly config: HubConfig,
         private readonly hubConnectionErrorFactory: IHubConnectionErrorsFactory,
         private readonly outboundMessengerFactory: IOutboundMessengerFactory,
         private readonly propertiesFeatureFactory: IHubPropertiesFeatureFactory,
@@ -47,9 +47,6 @@ export class Hub implements IHub {
         private readonly commandsFeatureFactory: IMotorsFeatureFactory,
         private readonly replyParser: IReplyParser<MessageType.genericError>,
         private readonly messageListenerFactory: IInboundMessageListenerFactory,
-        private readonly incomingMessageMiddleware: IMessageMiddleware[],
-        private readonly outgoingMessageMiddleware: IMessageMiddleware[],
-        private readonly externalDisconnectEvents$: Observable<unknown>
     ) {
     }
 
@@ -149,7 +146,12 @@ export class Hub implements IHub {
             shareReplay({ bufferSize: 1, refCount: true })
         );
 
-        const dataStream = this.characteristicsDataStreamFactory.create(primaryCharacteristic, this.incomingMessageMiddleware);
+        const dataStream = this.characteristicsDataStreamFactory.create(
+            primaryCharacteristic,
+            {
+                incomingMessageMiddleware: this.config.incomingMessageMiddleware,
+            }
+        );
 
         this._genericErrors = this.messageListenerFactory.create(
             dataStream,
@@ -164,9 +166,10 @@ export class Hub implements IHub {
             dataStream,
             this._genericErrors,
             primaryCharacteristic,
-            this.outgoingMessageMiddleware,
+            this.config.outgoingMessageMiddleware,
             this._beforeDisconnect,
-            this.logger
+            this.logger,
+            this.config
         );
 
         this._ports = this.ioFeatureFactory.create(
@@ -190,15 +193,6 @@ export class Hub implements IHub {
 
         await primaryCharacteristic.startNotifications();
         this.logger.debug('Started primary characteristic notifications');
-
-        const externalDisconnectSubscription = this.externalDisconnectEvents$.pipe(
-            takeUntil(this.beforeDisconnect),
-            take(1)
-        ).subscribe(() => {
-            this.logger.debug('External disconnect event received');
-            externalDisconnectSubscription.unsubscribe();
-            this.disconnect();
-        });
     }
 
     private async connectGattServer(device: BluetoothDeviceWithGatt): Promise<BluetoothRemoteGATTServer> {

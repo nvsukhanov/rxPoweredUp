@@ -1,11 +1,9 @@
 import { inject, injectable } from 'tsyringe';
-import { Observable } from 'rxjs';
 
 import { Hub } from './hub';
-import { BluetoothDeviceWithGatt, ILegoHubConfig, LEGO_HUB_CONFIG } from '../types';
+import { BluetoothDeviceWithGatt } from '../types';
 import { HUB_CONNECTION_ERRORS_FACTORY, IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { CHARACTERISTIC_DATA_STREAM_FACTORY, ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
-import { IMessageMiddleware } from './i-message-middleware';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
 import { HUB_PROPERTY_FEATURE_FACTORY, IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
@@ -13,14 +11,14 @@ import { IMotorsFeatureFactory, MOTORS_FEATURE_FACTORY } from './i-motors-featur
 import { IPortsFeatureFactory, PORTS_FEATURE_FACTORY } from './i-ports-feature-factory';
 import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from './i-inbound-message-listener-factory';
 import { GENERIC_ERRORS_REPLIES_PARSER } from './generic-errors-reply-parser';
-import { LogLevel, MessageType } from '../constants';
+import { MessageType } from '../constants';
 import { IReplyParser } from './i-reply-parser';
 import { IPrefixedConsoleLoggerFactory, PREFIXED_CONSOLE_LOGGER_FACTORY } from './i-prefixed-console-logger-factory';
+import { HUB_CONFIG_DEFAULTS, HubConfig } from './hub-config';
 
 @injectable()
 export class HubFactory {
     constructor(
-        @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig,
         @inject(HUB_CONNECTION_ERRORS_FACTORY) private readonly connectionErrorFactory: IHubConnectionErrorsFactory,
         @inject(OUTBOUND_MESSAGE_FACTORY) private readonly outboundMessengerFactory: IOutboundMessengerFactory,
         @inject(HUB_PROPERTY_FEATURE_FACTORY) private readonly hubPropertiesFactory: IHubPropertiesFeatureFactory,
@@ -35,15 +33,13 @@ export class HubFactory {
 
     public create(
         device: BluetoothDeviceWithGatt,
-        incomingMessageMiddleware: IMessageMiddleware[],
-        outgoingMessageMiddleware: IMessageMiddleware[],
-        externalDisconnectEvents$: Observable<unknown>,
-        logLevel: LogLevel = LogLevel.Warning
+        config: Partial<HubConfig> = {}
     ): IHub {
+        const combinedConfig = this.mergeConfigs(config);
         return new Hub(
             device,
-            this.loggerFactory.createLogger(device.name ?? device.id, logLevel),
-            this.config,
+            this.loggerFactory.createLogger(device.name ?? device.id, combinedConfig.logLevel),
+            combinedConfig,
             this.connectionErrorFactory,
             this.outboundMessengerFactory,
             this.hubPropertiesFactory,
@@ -52,9 +48,12 @@ export class HubFactory {
             this.commandsFeatureFactory,
             this.genericErrorsReplyParser,
             this.messageListenerFactory,
-            incomingMessageMiddleware,
-            outgoingMessageMiddleware,
-            externalDisconnectEvents$
         );
+    }
+
+    private mergeConfigs(
+        ...configs: Partial<HubConfig>[]
+    ): HubConfig {
+        return Object.assign({}, HUB_CONFIG_DEFAULTS, ...configs);
     }
 }

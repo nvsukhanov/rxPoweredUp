@@ -3,12 +3,13 @@ import { NEVER, Subject, Subscription, TimeoutError, catchError, of } from 'rxjs
 import { instance, mock, verify, when } from 'ts-mockito';
 
 import { OutboundMessenger } from './outbound-messenger';
-import { ILegoHubConfig, ILogger, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { ILogger, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { PacketBuilder } from './packet-builder';
 import { MessageType, OutboundMessageTypes } from '../../constants';
 import { concatUint8Arrays } from '../../helpers';
 import { PortOutputCommandFeedbackReplyParser } from '../reply-parsers';
 import { PortCommandExecutionStatus } from '../../hub';
+import { OutboundMessengerConfig } from '../../hub/outbound-messenger-config';
 
 jest.useFakeTimers();
 
@@ -50,7 +51,7 @@ describe('OutboundMessenger', () => {
     let characteristicMock: BluetoothRemoteGATTCharacteristic;
     let packetBuilderMock: PacketBuilder;
     let loggerMock: ILogger;
-    let config: ILegoHubConfig;
+    let config: OutboundMessengerConfig;
     let subs: Subscription[];
 
     beforeEach(() => {
@@ -63,7 +64,8 @@ describe('OutboundMessenger', () => {
         config = {
             maxMessageSendRetries: 5,
             messageSendTimeout: 5,
-        } as ILegoHubConfig;
+            outgoingMessageMiddleware: []
+        };
 
         subject = new OutboundMessenger(
             portOutputCommandFeedbackStream,

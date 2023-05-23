@@ -1,8 +1,8 @@
 import { Observable, ReplaySubject, Subject, Subscription, TimeoutError, catchError, from, of, retry, switchMap, take, takeUntil, timeout } from 'rxjs';
 
-import { IDisposable, ILegoHubConfig, ILogger, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { IDisposable, ILogger, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { GenericErrorCode, MessageType, OutboundMessageTypes } from '../../constants';
-import { GenericError, IMessageMiddleware, IOutboundMessenger, PortCommandExecutionStatus } from '../../hub';
+import { GenericError, IMessageMiddleware, IOutboundMessenger, OutboundMessengerConfig, PortCommandExecutionStatus } from '../../hub';
 import { PacketBuilder } from './packet-builder';
 import { formatMessageForDump } from '../../helpers';
 
@@ -77,7 +77,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
         private readonly packetBuilder: PacketBuilder,
         private readonly messageMiddleware: ReadonlyArray<IMessageMiddleware>,
         private readonly logger: ILogger,
-        private readonly config: ILegoHubConfig
+        private readonly config: OutboundMessengerConfig
     ) {
     }
 

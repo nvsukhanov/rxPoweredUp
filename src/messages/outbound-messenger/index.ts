@@ -1,3 +1,1 @@
-export * from './outbound-messenger-factory';
-
-
+export { OutboundMessengerFactory } from './outbound-messenger-factory';
