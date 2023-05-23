@@ -4,6 +4,7 @@ import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../const
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
 import { BluetoothDeviceWithGatt, IDisposable, ILogger } from '../types';
+import { GenericError, IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
@@ -14,9 +15,8 @@ import { IPortsFeature } from './i-ports-feature';
 import { IInboundMessageListenerFactory } from './i-inbound-message-listener-factory';
 import { IReplyParser } from './i-reply-parser';
 import { HubConfig } from './hub-config';
-import { GenericError } from './generic-error';
 
-export class Hub {
+export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
 
     private _ports: IPortsFeature | undefined;
@@ -50,12 +50,6 @@ export class Hub {
     ) {
     }
 
-    /**
-     * Emits when a generic error is received from the hub.
-     * Generic errors are errors that are not specific to a feature.
-     * e.g when a port output command for a port without an attached it is sent to the hub, the stream will emit:
-     * { commandType: MessageType.portOutputCommandFeedback, code: GenericErrorCode.invalidUse }
-     */
     public get genericErrors(): Observable<GenericError> {
         if (!this._genericErrors) {
             throw new Error('Hub not connected');
@@ -63,14 +57,6 @@ export class Hub {
         return this._genericErrors;
     }
 
-    /**
-     * Provides a way to access the ports information of the hub.
-     * e.g. listen to port attach/detach events, request port value, etc.
-     * Hub identifies ports by their numerical index (not by their literal name engraved on the hub).
-     * e.g. port A is index 0, port B is index 1, etc.
-     * Also note that hubs usually have internal ports that can be accessed by their index as well (eg. 50).
-     * On hub connection, the hub will emit a port attach event for each port that has a device attached to it, including internal ports.
-     */
     public get ports(): IPortsFeature {
         if (!this._ports) {
             throw new Error('Hub not connected');
@@ -78,10 +64,6 @@ export class Hub {
         return this._ports;
     }
 
-    /**
-     * Provides a way to send commands to motors attached to ports.
-     * e.g. start motor, etc
-     */
     public get motors(): IMotorsFeature {
         if (!this._motors) {
             throw new Error('Hub not connected');
@@ -89,10 +71,6 @@ export class Hub {
         return this._motors;
     }
 
-    /**
-     * Provides a way to access the properties of the hub.
-     * e.g. listen to battery level changes, set hub advertising name, etc.
-     */
     public get properties(): IHubPropertiesFeature {
         if (!this._properties) {
             throw new Error('Hub not connected');
@@ -100,10 +78,6 @@ export class Hub {
         return this._properties;
     }
 
-    /**
-     * Emits when the hub disconnect method is called but before the hub is actually disconnected.
-     * Can be used to perform some cleanup before the hub is disconnected.
-     */
     public get beforeDisconnect(): Observable<void> {
         if (!this._beforeDisconnect) {
             throw new Error('Hub not connected');
@@ -111,10 +85,6 @@ export class Hub {
         return this._beforeDisconnect;
     }
 
-    /**
-     * Emits when the hub is disconnected.
-     * Can be used to perform actions after the hub is disconnected.
-     */
     public get disconnected(): Observable<void> {
         if (!this._disconnected$) {
             throw new Error('Hub not connected');
@@ -122,10 +92,6 @@ export class Hub {
         return this._disconnected$;
     }
 
-    /**
-     * Connects to the hub.
-     * Must be called before using any hub features.
-     */
     public connect(): Observable<void> {
         if (this._isConnected) {
             throw new Error('Hub already connected');
@@ -153,9 +119,6 @@ export class Hub {
         ) as Observable<void>;
     }
 
-    /**
-     * Disconnects from the hub.
-     */
     public disconnect(): Observable<void> {
         if (!this._isConnected) {
             throw new Error('Hub not connected');
