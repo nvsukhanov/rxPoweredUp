@@ -5,11 +5,11 @@ import { bufferCount, concatWith } from 'rxjs';
 
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
-import { Hub, PortCommandExecutionStatus } from '../hub';
+import { IHub, PortCommandExecutionStatus } from '../hub';
 import { HubType, LogLevel } from '../constants';
 import { PrefixedConsoleLogger } from '../logger';
 
-let hub: Hub | undefined;
+let hub: IHub | undefined;
 
 async function connect(): Promise<void> {
     connectHub(
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('connect')!.addEventListener('click', () => connect());
 });
 
-function onConnected(nextHub: Hub): void {
+function onConnected(nextHub: IHub): void {
     hub = nextHub;
     setControlsState(true);
     const hubDisconnectHandle = (): unknown => nextHub.disconnect().subscribe(() => console.log('disconnected'));

@@ -1,5 +1,5 @@
 export * from './hub-factory';
-export * from './hub';
+export * from './i-hub';
 export * from './i-outbound-messenger';
 export * from './i-outbound-messenger-factory';
 export * from './i-hub-properties-feature';
@@ -19,4 +19,3 @@ export * from './i-prefixed-console-logger-factory';
 export { OutboundMessengerConfig } from './outbound-messenger-config';
 export { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
 export { HubConfig } from './hub-config';
-export { GenericError } from './generic-error';
