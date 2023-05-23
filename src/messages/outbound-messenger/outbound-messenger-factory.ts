@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { inject, injectable } from 'tsyringe';
 
-import { ILegoHubConfig, ILogger, LEGO_HUB_CONFIG, RawMessage } from '../../types';
+import { ILogger, RawMessage } from '../../types';
 import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
 import { MessageType } from '../../constants';
 import {
@@ -11,7 +11,8 @@ import {
     INBOUND_MESSAGE_LISTENER_FACTORY,
     IOutboundMessenger,
     IOutboundMessengerFactory,
-    IReplyParser
+    IReplyParser,
+    OutboundMessengerConfig
 } from '../../hub';
 import { OutboundMessenger } from './outbound-messenger';
 import { PacketBuilder } from './packet-builder';
@@ -21,7 +22,6 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
     constructor(
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER) private readonly feedbackIReplyParser: IReplyParser<MessageType.portOutputCommandFeedback>,
-        @inject(LEGO_HUB_CONFIG) private readonly config: ILegoHubConfig,
         private readonly packetBuilder: PacketBuilder,
     ) {
     }
@@ -32,7 +32,8 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         characteristic: BluetoothRemoteGATTCharacteristic,
         messageMiddleware: ReadonlyArray<IMessageMiddleware>,
         onDisconnected$: Observable<void>,
-        logger: ILogger
+        logger: ILogger,
+        config: OutboundMessengerConfig
     ): IOutboundMessenger {
         const commandsFeedbackStream = this.messageListenerFactory.create(
             characteristicDataStream,
@@ -47,7 +48,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
             this.packetBuilder,
             messageMiddleware,
             logger,
-            this.config,
+            config
         );
     }
 }

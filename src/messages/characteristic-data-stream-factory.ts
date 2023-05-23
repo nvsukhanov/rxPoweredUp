@@ -3,7 +3,7 @@ import { injectable } from 'tsyringe';
 
 import { InboundMessageDissector } from './inbound-message-dissector';
 import { MessageType } from '../constants';
-import { ICharacteristicDataStreamFactory, IMessageMiddleware } from '../hub';
+import { CharacteristicDataStreamConfig, ICharacteristicDataStreamFactory } from '../hub';
 import { RawMessage } from '../types';
 
 @injectable()
@@ -17,13 +17,13 @@ export class CharacteristicDataStreamFactory implements ICharacteristicDataStrea
 
     public create(
         characteristic: BluetoothRemoteGATTCharacteristic,
-        messageMiddleware: IMessageMiddleware[]
+        config: CharacteristicDataStreamConfig
     ): Observable<RawMessage<MessageType>> {
         return fromEvent(characteristic, this.characteristicValueChangedEventName).pipe(
             map((e) => this.getValueFromEvent(e)),
             switchMap((value) => value ? of(value) : EMPTY),
             map((uint8Message) => this.dissector.dissect(uint8Message)),
-            map((message) => messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message)),
+            map((message) => config.incomingMessageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message)),
             share()
         );
     }

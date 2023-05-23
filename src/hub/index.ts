@@ -16,3 +16,6 @@ export * from './i-inbound-message-listener-factory';
 export * from './inbound-message-listener-factory';
 export * from './i-reply-parser';
 export * from './i-prefixed-console-logger-factory';
+export { OutboundMessengerConfig } from './outbound-messenger-config';
+export { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
+export { HubConfig } from './hub-config';

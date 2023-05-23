@@ -6,6 +6,7 @@ import { ILogger, RawMessage } from '../types';
 import { MessageType } from '../constants';
 import { IMessageMiddleware } from './i-message-middleware';
 import { GenericError } from './i-hub';
+import { OutboundMessengerConfig } from './outbound-messenger-config';
 
 export interface IOutboundMessengerFactory {
     create(
@@ -14,7 +15,8 @@ export interface IOutboundMessengerFactory {
         characteristic: BluetoothRemoteGATTCharacteristic,
         messageMiddleware: ReadonlyArray<IMessageMiddleware>,
         onDisconnected$: Observable<void>,
-        logger: ILogger
+        logger: ILogger,
+        config: OutboundMessengerConfig
     ): IOutboundMessenger;
 }
 
