@@ -64,6 +64,7 @@ describe('OutboundMessenger', () => {
         config = {
             maxMessageSendRetries: 5,
             messageSendTimeout: 5,
+            outgoingMessageMiddleware: []
         };
 
         subject = new OutboundMessenger(
