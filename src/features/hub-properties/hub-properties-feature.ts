@@ -73,7 +73,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.advertisingName),
         ) as Observable<HubPropertyAdvertisingNameInboundMessage>;
-        return this.messenger.sendWithResponse(message, reply).pipe(
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((reply) => reply.advertisingName),
         );
     }
@@ -83,7 +83,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.batteryVoltage)
         ) as Observable<HubPropertyBatteryInboundMessage>;
-        return this.messenger.sendWithResponse(message, reply).pipe(
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((reply) => reply.level),
         );
     }
@@ -93,7 +93,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.button)
         ) as Observable<HubPropertyButtonStateInboundMessage>;
-        return this.messenger.sendWithResponse(message, reply).pipe(
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((reply) => reply.isPressed),
         );
     }
@@ -103,7 +103,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.primaryMacAddress)
         ) as Observable<HubPropertyPrimaryMacAddressInboundMessage>;
-        return this.messenger.sendWithResponse(message, reply).pipe(
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((reply) => reply.macAddress),
         );
     }
@@ -113,7 +113,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.RSSI)
         ) as Observable<HubPropertyRssiInboundMessage>;
-        return this.messenger.sendWithResponse(message, reply).pipe(
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((reply) => reply.level),
         );
     }
@@ -123,7 +123,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const reply = this.inboundMessages.pipe(
             filter((reply) => reply.propertyType === HubProperty.systemTypeId)
         ) as Observable<HubPropertySystemTypeIdInboundMessage>;
-        return this.messenger.sendWithResponse(message, reply).pipe(
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((reply) => reply.hubType),
         );
     }

@@ -1,8 +1,25 @@
-import { Observable, ReplaySubject, Subject, Subscription, TimeoutError, catchError, from, of, retry, switchMap, take, takeUntil, timeout } from 'rxjs';
+import {
+    Observable,
+    ReplaySubject,
+    Subject,
+    Subscription,
+    TimeoutError,
+    bufferCount,
+    catchError,
+    concatWith,
+    from,
+    map,
+    of,
+    retry,
+    switchMap,
+    take,
+    takeUntil,
+    timeout
+} from 'rxjs';
 
-import { IDisposable, ILogger, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { IDisposable, ILogger, LastOfTuple, PortOutputCommandFeedbackInboundMessage, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { GenericErrorCode, MessageType, OutboundMessageTypes } from '../../constants';
-import { GenericError, IMessageMiddleware, IOutboundMessenger, OutboundMessengerConfig, PortCommandExecutionStatus } from '../../hub';
+import { GenericError, IMessageMiddleware, IOutboundMessenger, OutboundMessengerConfig, PortCommandExecutionStatus, WithResponseSequenceItem } from '../../hub';
 import { PacketBuilder } from './packet-builder';
 import { formatMessageForDump } from '../../helpers';
 
@@ -104,28 +121,42 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable { // T
         return queueItem.executionStream;
     }
 
-    public sendWithResponse<TResponse>(
-        message: RawMessage<OutboundMessageTypes>,
-        responseStream: Observable<TResponse>,
-    ): Observable<TResponse> {
-        let isQueued = false;
+    sendWithResponse<
+        TSequenceItems extends [ ...Array<WithResponseSequenceItem<unknown>>, WithResponseSequenceItem<unknown> ],
+        TResult extends LastOfTuple<TSequenceItems> extends WithResponseSequenceItem<infer R> ? R : never
+    >(
+        ...sequenceItems: TSequenceItems
+    ): Observable<TResult> {
+        const executionStreams: Array<Observable<unknown>> = [];
+        sequenceItems.forEach(({ message, reply }) => {
+            let isQueued = false;
 
-        const queueItem: TaskWithResponseQueueItem<TResponse> = {
-            type: TaskType.withResponse,
-            message,
-            state: TaskState.pending,
-            inputStream: responseStream,
-            outputStream: new ReplaySubject<TResponse>(1),
-            executionStream: new Observable<TResponse>((observer) => {
-                if (!isQueued) {
-                    this.enqueueCommand(queueItem as TaskWithResponseQueueItem<unknown>);
-                    isQueued = true;
-                }
-                const sub = queueItem.outputStream.subscribe(observer);
-                return () => sub.unsubscribe();
-            })
-        };
-        return queueItem.executionStream;
+            const queueItem: TaskWithResponseQueueItem<unknown> = {
+                type: TaskType.withResponse,
+                message,
+                state: TaskState.pending,
+                inputStream: reply,
+                outputStream: new ReplaySubject<unknown>(1),
+                executionStream: new Observable<unknown>((observer) => {
+                    if (!isQueued) {
+                        this.enqueueCommand(queueItem as TaskWithResponseQueueItem<unknown>);
+                        isQueued = true;
+                    }
+                    const sub = queueItem.outputStream.subscribe(observer);
+                    return () => sub.unsubscribe();
+                })
+            };
+            executionStreams.push(queueItem.executionStream);
+        });
+        if (executionStreams.length === 1) {
+            return executionStreams[0] as Observable<TResult>;
+        } else {
+            return executionStreams[0].pipe(
+                concatWith(...executionStreams.slice(1)),
+                bufferCount(sequenceItems.length),
+                map((r) => r.at(-1) as TResult),
+            );
+        }
     }
 
     public sendPortOutputCommand(
