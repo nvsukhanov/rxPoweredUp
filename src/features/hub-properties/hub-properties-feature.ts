@@ -71,60 +71,60 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
     public getAdvertisingName(): Observable<string> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.advertisingName);
         const reply = this.inboundMessages.pipe(
-            filter((reply) => reply.propertyType === HubProperty.advertisingName),
+            filter((r) => r.propertyType === HubProperty.advertisingName),
         ) as Observable<HubPropertyAdvertisingNameInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
-            map((reply) => reply.advertisingName),
+            map((r) => r.advertisingName),
         );
     }
 
     public getBatteryLevel(): Observable<number> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.batteryVoltage);
         const reply = this.inboundMessages.pipe(
-            filter((reply) => reply.propertyType === HubProperty.batteryVoltage)
+            filter((r) => r.propertyType === HubProperty.batteryVoltage)
         ) as Observable<HubPropertyBatteryInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
-            map((reply) => reply.level),
+            map((r) => r.level),
         );
     }
 
     public getButtonState(): Observable<boolean> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.button);
         const reply = this.inboundMessages.pipe(
-            filter((reply) => reply.propertyType === HubProperty.button)
+            filter((r) => r.propertyType === HubProperty.button)
         ) as Observable<HubPropertyButtonStateInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
-            map((reply) => reply.isPressed),
+            map((r) => r.isPressed),
         );
     }
 
     public getPrimaryMacAddress(): Observable<string> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.primaryMacAddress);
         const reply = this.inboundMessages.pipe(
-            filter((reply) => reply.propertyType === HubProperty.primaryMacAddress)
+            filter((r) => r.propertyType === HubProperty.primaryMacAddress)
         ) as Observable<HubPropertyPrimaryMacAddressInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
-            map((reply) => reply.macAddress),
+            map((r) => r.macAddress),
         );
     }
 
     public getRSSILevel(): Observable<number> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.RSSI);
         const reply = this.inboundMessages.pipe(
-            filter((reply) => reply.propertyType === HubProperty.RSSI)
+            filter((r) => r.propertyType === HubProperty.RSSI)
         ) as Observable<HubPropertyRssiInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
-            map((reply) => reply.level),
+            map((r) => r.level),
         );
     }
 
     public getSystemTypeId(): Observable<HubType> {
         const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.systemTypeId);
         const reply = this.inboundMessages.pipe(
-            filter((reply) => reply.propertyType === HubProperty.systemTypeId)
+            filter((r) => r.propertyType === HubProperty.systemTypeId)
         ) as Observable<HubPropertySystemTypeIdInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
-            map((reply) => reply.hubType),
+            map((r) => r.hubType),
         );
     }
 

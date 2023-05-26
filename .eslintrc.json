@@ -144,7 +144,9 @@
         ],
         "import/no-mutable-exports": [
           "error"
-        ]
+        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error"
       }
     }
   ]
