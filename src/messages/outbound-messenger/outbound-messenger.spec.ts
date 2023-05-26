@@ -8,8 +8,7 @@ import { PacketBuilder } from './packet-builder';
 import { MessageType, OutboundMessageTypes } from '../../constants';
 import { concatUint8Arrays } from '../../helpers';
 import { PortOutputCommandFeedbackReplyParser } from '../reply-parsers';
-import { PortCommandExecutionStatus } from '../../hub';
-import { OutboundMessengerConfig } from '../../hub/outbound-messenger-config';
+import { OutboundMessengerConfig, PortCommandExecutionStatus } from '../../hub';
 
 jest.useFakeTimers();
 
@@ -265,7 +264,7 @@ describe('OutboundMessenger', () => {
 
             when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
             when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenResolve();
-            subs.push(subject.sendWithResponse(firstMessage, NEVER).subscribe({
+            subs.push(subject.sendWithResponse({ message: firstMessage, reply: NEVER }).subscribe({
                 error: (e) => {
                     expect(e).toBeInstanceOf(TimeoutError);
                     verify(characteristicMock.writeValueWithoutResponse(firstPacket)).times(config.maxMessageSendRetries + 1);
@@ -282,7 +281,7 @@ describe('OutboundMessenger', () => {
 
             when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
             when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test1'));
-            subs.push(subject.sendWithResponse(firstMessage, NEVER).subscribe({
+            subs.push(subject.sendWithResponse({ message: firstMessage, reply: NEVER }).subscribe({
                 error: (e) => {
                     expect(e).toBeInstanceOf(Error);
                     expect((e as Error).message).toBe('test1');
@@ -305,10 +304,10 @@ describe('OutboundMessenger', () => {
             when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenThrow(new Error('test2'));
             when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => done()).thenCall(() => Promise.resolve());
 
-            subs.push(subject.sendWithResponse(firstMessage, NEVER).pipe(
+            subs.push(subject.sendWithResponse({ message: firstMessage, reply: NEVER }).pipe(
                 catchError(() => of(null))
             ).subscribe());
-            subs.push(subject.sendWithResponse(secondMessage, NEVER).pipe(
+            subs.push(subject.sendWithResponse({ message: secondMessage, reply: NEVER }).pipe(
                 catchError(() => of(null))
             ).subscribe());
         });
@@ -324,10 +323,51 @@ describe('OutboundMessenger', () => {
                 return Promise.resolve();
             });
 
-            const p = subject.sendWithResponse(firstMessage, NEVER);
+            const p = subject.sendWithResponse({ message: firstMessage, reply: NEVER });
             expect(isSent).toBeFalsy();
             subs.push(p.subscribe());
             expect(isSent).toBeTruthy();
+        });
+
+        it('should send multiple commands in order, returning the response of the last one', (done) => {
+            const replies: unknown[] = [];
+            const messageSendOrder: Array<RawMessage<OutboundMessageTypes>> = [];
+            const expectedReply = Symbol();
+            const firstMessage = createGenericMessage(1);
+            const secondMessage = createGenericMessage(1);
+
+            const firstPacket = Symbol() as unknown as Uint8Array;
+            const secondPacket = Symbol() as unknown as Uint8Array;
+
+            const firstResponseStream = new Subject<number>();
+            const secondResponseStream = new Subject<symbol>();
+
+            when(packetBuilderMock.buildPacket(firstMessage)).thenReturn(firstPacket);
+            when(characteristicMock.writeValueWithoutResponse(firstPacket)).thenCall(() => {
+                messageSendOrder.push(firstMessage);
+                return Promise.resolve();
+            });
+
+            when(packetBuilderMock.buildPacket(secondMessage)).thenReturn(secondPacket);
+            when(characteristicMock.writeValueWithoutResponse(secondPacket)).thenCall(() => {
+                messageSendOrder.push(secondMessage);
+                return Promise.resolve();
+            });
+
+            subject.sendWithResponse(
+                { message: firstMessage, reply: firstResponseStream },
+                { message: secondMessage, reply: secondResponseStream }
+            ).subscribe({
+                next: (v) => replies.push(v),
+                complete: () => {
+                    expect(replies).toEqual([ expectedReply ]);
+                    expect(messageSendOrder).toEqual([ firstMessage, secondMessage ]);
+                    done();
+                }
+            });
+
+            firstResponseStream.next(1);
+            secondResponseStream.next(expectedReply);
         });
     });
 

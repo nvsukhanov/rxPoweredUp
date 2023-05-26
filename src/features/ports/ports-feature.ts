@@ -1,4 +1,4 @@
-import { Observable, concatWith, filter, last, take } from 'rxjs';
+import { Observable, filter, take } from 'rxjs';
 
 import { AttachIoEvent, PortModeInformationType, PortModeName } from '../../constants';
 import { PortsFeaturePortValueListenerFactory } from './ports-feature-port-value-listener-factory';
@@ -81,23 +81,21 @@ export class PortsFeature implements IPortsFeature, IPortValueProvider {
 
         const portValueReplies$ = this.portValueInboundListenerFactory.createForMode(portModeName);
 
-        // TODO: following messages must not be interrupted by other setPortInputFormat messages.
-        return this.messenger.sendWithResponse(setPortInputFormatMessage, portValueHandshakeReplies$).pipe(
-            concatWith(this.messenger.sendWithResponse(portValueRequestMessage, portValueReplies$)),
-            last()
-        ) as Observable<PortValueInboundMessage & { modeName: T }>;
+        return this.messenger.sendWithResponse(
+            { message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ },
+            { message: portValueRequestMessage, reply: portValueReplies$ }
+        );
     }
 
     public getPortModes(
         portId: number
     ): Observable<PortModeInboundMessage> {
-        return this.messenger.sendWithResponse(
-            this.portInformationRequestMessageFactory.createPortModeRequest(portId),
-            this.portModeReplies$.pipe(
-                filter((r) => r.portId === portId),
-                take(1)
+        return this.messenger.sendWithResponse({
+            message: this.portInformationRequestMessageFactory.createPortModeRequest(portId),
+            reply: this.portModeReplies$.pipe(
+                filter((r) => r.portId === portId)
             )
-        );
+        });
     }
 
     public getPortModeInformation<T extends PortModeInformationType>(
@@ -105,19 +103,16 @@ export class PortsFeature implements IPortsFeature, IPortValueProvider {
         mode: number,
         modeInformationType: T
     ): Observable<PortModeInformationInboundMessage & { modeInformationType: T }> {
-        const portModeRequestMessage = this.portModeInformationMessageFactory.createPortModeInformationRequest(
+        const message = this.portModeInformationMessageFactory.createPortModeInformationRequest(
             portId,
             mode,
             modeInformationType
         );
 
-        const replies$ = (this.portModeInformationReplies$ as Observable<PortModeInformationInboundMessage & { modeInformationType: T }>).pipe(
+        const reply = (this.portModeInformationReplies$ as Observable<PortModeInformationInboundMessage & { modeInformationType: T }>).pipe(
             filter((r) => r.modeInformationType === modeInformationType && r.portId === portId && r.mode === mode),
         );
 
-        return this.messenger.sendWithResponse(
-            portModeRequestMessage,
-            replies$
-        );
+        return this.messenger.sendWithResponse({ message, reply });
     }
 }
