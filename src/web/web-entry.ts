@@ -19,8 +19,8 @@ async function connect(): Promise<void> {
             outgoingMessageMiddleware: [ new MessageLoggingMiddleware(new PrefixedConsoleLogger('>', LogLevel.Debug), 'all') ],
             logLevel: LogLevel.Debug
         }
-    ).subscribe((hub) => {
-        onConnected(hub);
+    ).subscribe((connectedHub) => {
+        onConnected(connectedHub);
     });
 }
 
