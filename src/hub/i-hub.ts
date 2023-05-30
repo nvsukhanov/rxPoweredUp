@@ -12,6 +12,18 @@ export type GenericError = {
 
 export interface IHub {
     /**
+     * Emits whe the hub has received a power off command or when the hub is going to be switched off by the power button.
+     * Will replay the switch-off notification to new subscribers (if the hub is already in the process of switching off).
+     */
+    readonly willSwitchOff: Observable<void>;
+
+    /**
+     * Emits when the hub is going to be disconnected (after the hub has received a disconnect
+     * command or when the hub is going to be switched off by the power button).
+     */
+    readonly willDisconnect: Observable<void>;
+
+    /**
      * Emits when a generic error is received from the hub.
      * Generic errors are errors that are not specific to a feature.
      * e.g when a port output command for a port without an attached it is sent to the hub, the stream will emit:
@@ -43,6 +55,7 @@ export interface IHub {
     /**
      * Emits when the hub is disconnected.
      * Can be used to perform actions after the hub is disconnected.
+     * Will replay the disconnect notification to new subscribers (if the hub is already disconnected).
      */
     readonly disconnected: Observable<void>;
 
@@ -53,7 +66,12 @@ export interface IHub {
     connect(): Observable<void>
 
     /**
-     * Disconnects from the hub.
+     * Gracefully disconnects from the hub.
      */
     disconnect(): Observable<void>
+
+    /**
+     * Gracefully powers off the hub.
+     */
+    switchOff(): Observable<void>;
 }

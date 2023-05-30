@@ -16,6 +16,8 @@ export * from './i-inbound-message-listener-factory';
 export * from './inbound-message-listener-factory';
 export * from './i-reply-parser';
 export * from './i-prefixed-console-logger-factory';
+export { IHubActionsFeature } from './i-hub-actions-feature';
+export { HUB_ACTIONS_FEATURE_FACTORY, IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
 export { OutboundMessengerConfig } from './outbound-messenger-config';
 export { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
 export { HubConfig } from './hub-config';

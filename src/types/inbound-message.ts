@@ -1,6 +1,7 @@
 import {
     AttachIoEvent,
     GenericErrorCode,
+    HubActionType,
     HubProperty,
     HubType,
     IOType,
@@ -223,6 +224,11 @@ export type PortInputSetupSingleHandshakeInboundMessage = {
     notificationEnabled: boolean;
 }
 
+export type HubActionInboundMessage = {
+    messageType: MessageType.action;
+    actionType: HubActionType;
+}
+
 export type InboundMessage =
     HubPropertyInboundMessage
     | AttachedIOInboundMessage
@@ -231,4 +237,5 @@ export type InboundMessage =
     | PortModeInformationInboundMessage
     | PortOutputCommandFeedbackInboundMessage
     | GenericErrorInboundMessage
-    | PortInputSetupSingleHandshakeInboundMessage;
+    | PortInputSetupSingleHandshakeInboundMessage
+    | HubActionInboundMessage;

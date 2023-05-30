@@ -3,6 +3,7 @@ export const HUB_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
 
 export enum MessageType {
     properties = 0x01,
+    action = 0x02,
     attachedIO = 0x04,
     genericError = 0x05,
     portInformationRequest = 0x21, // 33
@@ -16,10 +17,18 @@ export enum MessageType {
     portOutputCommandFeedback = 0x82, // 130
 }
 
+export enum HubActionType {
+    switchOff = 0x01,
+    disconnect = 0x02,
+    willSwitchOff = 0x30, // 48
+    willDisconnect = 0x31, // 49
+}
+
 export type OutboundMessageTypes = MessageType.properties
     | MessageType.portInformationRequest
     | MessageType.portModeInformationRequest
-    | MessageType.portInputFormatSetupSingle;
+    | MessageType.portInputFormatSetupSingle
+    | MessageType.action;
 
 export enum PortModeInformationType {
     name = 0x00,

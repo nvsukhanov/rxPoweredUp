@@ -1,6 +1,6 @@
 {
   "name": "@nvsukhanov/rxpoweredup",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A Typescript RxJS-based library for controlling LEGO Powered UP MOCs",
   "homepage": "https://github.com/nvsukhanov/rxPoweredUP/",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
     "lint": "eslint src/ --ext .ts",
     "test": "jest --detectOpenHandles --forceExit",
     "start": "webpack-dev-server --mode development",
-    "ci": "npm run lint && npm run test && npm run build",
+    "ci": "npm run lint && npm run test && npm run build && npm run docs",
     "prepare": "npm run lint && npm run test && npm run build"
   },
   "author": "Nikolai Sukhanov <nvsukhanov@outlook.com>",
