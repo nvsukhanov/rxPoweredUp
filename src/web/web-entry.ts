@@ -32,7 +32,21 @@ document.addEventListener('DOMContentLoaded', () => {
 function onConnected(nextHub: IHub): void {
     hub = nextHub;
     setControlsState(true);
-    const hubDisconnectHandle = (): unknown => nextHub.disconnect().subscribe(() => console.log('disconnected'));
+    const hubDisconnectHandle = (): unknown => nextHub.disconnect().subscribe(() => console.log('disconnect command sent'));
+
+    const switchOffHandle = (): unknown => nextHub.switchOff().subscribe(() => console.log('switch off command sent'));
+
+    nextHub.willDisconnect.subscribe(() => {
+        console.log('willDisconnect emitted');
+    });
+
+    nextHub.willSwitchOff.subscribe(() => {
+        console.log('willSwitchOff emitted');
+    });
+
+    nextHub.disconnected.subscribe(() => {
+        console.log('disconnected emitted');
+    });
 
     nextHub.genericErrors.subscribe((e) => {
         console.log('got generic error', e);
@@ -51,6 +65,7 @@ function onConnected(nextHub: IHub): void {
     });
 
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle);
+    document.getElementById('switch-off')!.addEventListener('click', switchOffHandle);
     document.getElementById('increment-angle')!.addEventListener('click', incrementAngle);
     document.getElementById('decrement-angle')!.addEventListener('click', decrementAngle);
     document.getElementById('go-to-zero')!.addEventListener('click', goToZero);
@@ -62,6 +77,7 @@ function onConnected(nextHub: IHub): void {
 
     nextHub.disconnected.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
+        document.getElementById('switch-off')!.removeEventListener('click', switchOffHandle);
         document.getElementById('increment-angle')!.removeEventListener('click', incrementAngle);
         document.getElementById('decrement-angle')!.removeEventListener('click', decrementAngle);
         document.getElementById('go-to-zero')!.removeEventListener('click', goToZero);

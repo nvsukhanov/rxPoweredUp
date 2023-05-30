@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, catchError, concatWith, from, fromEvent, map, of, share, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, ReplaySubject, catchError, concatWith, from, fromEvent, last, map, of, share, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
@@ -15,21 +15,25 @@ import { IPortsFeature } from './i-ports-feature';
 import { IInboundMessageListenerFactory } from './i-inbound-message-listener-factory';
 import { IReplyParser } from './i-reply-parser';
 import { HubConfig } from './hub-config';
+import { IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
+import { IHubActionsFeature } from './i-hub-actions-feature';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
 
-    private _ports: IPortsFeature | undefined;
+    private _ports?: IPortsFeature;
 
-    private _motors: IMotorsFeature | undefined;
+    private _motors?: IMotorsFeature;
 
-    private _properties: (IHubPropertiesFeature & IDisposable) | undefined;
+    private _properties?: (IHubPropertiesFeature & IDisposable);
 
     private _isConnected = false;
 
     private _genericErrors?: Observable<GenericError>;
 
     private _disconnected$ = new ReplaySubject<void>(1);
+
+    private _actionsFeature?: IHubActionsFeature;
 
     constructor(
         private readonly device: BluetoothDeviceWithGatt,
@@ -43,7 +47,22 @@ export class Hub implements IHub {
         private readonly commandsFeatureFactory: IMotorsFeatureFactory,
         private readonly replyParser: IReplyParser<MessageType.genericError>,
         private readonly messageListenerFactory: IInboundMessageListenerFactory,
+        private readonly hubActionsFeatureFactory: IHubActionsFeatureFactory
     ) {
+    }
+
+    public get willSwitchOff(): Observable<void> {
+        if (!this._actionsFeature) {
+            throw new Error('Hub not connected');
+        }
+        return this._actionsFeature.willSwitchOff;
+    }
+
+    public get willDisconnect(): Observable<void> {
+        if (!this._actionsFeature?.willDisconnect) {
+            throw new Error('Hub not connected');
+        }
+        return this._actionsFeature.willDisconnect;
     }
 
     public get genericErrors(): Observable<GenericError> {
@@ -97,7 +116,7 @@ export class Hub implements IHub {
                 fromEvent(this.device, this.gattServerDisconnectEventName).pipe(
                     takeUntil(this._disconnected$)
                 ).subscribe(() => {
-                    this.handleGattServerDisconnect();
+                    this.dispose();
                 });
             }),
             switchMap((primaryCharacteristic) => from(this.createFeatures(primaryCharacteristic))),
@@ -121,25 +140,27 @@ export class Hub implements IHub {
         }
         return of(void 0).pipe(
             tap(() => this.logger.debug('Disconnection invoked')),
-            concatWith(this.disposeFeatures()),
-            tap(() => {
-                this.device.gatt.disconnect();
-                this.logger.debug('Disconnected');
-            })
+            concatWith(this._actionsFeature?.disconnect() ?? of(void 0)),
+            last()
         );
     }
 
-    private handleGattServerDisconnect(): void {
-        if (this._isConnected) {
-            this.disposeFeatures();
-            this.logger.debug('GATT server disconnected');
-            this._isConnected = false;
-            this._disconnected$.next();
+    public switchOff(): Observable<void> {
+        if (!this._actionsFeature) {
+            throw new Error('Hub not connected');
         }
+        return this._actionsFeature.switchOff();
     }
 
-    private disposeFeatures(): Observable<void> {
-        return this._properties?.dispose() ?? of(void 0);
+    private dispose(): Observable<void> {
+        if (this._isConnected) {
+            this._isConnected = false;
+            this._disconnected$.next();
+            return (this._properties?.dispose() ?? of(void 0)).pipe(
+                tap(() => this.logger.debug('Disconnected')),
+            );
+        }
+        return of(void 0);
     }
 
     private async createFeatures(
@@ -169,6 +190,12 @@ export class Hub implements IHub {
             this._disconnected$,
             this.logger,
             this.config
+        );
+
+        this._actionsFeature = this.hubActionsFeatureFactory.create(
+            dataStream,
+            messenger,
+            this._disconnected$,
         );
 
         this._ports = this.ioFeatureFactory.create(

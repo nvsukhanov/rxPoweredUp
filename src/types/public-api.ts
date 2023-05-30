@@ -1,4 +1,3 @@
-export { IDisposable } from './i-disposable';
 export { ILogger } from './i-logger';
 export {
     AttachedIoAttachInboundMessage,
