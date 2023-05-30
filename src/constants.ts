@@ -68,12 +68,13 @@ export enum IOType {
     rgbLight = 0x0017, // 23
     externalTiltSensor = 0x0022, // 34
     motionSensor = 0x0023, // 35
-    visionSensor = 0x0025, //
+    visionSensor = 0x0025, // 37
     externalMotorWithTacho = 0x0026, // 38
     internalMotorWithTacho = 0x0027, // 39
     internalTilt = 0x0028, // 40
     largeTechnicMotor = 0x002E, // 46
     xLargeTechnicMotor = 0x002F, // 47
+    handsetButtonGroup = 0x0037, // 55
     mediumTechnicAngularMotor = 0x004B, // 75
     largeTechnicAngularMotor = 0x004C, // 76
 }
@@ -126,6 +127,11 @@ export enum PortModeName {
     currentL = 'CUR L',
     voltageS = 'VLT S',
     voltageL = 'VLT L',
+    handsetRCKey = 'RCKEY',
+    handsetKeyA = 'KEYA',
+    handsetKeyR = 'KEYR',
+    handsetKeyD = 'KEYD',
+    handsetKeySD = 'KEYSD',
 }
 
 export enum PortModeSymbol {
@@ -133,6 +139,7 @@ export enum PortModeSymbol {
     degree = 'DEG',
     milliAmps = 'mA',
     milliVolts = 'mV',
+    button = 'btn',
     generic = ''
 }
 
