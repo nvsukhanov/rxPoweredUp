@@ -41,12 +41,6 @@ export interface IHub {
     readonly properties: IHubPropertiesFeature;
 
     /**
-     * Emits when the hub disconnect method is called but before the hub is actually disconnected.
-     * Can be used to perform some cleanup before the hub is disconnected.
-     */
-    readonly beforeDisconnect: Observable<void>;
-
-    /**
      * Emits when the hub is disconnected.
      * Can be used to perform actions after the hub is disconnected.
      */
