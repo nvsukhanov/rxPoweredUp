@@ -6,7 +6,7 @@ import { bufferCount, concatWith } from 'rxjs';
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
-import { HubType, LogLevel } from '../constants';
+import { AttachIoEvent, HubType, LogLevel } from '../constants';
 import { PrefixedConsoleLogger } from '../logger';
 
 let hub: IHub | undefined;
@@ -64,6 +64,29 @@ function onConnected(nextHub: IHub): void {
         console.log('systemTypeId', HubType[v]);
     });
 
+    nextHub.ports.onIoAttach().subscribe((v) => {
+        console.log('onIoAttach', v);
+        if (v.event === AttachIoEvent.AttachedVirtual) {
+            (document.getElementById('virtualPortControlsId') as HTMLInputElement).value = v.portId.toString();
+            (document.getElementById('deleteVirtualPortId') as HTMLInputElement).value = v.portId.toString();
+        }
+    });
+
+    nextHub.ports.onIoDetach().subscribe((v) => {
+        console.log('onIoDetach', v);
+        if (v.event === AttachIoEvent.Detached) {
+            const virtualPortControlsIdValue = (document.getElementById('virtualPortControlsId') as HTMLInputElement).value;
+            if (virtualPortControlsIdValue === v.portId.toString()) {
+                (document.getElementById('virtualPortControlsId') as HTMLInputElement).value = '';
+            }
+
+            const deleteVirtualPortIdValue = (document.getElementById('deleteVirtualPortId') as HTMLInputElement).value;
+            if (deleteVirtualPortIdValue === v.portId.toString()) {
+                (document.getElementById('deleteVirtualPortId') as HTMLInputElement).value = '';
+            }
+        }
+    });
+
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle);
     document.getElementById('switch-off')!.addEventListener('click', switchOffHandle);
     document.getElementById('increment-angle')!.addEventListener('click', incrementAngle);
@@ -75,6 +98,11 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('reset-zero')!.addEventListener('click', resetZero);
     document.getElementById('read-pos-apos')!.addEventListener('click', readPOSandAPOS);
     document.getElementById('read-port-value')!.addEventListener('click', readPortValueRaw);
+    document.getElementById('read-port-value')!.addEventListener('click', readPortValueRaw);
+    document.getElementById('createVirtualPort')!.addEventListener('click', createVirtualPort);
+    document.getElementById('deleteVirtualPort')!.addEventListener('click', deleteVirtualPort);
+    document.getElementById('virtualPortSetSpeed')!.addEventListener('click', setVirtualPortSpeed);
+    document.getElementById('virtualPortSetAngle')!.addEventListener('click', setVirtualPortAngle);
 
     nextHub.disconnected.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
@@ -88,6 +116,10 @@ function onConnected(nextHub: IHub): void {
         document.getElementById('reset-zero')!.removeEventListener('click', resetZero);
         document.getElementById('read-pos-apos')!.removeEventListener('click', readPOSandAPOS);
         document.getElementById('read-port-value')!.removeEventListener('click', readPortValueRaw);
+        document.getElementById('createVirtualPort')!.removeEventListener('click', createVirtualPort);
+        document.getElementById('deleteVirtualPort')!.removeEventListener('click', deleteVirtualPort);
+        document.getElementById('virtualPortSetSpeed')!.removeEventListener('click', setVirtualPortSpeed);
+        document.getElementById('virtualPortSetAngle')!.removeEventListener('click', setVirtualPortAngle);
         onDisconnected();
     });
 }
@@ -95,12 +127,16 @@ function onConnected(nextHub: IHub): void {
 const angleStep = 10;
 let currentAngle = 0;
 
+function getPort(): number {
+    return (document.getElementById('port') as HTMLInputElement).valueAsNumber;
+}
+
 function incrementAngle(): void {
     currentAngle += angleStep;
     const targetAngle = currentAngle;
     console.log('incrementing angle to', targetAngle);
     hub?.motors.goToPosition(
-        0,
+        getPort(),
         targetAngle
     ).subscribe({
         next: (r) => {
@@ -124,12 +160,33 @@ function readPortValueRaw(): void {
     });
 }
 
+function createVirtualPort(): void {
+    const portIdA = (document.getElementById('combinePortA') as HTMLInputElement).valueAsNumber;
+    const portIdB = (document.getElementById('combinePortB') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portIdA) || !Number.isInteger(portIdB)) {
+        return;
+    }
+    hub?.ports.createVirtualPort(portIdA, portIdB).subscribe((v) => {
+        console.log('createVirtualPort', v);
+    });
+}
+
+function deleteVirtualPort(): void {
+    const virtualPortId = (document.getElementById('deleteVirtualPortId') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(virtualPortId)) {
+        return;
+    }
+    hub?.ports.deleteVirtualPort(virtualPortId).subscribe((v) => {
+        console.log('deleteVirtualPort', v);
+    });
+}
+
 function decrementAngle(): void {
     currentAngle -= angleStep;
     const targetAngle = currentAngle;
     console.log('decrementing angle to', targetAngle);
     hub?.motors.goToPosition(
-        0,
+        getPort(),
         targetAngle
     ).subscribe({
         next: (r) => {
@@ -142,59 +199,62 @@ function decrementAngle(): void {
 }
 
 function goToZero(): void {
+    const port = getPort();
     hub?.motors.goToPosition(
-        0,
+        port,
         0
     ).subscribe({
         next: (r) => {
-            console.log('settings angle', 0, PortCommandExecutionStatus[r]);
+            console.log('settings angle', port, PortCommandExecutionStatus[r]);
         },
         complete: () => {
             currentAngle = 0;
-            console.log('goToZero complete', 0);
+            console.log('goToZero complete', port);
         }
     });
 }
 
 function setAsZero(): void {
+    const port = getPort();
     hub?.motors.setZeroPositionRelativeToCurrentPosition(
-        0,
+        port,
         0
     ).subscribe({
         next: (r) => {
-            console.log('setAsZero', 0, PortCommandExecutionStatus[r]);
+            console.log('setAsZero', port, PortCommandExecutionStatus[r]);
         },
         complete: () => {
             currentAngle = 0;
-            console.log('setAsZero complete', 0);
+            console.log('setAsZero complete', port);
         }
     });
 }
 
 function readPOS(): void {
-    hub?.motors.getPosition(0).subscribe((r) => {
+    hub?.motors.getPosition(getPort()).subscribe((r) => {
         console.log('readPosition', r);
     });
 }
 
 function readAPOS(): void {
-    hub?.motors.getAbsolutePosition(0).subscribe((r) => {
+    hub?.motors.getAbsolutePosition(getPort()).subscribe((r) => {
         console.log('readAbsolutePosition', r);
     });
 }
 
 function readPOSandAPOS(): void {
+    const port = getPort();
     if (!hub) {
         return;
     }
-    hub.motors.getPosition(0).pipe(
-        concatWith(hub.motors.getAbsolutePosition(0)),
+    hub.motors.getPosition(port).pipe(
+        concatWith(hub.motors.getAbsolutePosition(port)),
         bufferCount(2)
     ).subscribe((v) => console.log('POS and APOS', v));
 }
 
 function resetZero(): void {
-    hub?.motors.resetEncoder(0).subscribe((r) => {
+    hub?.motors.resetEncoder(getPort()).subscribe((r) => {
         console.log('resetZero', r);
     });
 }
@@ -210,3 +270,29 @@ function setControlsState(isConnected: boolean): void {
         (connectedControls[i] as HTMLButtonElement).disabled = !isConnected;
     }
 }
+
+function setVirtualPortSpeed(): void {
+    const virtualPortId = (document.getElementById('virtualPortControlsId') as HTMLInputElement).valueAsNumber;
+    const speed1 = (document.getElementById('virtualPortSpeedInput1') as HTMLInputElement).valueAsNumber;
+    const speed2 = (document.getElementById('virtualPortSpeedInput2') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(virtualPortId)) {
+        return;
+    }
+    hub?.motors.setSpeedSynchronized(virtualPortId, speed1, speed2).subscribe((v) => {
+        console.log('setVirtualPortSpeed', v);
+    });
+}
+
+function setVirtualPortAngle(): void {
+    const virtualPortId = (document.getElementById('virtualPortControlsId') as HTMLInputElement).valueAsNumber;
+    const angle1 = (document.getElementById('virtualPortAngleInput1') as HTMLInputElement).valueAsNumber;
+    const angle2 = (document.getElementById('virtualPortAngleInput2') as HTMLInputElement).valueAsNumber;
+    const speed = (document.getElementById('virtualPortAngleSpeedInput') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(virtualPortId)) {
+        return;
+    }
+    hub?.motors.goToPositionSynchronized(virtualPortId, angle1, angle2, { speed }).subscribe((v) => {
+        console.log('setVirtualPortSpeed', v);
+    });
+}
+

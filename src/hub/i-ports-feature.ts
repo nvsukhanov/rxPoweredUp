@@ -64,4 +64,25 @@ export interface IPortsFeature {
         mode: number,
         modeInformationType: T
     ): Observable<PortModeInformationInboundMessage & { modeInformationType: T }>;
+
+    /**
+     * Creates a virtual port that merges two physical ports.
+     * Virtual ports can be used to control two motors in a synchronized way.
+     *
+     * @param portIdA
+     * @param portIdB
+     */
+    createVirtualPort(
+        portIdA: number,
+        portIdB: number,
+    ): Observable<AttachedIOAttachVirtualInboundMessage>;
+
+    /**
+     * Deletes a virtual port.
+     *
+     * @param virtualPortId
+     */
+    deleteVirtualPort(
+        virtualPortId: number
+    ): Observable<AttachedIODetachInboundMessage>;
 }

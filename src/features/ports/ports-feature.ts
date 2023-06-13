@@ -16,6 +16,7 @@ import { IPortInformationRequestMessageFactory } from './i-port-information-requ
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
 import { IRawPortValueProvider } from '../motors';
+import { IVirtualPortSetupMessageFactory } from './i-virtual-port-setup-message-factory';
 
 export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     constructor(
@@ -27,6 +28,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         private readonly rawPortValueReplies: Observable<PortValueInboundMessage>,
         private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
         private readonly portInputFormatSetupMessageFactory: IPortInputFormatSetupMessageFactory,
+        private readonly virtualPortSetupMessageFactory: IVirtualPortSetupMessageFactory,
         private readonly messenger: IOutboundMessenger,
     ) {
     }
@@ -112,5 +114,30 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         );
 
         return this.messenger.sendWithResponse({ message, reply });
+    }
+
+    public createVirtualPort(
+        portIdA: number,
+        portIdB: number
+    ): Observable<AttachedIOAttachVirtualInboundMessage> {
+        const replies = this.attachedIoReplies$.pipe(
+            filter((r) => r.event === AttachIoEvent.AttachedVirtual && r.portIdA === portIdA && r.portIdB === portIdB),
+        );
+        return this.messenger.sendWithResponse({
+            message: this.virtualPortSetupMessageFactory.createVirtualPort(portIdA, portIdB),
+            reply: replies
+        });
+    }
+
+    public deleteVirtualPort(
+        virtualPortId: number
+    ): Observable<AttachedIODetachInboundMessage> {
+        const replies = this.attachedIoReplies$.pipe(
+            filter((r) => r.event === AttachIoEvent.Detached && r.portId === virtualPortId),
+        );
+        return this.messenger.sendWithResponse({
+            message: this.virtualPortSetupMessageFactory.deleteVirtualPort(virtualPortId),
+            reply: replies
+        });
     }
 }

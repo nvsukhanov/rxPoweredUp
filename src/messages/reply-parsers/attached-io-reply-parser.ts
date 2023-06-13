@@ -23,9 +23,9 @@ export class AttachedIoReplyParser implements IReplyParser<MessageType.attachedI
 
     private readonly ioTypeIdOffsetByte1 = 3;
 
-    private readonly portIdAOffset = 12;
+    private readonly portIdAOffset = 4;
 
-    private readonly portIdBOffset = 13;
+    private readonly portIdBOffset = 5;
 
     public parseMessage(
         rawMessage: RawMessage<MessageType.attachedIO>
