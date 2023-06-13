@@ -4,5 +4,9 @@
     "./src/public-api.ts"
   ],
   "out": "docs",
-  "readme": "./README.md"
+  "readme": "./README.md",
+  "markedOptions": {
+    "gfm": true,
+    "breaks": true
+  }
 }
