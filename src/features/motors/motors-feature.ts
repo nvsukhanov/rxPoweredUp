@@ -62,6 +62,22 @@ export class MotorsFeature implements IMotorsFeature {
         return this.execute(message);
     }
 
+    public setSpeedSynchronized(
+        virtualPortId: number,
+        speed1: number,
+        speed2: number,
+        options?: SetSpeedOptions
+    ): Observable<PortCommandExecutionStatus> {
+        const message = this.portOutputCommandOutboundMessageFactoryService.startRotationSynchronized(
+            virtualPortId,
+            speed1,
+            speed2,
+            options?.power ?? MOTOR_LIMITS.maxPower,
+            options?.useProfile ?? MotorUseProfile.dontUseProfiles,
+        );
+        return this.execute(message);
+    }
+
     public goToPosition(
         portId: number,
         absoluteDegree: number,
@@ -70,6 +86,24 @@ export class MotorsFeature implements IMotorsFeature {
         const message = this.portOutputCommandOutboundMessageFactoryService.goToAbsolutePosition(
             portId,
             absoluteDegree,
+            options?.speed ?? MOTOR_LIMITS.maxSpeed,
+            options?.power ?? MOTOR_LIMITS.maxPower,
+            options?.endState ?? MotorServoEndState.hold,
+            options?.useProfile ?? MotorUseProfile.dontUseProfiles,
+        );
+        return this.execute(message);
+    }
+
+    public goToPositionSynchronized(
+        virtualPortId: number,
+        targetDegree1: number,
+        targetDegree2: number,
+        options?: GoToPositionOptions
+    ): Observable<PortCommandExecutionStatus> {
+        const message = this.portOutputCommandOutboundMessageFactoryService.goToAbsolutePositionSynchronized(
+            virtualPortId,
+            targetDegree1,
+            targetDegree2,
             options?.speed ?? MOTOR_LIMITS.maxSpeed,
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.endState ?? MotorServoEndState.hold,

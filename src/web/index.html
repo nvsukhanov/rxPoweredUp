@@ -3,45 +3,58 @@
 <head>
     <meta charset="utf-8"/>
 </head>
+<style>
+    .control-section {
+        padding-left: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-left: 3px solid #AACAE2;
+    }
+
+    .row-controls {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .row-controls > * {
+        margin-right: 10px;
+    }
+</style>
 <body>
-<p>
-    <button id="connect">Connect</button>
-</p>
-<p>
-    <button id="disconnect" class="connected-control">Disconnect</button>
-</p>
-<p>
-    <button id="switch-off" class="connected-control">Switch off</button>
-</p>
-<p>
-    <button id="increment-angle" class="connected-control">Increment angle</button>
-</p>
-<p>
-    <button id="decrement-angle" class="connected-control">Decrement angle</button>
-</p>
-<p>
-    <button id="go-to-zero" class="connected-control">Go to zero</button>
-</p>
-<p>
-    <button id="set-as-zero" class="connected-control">Set as zero</button>
-</p>
-<p>
-    <button id="read-pos" class="connected-control">Read POS</button>
-</p>
-<p>
-    <button id="read-apos" class="connected-control">Read APOS</button>
-</p>
-<p>
-    <button id="reset-zero" class="connected-control">Set POS zero to APOS zero</button>
-</p>
-<p>
-    <button id="read-pos-apos" class="connected-control">Reaad POS and APOS</button>
-</p>
-<p>
-    <div>
-        Port value read
+<section class="control-section">
+    <h2>
+        Hub controls
+    </h2>
+    <div class="row-controls">
+        <button id="connect">Connect</button>
+        <button id="disconnect" class="connected-control">Disconnect</button>
+        <button id="switch-off" class="connected-control">Switch off</button>
     </div>
-    <div style="display: flex; flex-direction: row">
+</section>
+
+<section class="control-section">
+    <h2>Port controls</h2>
+    <p>
+        <label for="port">Port id</label>
+        <input type="number" id="port" value="0" class="connected-control"/>
+    </p>
+    <div class="row-controls">
+        <button id="increment-angle" class="connected-control">Increment angle</button>
+        <button id="decrement-angle" class="connected-control">Decrement angle</button>
+        <button id="go-to-zero" class="connected-control">Go to zero</button>
+        <button id="set-as-zero" class="connected-control">Set as zero</button>
+        <button id="read-pos" class="connected-control">Read POS</button>
+        <button id="read-apos" class="connected-control">Read APOS</button>
+        <button id="reset-zero" class="connected-control">Set POS zero to APOS zero</button>
+        <button id="read-pos-apos" class="connected-control">Read POS and APOS</button>
+    </div>
+</section>
+
+<section class="control-section">
+    <h2>
+        Port value read
+    </h2>
+    <div class="row-controls">
         <div>
             <label for="portValuePort">Port id</label>
             <input type="number" id="portValuePort" value="" class="connected-control"/>
@@ -58,6 +71,73 @@
         Results:
     </div>
     <pre id="portValueResults"></pre>
-</p>
+</section>
+
+<section class="control-section">
+    <h2>
+        Create virtual port
+    </h2>
+    <div class="row-controls">
+        <div>
+            <label for="combinePortA">Port id A</label>
+            <input type="number" id="combinePortA" value="" class="connected-control"/>
+        </div>
+        <div>
+            <label for="combinePortB">Mode id B</label>
+            <input type="number" id="combinePortB" value="" class="connected-control"/>
+        </div>
+        <div>
+            <button id="createVirtualPort" class="connected-control">Create virtual port</button>
+        </div>
+    </div>
+</section>
+
+<section class="control-section">
+    <h2>
+        Virtual port controls
+    </h2>
+    <div class="row-controls">
+        <label for="virtualPortControlsId">Virtual port id</label>
+        <input type="number" id="virtualPortControlsId" value="" class="connected-control"/>
+    </div>
+    <section class="control-section">
+        <div class="row-controls">
+            <label for="virtualPortSpeedInput1">Speed 1</label>
+            <input type="number" value="100" min="-100" max="100" id="virtualPortSpeedInput1" class="connected-control"/>
+            <label for="virtualPortSpeedInput2">Speed 2</label>
+            <input type="number" value="-100" min="-100" max="100" id="virtualPortSpeedInput2" class="connected-control"/>
+
+            <button id="virtualPortSetSpeed" class="connected-control">Set speed</button>
+        </div>
+    </section>
+    <section class="control-section">
+        <div class="row-controls">
+            <label for="virtualPortAngleInput1">Angle 1</label>
+            <input type="number" value="0" id="virtualPortAngleInput1" class="connected-control"/>
+            <label for="virtualPortAngleInput2">Angle 2</label>
+            <input type="number" value="0" id="virtualPortAngleInput2" class="connected-control"/>
+            <label for="virtualPortAngleSpeedInput">Speed</label>
+            <input type="number" value="100" min="-100" max="100" id="virtualPortAngleSpeedInput" class="connected-control"/>
+
+            <button id="virtualPortSetAngle" class="connected-control">Set angle</button>
+        </div>
+    </section>
+</section>
+
+<section class="control-section">
+    <h2>
+        Delete virtual port
+    </h2>
+    <div class="row-controls">
+        <div>
+            <label for="deleteVirtualPortId">Port id A</label>
+            <input type="number" id="deleteVirtualPortId" value="" class="connected-control"/>
+        </div>
+        <div>
+            <button id="deleteVirtualPort" class="connected-control">Delete virtual port</button>
+        </div>
+    </div>
+</section>
+
 </body>
 </html>

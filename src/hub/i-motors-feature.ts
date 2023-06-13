@@ -58,6 +58,22 @@ export interface IMotorsFeature {
     ): Observable<PortCommandExecutionStatus>;
 
     /**
+     * Starts motors rotation at the specified speed in synchronized mode (applicable only for virtual ports).
+     * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
+     *
+     * @param virtualPortId
+     * @param speed1
+     * @param speed2
+     * @param options
+     */
+    setSpeedSynchronized(
+        virtualPortId: number,
+        speed1: number,
+        speed2: number,
+        options?: SetSpeedOptions
+    ): Observable<PortCommandExecutionStatus>;
+
+    /**
      * Rotates the motor to the specified position (relative to zero).
      * Zero is the position when the motor was last switched on or connected to the hub.
      * Positive values are calculated clockwise, negative values are calculated counter-clockwise.
@@ -92,6 +108,22 @@ export interface IMotorsFeature {
     goToPosition(
         portId: number,
         targetDegree: number,
+        options?: GoToPositionOptions
+    ): Observable<PortCommandExecutionStatus>;
+
+    /**
+     * Rotates virtual port motors to the specified positions (relative to zero).
+     * @see goToPosition
+     *
+     * @param virtualPortId
+     * @param targetDegree1
+     * @param targetDegree2
+     * @param options
+     */
+    goToPositionSynchronized(
+        virtualPortId: number,
+        targetDegree1: number,
+        targetDegree2: number,
         options?: GoToPositionOptions
     ): Observable<PortCommandExecutionStatus>;
 

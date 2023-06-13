@@ -13,9 +13,31 @@ export interface IMotorCommandsOutboundMessageFactory {
         completionMode?: PortOperationCompletionInformation,
     ): RawPortOutputCommandMessage;
 
+    startRotationSynchronized(
+        virtualPortId: number,
+        speed1: number,
+        speed2: number,
+        power?: number,
+        useProfile?: MotorUseProfile,
+        startupMode?: PortOperationStartupInformation,
+        completionMode?: PortOperationCompletionInformation,
+    ): RawPortOutputCommandMessage;
+
     goToAbsolutePosition(
         portId: number,
         absolutePosition: number,
+        speed?: number,
+        power?: number,
+        endState?: MotorServoEndState,
+        useProfile?: MotorUseProfile,
+        startupMode?: PortOperationStartupInformation,
+        completionMode?: PortOperationCompletionInformation,
+    ): RawPortOutputCommandMessage;
+
+    goToAbsolutePositionSynchronized(
+        virtualPortId: number,
+        absolutePosition1: number,
+        absolutePosition2: number,
         speed?: number,
         power?: number,
         endState?: MotorServoEndState,

@@ -44,6 +44,36 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
         };
     }
 
+    public startRotationSynchronized(
+        virtualPortId: number,
+        speed1: number,
+        speed2: number,
+        power: number = MOTOR_LIMITS.maxPower,
+        useProfile: MotorUseProfile = MotorUseProfile.dontUseProfiles,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
+    ): RawPortOutputCommandMessage {
+        this.ensureSpeedIsWithinLimits(speed1);
+        this.ensureSpeedIsWithinLimits(speed2);
+        this.ensurePowerIsWithinLimits(power);
+
+        return {
+            header: {
+                messageType: MessageType.portOutputCommand,
+            },
+            portId: virtualPortId,
+            payload: new Uint8Array([
+                virtualPortId,
+                startupMode | completionMode,
+                OutputSubCommand.startSpeedSynchronized,
+                speed1,
+                speed2,
+                power,
+                useProfile
+            ])
+        };
+    }
+
     public goToAbsolutePosition(
         portId: number,
         absolutePosition: number,
@@ -72,6 +102,41 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 power,
                 endState,
                 profile
+            ])
+        };
+    }
+
+    public goToAbsolutePositionSynchronized(
+        virtualPortId: number,
+        absolutePosition1: number,
+        absolutePosition2: number,
+        speed: number = MOTOR_LIMITS.maxSpeed,
+        power: number = MOTOR_LIMITS.maxPower,
+        endState: MotorServoEndState = MotorServoEndState.hold,
+        useProfile: MotorUseProfile = MotorUseProfile.dontUseProfiles,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
+    ): RawPortOutputCommandMessage {
+        this.ensureAbsolutePositionIsWithinLimits(absolutePosition1);
+        this.ensureAbsolutePositionIsWithinLimits(absolutePosition2);
+        this.ensureSpeedIsWithinLimits(speed);
+        this.ensurePowerIsWithinLimits(power);
+
+        return {
+            header: {
+                messageType: MessageType.portOutputCommand,
+            },
+            portId: virtualPortId,
+            payload: new Uint8Array([
+                virtualPortId,
+                startupMode | completionMode,
+                OutputSubCommand.gotoAbsolutePositionSynchronized,
+                ...numberToUint32LEArray(absolutePosition1),
+                ...numberToUint32LEArray(absolutePosition2),
+                speed,
+                power,
+                endState,
+                useProfile
             ])
         };
     }

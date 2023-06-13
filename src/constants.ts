@@ -13,6 +13,7 @@ export enum MessageType {
     portModeInformation = 0x44, // 68
     portValueSingle = 0x45, // 69
     portInputFormatSetupSingleHandshake = 0x47, // 71
+    virtualPortSetup = 0x61, // 97
     portOutputCommand = 0x81, // 129
     portOutputCommandFeedback = 0x82, // 130
 }
@@ -28,7 +29,8 @@ export type OutboundMessageTypes = MessageType.properties
     | MessageType.portInformationRequest
     | MessageType.portModeInformationRequest
     | MessageType.portInputFormatSetupSingle
-    | MessageType.action;
+    | MessageType.action
+    | MessageType.virtualPortSetup;
 
 export enum PortModeInformationType {
     name = 0x00,
@@ -189,7 +191,9 @@ export enum OutputSubCommand {
     setAccTime = 0x05,
     setDecTime = 0x06,
     startSpeed = 0x07,
+    startSpeedSynchronized = 0x08,
     gotoAbsolutePosition = 0x0D, // 13
+    gotoAbsolutePositionSynchronized = 0x0E, // 14
     writeDirectModeData = 0x51, // 81
 }
 
@@ -232,6 +236,11 @@ export const WELL_KNOWN_MOTOR_PORT_MODE_IDS = {
     [PortModeName.position]: 2,
     [PortModeName.absolutePosition]: 3,
 } as const satisfies { [s in PortModeName]?: number };
+
+export enum VirtualPortSetupCommand {
+    Disconnect = 0x00,
+    Connect = 0x01
+}
 
 export type SubscribableHubProperties = HubProperty.RSSI | HubProperty.batteryVoltage | HubProperty.button | HubProperty.advertisingName;
 

@@ -21,6 +21,7 @@ import { IPortInputFormatSetupMessageFactory, PORT_INPUT_FORMAT_SETUP_MESSAGE_FA
 import { AttachedIoRepliesCache } from './attached-io-replies-cache';
 import { PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER } from './port-input-format-setup-single-handshake-reply-parser';
 import { PORT_RAW_VALUE_REPLY_PARSER } from './port-value-raw-reply-parser';
+import { IVirtualPortSetupMessageFactory, VIRTUAL_PORT_SETUP_MESSAGE_FACTORY } from './i-virtual-port-setup-message-factory';
 
 @injectable()
 export class PortsFeatureFactory implements IPortsFeatureFactory {
@@ -35,6 +36,7 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
         @inject(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY) private readonly portInputFormatSetupSingleMessageFactory: IPortInputFormatSetupMessageFactory,
         @inject(PORT_MODE_INFORMATION_REPLY_PARSER) private readonly portModeInformationReplyParserService: IReplyParser<MessageType.portModeInformation>,
         @inject(PORT_RAW_VALUE_REPLY_PARSER) private readonly portRawValueReplyParser: IReplyParser<MessageType.portValueSingle>,
+        @inject(VIRTUAL_PORT_SETUP_MESSAGE_FACTORY) private readonly virtualPortSetupMessageFactory: IVirtualPortSetupMessageFactory,
     ) {
     }
 
@@ -87,6 +89,7 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
             portRawValueReplies,
             this.portModeInformationMessageFactory,
             this.portInputFormatSetupSingleMessageFactory,
+            this.virtualPortSetupMessageFactory,
             messenger
         );
     }

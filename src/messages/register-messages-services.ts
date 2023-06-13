@@ -18,7 +18,8 @@ import {
     PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER,
     PORT_OUTPUT_COMMAND_MESSAGE_FACTORY,
     PORT_RAW_VALUE_REPLY_PARSER,
-    RAW_MOTOR_PORT_VALUE_PARSER
+    RAW_MOTOR_PORT_VALUE_PARSER,
+    VIRTUAL_PORT_SETUP_MESSAGE_FACTORY
 } from '../features';
 import {
     AttachedIoReplyParser,
@@ -38,7 +39,8 @@ import {
     PortInformationRequestOutboundMessageFactory,
     PortInputFormatSetupSingleOutboundMessageFactory,
     PortModeInformationRequestOutboundMessageFactory,
-    PortOutputCommandOutboundMessageFactory
+    PortOutputCommandOutboundMessageFactory,
+    VirtualPortSetupOutboundMessageFactory
 } from './outbound-message-factories';
 
 export function registerMessagesServices(
@@ -62,4 +64,5 @@ export function registerMessagesServices(
     container.register(HUB_ACTIONS_MESSAGE_FACTORY, HubActionsOutboundMessageFactory);
     container.register(PORT_RAW_VALUE_REPLY_PARSER, PortValueReplyParser);
     container.register(RAW_MOTOR_PORT_VALUE_PARSER, RawPortValueParser);
+    container.register(VIRTUAL_PORT_SETUP_MESSAGE_FACTORY, VirtualPortSetupOutboundMessageFactory);
 }
