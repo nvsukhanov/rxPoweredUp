@@ -20,7 +20,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">IHub</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L13">src/hub/i-hub.ts:13</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L13">src/hub/i-hub.ts:13</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -47,66 +47,52 @@
 <section class="tsd-panel tsd-member"><a id="disconnected" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>disconnected</span><a href="#disconnected" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">disconnected</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
-<div class="tsd-comment tsd-typography"><p>Emits when the hub is disconnected.
-Can be used to perform actions after the hub is disconnected.
-Will replay the disconnect notification to new subscribers (if the hub is already disconnected).</p>
+<div class="tsd-comment tsd-typography"><p>Emits when the hub is disconnected.<br>Can be used to perform actions after the hub is disconnected.<br>Will replay the disconnect notification to new subscribers (if the hub is already disconnected).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L60">src/hub/i-hub.ts:60</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L60">src/hub/i-hub.ts:60</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="genericErrors" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>generic<wbr/>Errors</span><a href="#genericErrors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">generic<wbr/>Errors</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/GenericError.html" class="tsd-signature-type tsd-kind-type-alias">GenericError</a><span class="tsd-signature-symbol">&gt;</span></div>
-<div class="tsd-comment tsd-typography"><p>Emits when a generic error is received from the hub.
-Generic errors are errors that are not specific to a feature.
-e.g when a port output command for a port without an attached it is sent to the hub, the stream will emit:
-{ commandType: MessageType.portOutputCommandFeedback, code: GenericErrorCode.invalidUse }</p>
+<div class="tsd-comment tsd-typography"><p>Emits when a generic error is received from the hub.<br>Generic errors are errors that are not specific to a feature.<br>e.g when a port output command for a port without an attached it is sent to the hub, the stream will emit:<br>{ commandType: MessageType.portOutputCommandFeedback, code: GenericErrorCode.invalidUse }</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L32">src/hub/i-hub.ts:32</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L32">src/hub/i-hub.ts:32</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="motors" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>motors</span><a href="#motors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">motors</span><span class="tsd-signature-symbol">:</span> <a href="IMotorsFeature.html" class="tsd-signature-type tsd-kind-interface">IMotorsFeature</a></div>
-<div class="tsd-comment tsd-typography"><p>Provides a way to send commands to motors attached to ports.
-e.g. start motor, etc</p>
+<div class="tsd-comment tsd-typography"><p>Provides a way to send commands to motors attached to ports.<br>e.g. start motor, etc</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L47">src/hub/i-hub.ts:47</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L47">src/hub/i-hub.ts:47</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="ports" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>ports</span><a href="#ports" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ports</span><span class="tsd-signature-symbol">:</span> <a href="IPortsFeature.html" class="tsd-signature-type tsd-kind-interface">IPortsFeature</a></div>
-<div class="tsd-comment tsd-typography"><p>Provides a way to access the ports information of the hub.
-e.g. listen to port attach/detach events, request port value, etc.
-Hub identifies ports by their numerical index (not by their literal name engraved on the hub).
-e.g. port A is index 0, port B is index 1, etc.
-Also note that hubs usually have internal ports that can be accessed by their index as well (eg. 50).
-On hub connection, the hub will emit a port attach event for each port that has a device attached to it, including internal ports.</p>
+<div class="tsd-comment tsd-typography"><p>Provides a way to access the ports information of the hub.<br>e.g. listen to port attach/detach events, request port value, etc.<br>Hub identifies ports by their numerical index (not by their literal name engraved on the hub).<br>e.g. port A is index 0, port B is index 1, etc.<br>Also note that hubs usually have internal ports that can be accessed by their index as well (eg. 50).<br>On hub connection, the hub will emit a port attach event for each port that has a device attached to it, including internal ports.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L41">src/hub/i-hub.ts:41</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L41">src/hub/i-hub.ts:41</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="properties" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>properties</span><a href="#properties" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">properties</span><span class="tsd-signature-symbol">:</span> <a href="IHubPropertiesFeature.html" class="tsd-signature-type tsd-kind-interface">IHubPropertiesFeature</a></div>
-<div class="tsd-comment tsd-typography"><p>Provides a way to access the properties of the hub.
-e.g. listen to battery level changes, set hub advertising name, etc.</p>
+<div class="tsd-comment tsd-typography"><p>Provides a way to access the properties of the hub.<br>e.g. listen to battery level changes, set hub advertising name, etc.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L53">src/hub/i-hub.ts:53</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L53">src/hub/i-hub.ts:53</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="willDisconnect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>will<wbr/>Disconnect</span><a href="#willDisconnect" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">will<wbr/>Disconnect</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
-<div class="tsd-comment tsd-typography"><p>Emits when the hub is going to be disconnected (after the hub has received a disconnect
-command or when the hub is going to be switched off by the power button).</p>
+<div class="tsd-comment tsd-typography"><p>Emits when the hub is going to be disconnected (after the hub has received a disconnect<br>command or when the hub is going to be switched off by the power button).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L24">src/hub/i-hub.ts:24</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L24">src/hub/i-hub.ts:24</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="willSwitchOff" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>will<wbr/>Switch<wbr/>Off</span><a href="#willSwitchOff" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">will<wbr/>Switch<wbr/>Off</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
-<div class="tsd-comment tsd-typography"><p>Emits whe the hub has received a power off command or when the hub is going to be switched off by the power button.
-Will replay the switch-off notification to new subscribers (if the hub is already in the process of switching off).</p>
+<div class="tsd-comment tsd-typography"><p>Emits whe the hub has received a power off command or when the hub is going to be switched off by the power button.<br>Will replay the switch-off notification to new subscribers (if the hub is already in the process of switching off).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L18">src/hub/i-hub.ts:18</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L18">src/hub/i-hub.ts:18</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="connect" class="tsd-anchor"></a>
@@ -114,12 +100,11 @@ Will replay the switch-off notification to new subscribers (if the hub is alread
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="connect.connect-1"><span class="tsd-kind-call-signature">connect</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#connect.connect-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Connects to the hub.
-Must be called before using any hub features.</p>
+<div class="tsd-comment tsd-typography"><p>Connects to the hub.<br>Must be called before using any hub features.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L66">src/hub/i-hub.ts:66</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L66">src/hub/i-hub.ts:66</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="disconnect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>disconnect</span><a href="#disconnect" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -129,7 +114,7 @@ Must be called before using any hub features.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L71">src/hub/i-hub.ts:71</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L71">src/hub/i-hub.ts:71</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="switchOff" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>switch<wbr/>Off</span><a href="#switchOff" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -139,7 +124,7 @@ Must be called before using any hub features.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/1f2f8e3/src/hub/i-hub.ts#L76">src/hub/i-hub.ts:76</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/837570c/src/hub/i-hub.ts#L76">src/hub/i-hub.ts:76</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
