@@ -12,13 +12,15 @@ import {
 import { GoToPositionOptions, IMotorsFeature, IOutboundMessenger, PortCommandExecutionStatus, SetSpeedOptions } from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
-import { IPortValueProvider } from './i-port-value-provider';
+import { IRawPortValueProvider } from './i-raw-port-value-provider';
+import { IRawMotorPortValueParser } from './i-raw-motor-port-value-parser';
 
 export class MotorsFeature implements IMotorsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: IMotorCommandsOutboundMessageFactory,
-        private readonly portValueProvider: IPortValueProvider
+        private readonly rawPortValueProvider: IRawPortValueProvider,
+        private readonly rawMotorPortValueParser: IRawMotorPortValueParser
     ) {
     }
 
@@ -100,12 +102,11 @@ export class MotorsFeature implements IMotorsFeature {
         portId: number,
         modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.absolutePosition]
     ): Observable<number> {
-        return this.portValueProvider.getPortValue(
+        return this.rawPortValueProvider.getRawPortValue(
             portId,
             modeId,
-            PortModeName.absolutePosition
         ).pipe(
-            map((r) => r.absolutePosition)
+            map((r) => this.rawMotorPortValueParser.getAbsolutePosition(r))
         );
     }
 
@@ -113,12 +114,11 @@ export class MotorsFeature implements IMotorsFeature {
         portId: number,
         modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.position]
     ): Observable<number> {
-        return this.portValueProvider.getPortValue(
+        return this.rawPortValueProvider.getRawPortValue(
             portId,
             modeId,
-            PortModeName.position
         ).pipe(
-            map((r) => r.position)
+            map((r) => this.rawMotorPortValueParser.getPosition(r))
         );
     }
 
@@ -126,12 +126,11 @@ export class MotorsFeature implements IMotorsFeature {
         portId: number,
         absolutePositionModeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.absolutePosition]
     ): Observable<PortCommandExecutionStatus> {
-        return this.portValueProvider.getPortValue(
+        return this.getAbsolutePosition(
             portId,
-            absolutePositionModeId,
-            PortModeName.absolutePosition
+            absolutePositionModeId
         ).pipe(
-            switchMap((offset) => this.setZeroPositionRelativeToCurrentPosition(portId, -offset.absolutePosition))
+            switchMap((offset) => this.setZeroPositionRelativeToCurrentPosition(portId, -offset))
         );
     }
 

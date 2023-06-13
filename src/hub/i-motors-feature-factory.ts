@@ -5,13 +5,13 @@ import { RawMessage } from '../types';
 import { MessageType } from '../constants';
 import { IMotorsFeature } from './i-motors-feature';
 import { IOutboundMessenger } from './i-outbound-messenger';
-import { IPortValueProvider } from '../features';
+import { IRawPortValueProvider } from '../features';
 
 export interface IMotorsFeatureFactory {
     createCommandsFeature(
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         messenger: IOutboundMessenger,
-        portValueProvider: IPortValueProvider
+        portValueProvider: IRawPortValueProvider
     ): IMotorsFeature;
 }
 
