@@ -1,7 +1,6 @@
-import { Observable, filter, take } from 'rxjs';
+import { Observable, filter, map, take } from 'rxjs';
 
-import { AttachIoEvent, PortModeInformationType, PortModeName } from '../../constants';
-import { PortsFeaturePortValueListenerFactory } from './ports-feature-port-value-listener-factory';
+import { AttachIoEvent, PortModeInformationType } from '../../constants';
 import {
     AttachedIOAttachVirtualInboundMessage,
     AttachedIODetachInboundMessage,
@@ -16,16 +15,16 @@ import { IOutboundMessenger, IPortsFeature } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
-import { IPortValueProvider } from '../motors';
+import { IRawPortValueProvider } from '../motors';
 
-export class PortsFeature implements IPortsFeature, IPortValueProvider {
+export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     constructor(
         private readonly portModeReplies$: Observable<PortModeInboundMessage>,
         private readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>,
         private readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>,
         private readonly portValueSetupSingleHandshakeReplies$: Observable<PortInputSetupSingleHandshakeInboundMessage>,
         private readonly portInformationRequestMessageFactory: IPortInformationRequestMessageFactory,
-        private readonly portValueInboundListenerFactory: PortsFeaturePortValueListenerFactory,
+        private readonly rawPortValueReplies: Observable<PortValueInboundMessage>,
         private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
         private readonly portInputFormatSetupMessageFactory: IPortInputFormatSetupMessageFactory,
         private readonly messenger: IOutboundMessenger,
@@ -62,11 +61,10 @@ export class PortsFeature implements IPortsFeature, IPortValueProvider {
         ) as Observable<AttachedIODetachInboundMessage>;
     }
 
-    public getPortValue<T extends PortModeName>(
+    public getRawPortValue(
         portId: number,
         modeId: number,
-        portModeName: T
-    ): Observable<PortValueInboundMessage & { modeName: T }> {
+    ): Observable<number[]> {
         const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
             portId,
             modeId,
@@ -79,11 +77,11 @@ export class PortsFeature implements IPortsFeature, IPortValueProvider {
             take(1)
         );
 
-        const portValueReplies$ = this.portValueInboundListenerFactory.createForMode(portModeName);
-
         return this.messenger.sendWithResponse(
             { message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ },
-            { message: portValueRequestMessage, reply: portValueReplies$ }
+            { message: portValueRequestMessage, reply: this.rawPortValueReplies }
+        ).pipe(
+            map((r) => r.value)
         );
     }
 

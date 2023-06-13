@@ -74,7 +74,12 @@ export enum IOType {
     internalTilt = 0x0028, // 40
     largeTechnicMotor = 0x002E, // 46
     xLargeTechnicMotor = 0x002F, // 47
+    gestureSensor = 0x0036, // 54
     handsetButtonGroup = 0x0037, // 55
+    accelerometerSensor = 0x0039, // 57
+    gyroscopeSensor = 0x003A, // 58
+    tiltSensor = 0x003B, // 59
+    temperatureSensor = 0x003C, // 60
     mediumTechnicAngularMotor = 0x004B, // 75
     largeTechnicAngularMotor = 0x004C, // 76
 }
@@ -132,6 +137,7 @@ export enum PortModeName {
     handsetKeyR = 'KEYR',
     handsetKeyD = 'KEYD',
     handsetKeySD = 'KEYSD',
+    raw = 'RAW',
 }
 
 export enum PortModeSymbol {

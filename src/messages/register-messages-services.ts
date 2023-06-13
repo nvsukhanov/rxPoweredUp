@@ -17,9 +17,8 @@ import {
     PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY,
     PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER,
     PORT_OUTPUT_COMMAND_MESSAGE_FACTORY,
-    PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER,
-    PORT_VALUE_POSITION_REPLY_PARSER,
-    PORT_VALUE_SPEED_REPLY_PARSER
+    PORT_RAW_VALUE_REPLY_PARSER,
+    RAW_MOTOR_PORT_VALUE_PARSER
 } from '../features';
 import {
     AttachedIoReplyParser,
@@ -30,9 +29,8 @@ import {
     PortInputFormatSetupSingleHandshakeReplyParser,
     PortModeInformationReplyParser,
     PortOutputCommandFeedbackReplyParser,
-    PortValueAbsolutePositionReplyParser,
-    PortValuePositionReplyParser,
-    PortValueSpeedReplyParser
+    PortValueReplyParser,
+    RawPortValueParser,
 } from './reply-parsers';
 import {
     HubActionsOutboundMessageFactory,
@@ -53,9 +51,6 @@ export function registerMessagesServices(
     container.register(HUB_PROPERTIES_REPLIES_PARSER, HubPropertiesReplyParser);
     container.register(PORT_INFORMATION_REPLY_PARSER, PortInformationReplyParser);
     container.register(ATTACHED_IO_REPLIES_PARSER, AttachedIoReplyParser);
-    container.register(PORT_VALUE_ABSOLUTE_POSITION_REPLY_PARSER, PortValueAbsolutePositionReplyParser);
-    container.register(PORT_VALUE_SPEED_REPLY_PARSER, PortValueSpeedReplyParser);
-    container.register(PORT_VALUE_POSITION_REPLY_PARSER, PortValuePositionReplyParser);
     container.register(PORT_MODE_INFORMATION_REPLY_PARSER, PortModeInformationReplyParser);
     container.register(PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER, PortInputFormatSetupSingleHandshakeReplyParser);
     container.register(PORT_INFORMATION_REQUEST_MESSAGE_FACTORY, PortInformationRequestOutboundMessageFactory);
@@ -65,4 +60,6 @@ export function registerMessagesServices(
     container.register(GENERIC_ERRORS_REPLIES_PARSER, GenericErrorReplyParser);
     container.register(HUB_ACTIONS_REPLY_PARSER, HubActionsReplyParser);
     container.register(HUB_ACTIONS_MESSAGE_FACTORY, HubActionsOutboundMessageFactory);
+    container.register(PORT_RAW_VALUE_REPLY_PARSER, PortValueReplyParser);
+    container.register(RAW_MOTOR_PORT_VALUE_PARSER, RawPortValueParser);
 }

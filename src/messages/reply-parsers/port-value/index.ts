@@ -1,3 +1,2 @@
-export * from './port-value-absolute-position-reply-parser';
-export * from './port-value-speed-reply-parser';
-export * from './port-value-position-reply-parser';
+export * from './port-value-reply-parser';
+export * from './raw-port-value-parser';

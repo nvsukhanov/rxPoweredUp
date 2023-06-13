@@ -74,6 +74,7 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('read-apos')!.addEventListener('click', readAPOS);
     document.getElementById('reset-zero')!.addEventListener('click', resetZero);
     document.getElementById('read-pos-apos')!.addEventListener('click', readPOSandAPOS);
+    document.getElementById('read-port-value')!.addEventListener('click', readPortValueRaw);
 
     nextHub.disconnected.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
@@ -86,6 +87,7 @@ function onConnected(nextHub: IHub): void {
         document.getElementById('read-apos')!.removeEventListener('click', readAPOS);
         document.getElementById('reset-zero')!.removeEventListener('click', resetZero);
         document.getElementById('read-pos-apos')!.removeEventListener('click', readPOSandAPOS);
+        document.getElementById('read-port-value')!.removeEventListener('click', readPortValueRaw);
         onDisconnected();
     });
 }
@@ -107,6 +109,18 @@ function incrementAngle(): void {
         complete: () => {
             console.log('incrementing angle complete', targetAngle);
         }
+    });
+}
+
+function readPortValueRaw(): void {
+    const portId = (document.getElementById('portValuePort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('portValueMode') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    hub?.ports.getRawPortValue(portId, modeId).subscribe((v) => {
+        (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = JSON.stringify(v);
     });
 }
 

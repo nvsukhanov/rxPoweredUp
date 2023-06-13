@@ -37,5 +37,27 @@
 <p>
     <button id="read-pos-apos" class="connected-control">Reaad POS and APOS</button>
 </p>
+<p>
+    <div>
+        Port value read
+    </div>
+    <div style="display: flex; flex-direction: row">
+        <div>
+            <label for="portValuePort">Port id</label>
+            <input type="number" id="portValuePort" value="" class="connected-control"/>
+        </div>
+        <div>
+            <label for="portValueMode">Mode id</label>
+            <input type="number" id="portValueMode" value="" class="connected-control"/>
+        </div>
+        <div>
+            <button id="read-port-value" class="connected-control">Read</button>
+        </div>
+    </div>
+    <div>
+        Results:
+    </div>
+    <pre id="portValueResults"></pre>
+</p>
 </body>
 </html>
