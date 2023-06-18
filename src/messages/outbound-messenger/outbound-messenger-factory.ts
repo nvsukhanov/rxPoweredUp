@@ -1,11 +1,10 @@
 import { Observable } from 'rxjs';
 import { inject, injectable } from 'tsyringe';
 
-import { ILogger, RawMessage } from '../../types';
+import { GenericErrorInboundMessage, ILogger, RawMessage } from '../../types';
 import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
 import { MessageType } from '../../constants';
 import {
-    GenericError,
     IInboundMessageListenerFactory,
     IMessageMiddleware,
     INBOUND_MESSAGE_LISTENER_FACTORY,
@@ -15,40 +14,56 @@ import {
     OutboundMessengerConfig
 } from '../../hub';
 import { OutboundMessenger } from './outbound-messenger';
-import { PacketBuilder } from './packet-builder';
+import { ChannelFactory } from './channel';
+import { TaskQueueFactory } from './queue';
+import { TaskVisitorFactory } from './task-visitor';
 
 @injectable()
 export class OutboundMessengerFactory implements IOutboundMessengerFactory {
     constructor(
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER) private readonly feedbackIReplyParser: IReplyParser<MessageType.portOutputCommandFeedback>,
-        private readonly packetBuilder: PacketBuilder,
+        private readonly channelFactory: ChannelFactory,
+        private readonly taskQueueFactory: TaskQueueFactory,
+        private readonly feedbackHandlerFactory: TaskVisitorFactory,
     ) {
     }
 
     public create(
         characteristicDataStream: Observable<RawMessage<MessageType>>,
-        genericErrorsStream: Observable<GenericError>,
+        genericErrorsStream: Observable<GenericErrorInboundMessage>,
         characteristic: BluetoothRemoteGATTCharacteristic,
         messageMiddleware: ReadonlyArray<IMessageMiddleware>,
         onDisconnected$: Observable<void>,
         logger: ILogger,
         config: OutboundMessengerConfig
     ): IOutboundMessenger {
+        const channel = this.channelFactory.createChannel(
+            characteristic,
+            config.outgoingMessageMiddleware
+        );
+
         const commandsFeedbackStream = this.messageListenerFactory.create(
             characteristicDataStream,
             this.feedbackIReplyParser,
             onDisconnected$
         );
 
-        return new OutboundMessenger(
+        const feedbackHandler = this.feedbackHandlerFactory.createFeedbackHandler(
             commandsFeedbackStream,
-            genericErrorsStream,
-            characteristic,
-            this.packetBuilder,
-            messageMiddleware,
+        );
+
+        const queue = this.taskQueueFactory.createTaskQueue(
+            channel,
+            config.messageSendTimeout,
+            config.maxMessageSendRetries,
             logger,
-            config
+            genericErrorsStream,
+            feedbackHandler
+        );
+
+        return new OutboundMessenger(
+            queue
         );
     }
 }

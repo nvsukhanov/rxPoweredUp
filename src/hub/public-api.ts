@@ -1,4 +1,4 @@
-export { IHub, GenericError } from './i-hub';
+export { IHub } from './i-hub';
 export { IHubPropertiesFeature } from './i-hub-properties-feature';
 export {
     PortCommandExecutionStatus,

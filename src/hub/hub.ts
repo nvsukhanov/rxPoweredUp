@@ -1,10 +1,10 @@
-import { Observable, ReplaySubject, catchError, concatWith, from, fromEvent, last, map, of, share, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, ReplaySubject, catchError, concatWith, from, fromEvent, last, of, share, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
 import { BluetoothDeviceWithGatt, IDisposable, ILogger } from '../types';
-import { GenericError, IHub } from './i-hub';
+import { IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
@@ -29,8 +29,6 @@ export class Hub implements IHub {
 
     private _isConnected = false;
 
-    private _genericErrors?: Observable<GenericError>;
-
     private _disconnected$ = new ReplaySubject<void>(1);
 
     private _actionsFeature?: IHubActionsFeature;
@@ -45,7 +43,7 @@ export class Hub implements IHub {
         private readonly ioFeatureFactory: IPortsFeatureFactory,
         private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
         private readonly commandsFeatureFactory: IMotorsFeatureFactory,
-        private readonly replyParser: IReplyParser<MessageType.genericError>,
+        private readonly genericErrorReplyParser: IReplyParser<MessageType.genericError>,
         private readonly messageListenerFactory: IInboundMessageListenerFactory,
         private readonly hubActionsFeatureFactory: IHubActionsFeatureFactory
     ) {
@@ -63,13 +61,6 @@ export class Hub implements IHub {
             throw new Error('Hub not connected');
         }
         return this._actionsFeature.willDisconnect;
-    }
-
-    public get genericErrors(): Observable<GenericError> {
-        if (!this._genericErrors) {
-            throw new Error('Hub not connected');
-        }
-        return this._genericErrors;
     }
 
     public get ports(): IPortsFeature {
@@ -173,18 +164,17 @@ export class Hub implements IHub {
             }
         );
 
-        this._genericErrors = this.messageListenerFactory.create(
+        const genericErrorsStream = this.messageListenerFactory.create(
             dataStream,
-            this.replyParser,
+            this.genericErrorReplyParser,
             this._disconnected$
         ).pipe(
-            map((r) => ({ commandType: r.commandType, code: r.code })),
             share()
         );
 
         const messenger = this.outboundMessengerFactory.create(
             dataStream,
-            this._genericErrors,
+            genericErrorsStream,
             primaryCharacteristic,
             this.config.outgoingMessageMiddleware,
             this._disconnected$,

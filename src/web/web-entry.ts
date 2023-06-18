@@ -48,10 +48,6 @@ function onConnected(nextHub: IHub): void {
         console.log('disconnected emitted');
     });
 
-    nextHub.genericErrors.subscribe((e) => {
-        console.log('got generic error', e);
-    });
-
     nextHub.properties.getBatteryLevel().subscribe((v) => {
         console.log('batteryLevel', v);
     });
@@ -103,6 +99,7 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('deleteVirtualPort')!.addEventListener('click', deleteVirtualPort);
     document.getElementById('virtualPortSetSpeed')!.addEventListener('click', setVirtualPortSpeed);
     document.getElementById('virtualPortSetAngle')!.addEventListener('click', setVirtualPortAngle);
+    document.getElementById('setPortSpeed')!.addEventListener('click', setPortSpeed);
 
     nextHub.disconnected.subscribe(() => {
         document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
@@ -120,11 +117,12 @@ function onConnected(nextHub: IHub): void {
         document.getElementById('deleteVirtualPort')!.removeEventListener('click', deleteVirtualPort);
         document.getElementById('virtualPortSetSpeed')!.removeEventListener('click', setVirtualPortSpeed);
         document.getElementById('virtualPortSetAngle')!.removeEventListener('click', setVirtualPortAngle);
+        document.getElementById('setPortSpeed')!.removeEventListener('click', setPortSpeed);
         onDisconnected();
     });
 }
 
-const angleStep = 10;
+const angleStep = 90;
 let currentAngle = 0;
 
 function getPort(): number {
@@ -166,8 +164,13 @@ function createVirtualPort(): void {
     if (!Number.isInteger(portIdA) || !Number.isInteger(portIdB)) {
         return;
     }
-    hub?.ports.createVirtualPort(portIdA, portIdB).subscribe((v) => {
-        console.log('createVirtualPort', v);
+    hub?.ports.createVirtualPort(portIdA, portIdB).subscribe({
+        next: (v) => {
+            console.log('createVirtualPort', v);
+        },
+        error: (e) => {
+            console.log('createVirtualPort error', e);
+        }
     });
 }
 
@@ -296,3 +299,21 @@ function setVirtualPortAngle(): void {
     });
 }
 
+function setPortSpeed(): void {
+    const portId = (document.getElementById('portSpeedCommandPort') as HTMLInputElement).valueAsNumber;
+    const speed = (document.getElementById('portSpeedCommandSpeed') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(speed)) {
+        return;
+    }
+    hub?.motors.setSpeed(portId, speed).subscribe({
+        next: (r) => {
+            console.log('setPortSpeed', PortCommandExecutionStatus[r]);
+        },
+        error: (e) => {
+            console.log('setPortSpeed error', e);
+        },
+        complete: () => {
+            console.log('setPortSpeed stream complete');
+        }
+    });
+}
