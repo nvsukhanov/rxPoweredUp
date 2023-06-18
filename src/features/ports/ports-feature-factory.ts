@@ -82,6 +82,7 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
 
         return new PortsFeature(
             portInformationReplies$,
+            attachedIOReplies$,
             attachedIOCache.replies$,
             portModeInformationReplies$,
             portInputFormatSetupSingleReplies$,

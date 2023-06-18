@@ -22,6 +22,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     constructor(
         private readonly portModeReplies$: Observable<PortModeInboundMessage>,
         private readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>,
+        private readonly attachedIoCachedReplies$: Observable<AttachedIOInboundMessage>,
         private readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>,
         private readonly portValueSetupSingleHandshakeReplies$: Observable<PortInputSetupSingleHandshakeInboundMessage>,
         private readonly portInformationRequestMessageFactory: IPortInformationRequestMessageFactory,
@@ -36,7 +37,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     public onIoAttach(
         portId?: number
     ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage> {
-        return this.attachedIoReplies$.pipe(
+        return this.attachedIoCachedReplies$.pipe(
             filter((message) => {
                 if (message.event !== AttachIoEvent.Attached && message.event !== AttachIoEvent.AttachedVirtual) {
                     return false;
@@ -50,7 +51,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     }
 
     public onIoDetach(portId?: number): Observable<AttachedIODetachInboundMessage> {
-        return this.attachedIoReplies$.pipe(
+        return this.attachedIoCachedReplies$.pipe(
             filter((message) => {
                 if (message.event !== AttachIoEvent.Detached) {
                     return false;
