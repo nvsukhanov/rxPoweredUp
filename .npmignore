@@ -12,3 +12,4 @@ tsconfig.dev.json
 jest.config.js
 docs/
 typedoc.json
+coverage/
