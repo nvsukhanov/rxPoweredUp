@@ -1,4 +1,4 @@
-import { Observable, filter, map, take } from 'rxjs';
+import { MonoTypeOperatorFunction, Observable, filter, map, take } from 'rxjs';
 
 import { AttachIoEvent, PortModeInformationType } from '../../constants';
 import {
@@ -11,7 +11,7 @@ import {
     PortModeInformationInboundMessage,
     PortValueInboundMessage
 } from '../../types';
-import { IOutboundMessenger, IPortsFeature } from '../../hub';
+import { IOutboundMessenger, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
@@ -35,32 +35,42 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     }
 
     public onIoAttach(
-        portId?: number
+        filterOptions: OnIoAttachFilter = {
+            eventTypes: [ AttachIoEvent.Attached, AttachIoEvent.AttachedVirtual ]
+        }
     ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage> {
-        return this.attachedIoCachedReplies$.pipe(
-            filter((message) => {
-                if (message.event !== AttachIoEvent.Attached && message.event !== AttachIoEvent.AttachedVirtual) {
-                    return false;
-                }
-                if (portId !== undefined) {
-                    return message.portId === portId;
-                }
-                return true;
-            })
+        const filters: Array<MonoTypeOperatorFunction<AttachedIOInboundMessage>> = [];
+
+        if (filterOptions.ports !== undefined) {
+            const portIdsSet = new Set(filterOptions.ports);
+            filters.push(filter((message) => portIdsSet.has(message.portId)));
+        }
+        if (filterOptions.eventTypes !== undefined) {
+            const eventTypesSet: ReadonlySet<AttachIoEvent> = new Set(filterOptions.eventTypes);
+            filters.push(filter((message) => eventTypesSet.has(message.event)));
+        }
+        if (filterOptions.ioTypes !== undefined) {
+            const ioTypesSet = new Set(filterOptions.ioTypes);
+            filters.push(filter((message) => ioTypesSet.has((message as AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage).ioTypeId)));
+        }
+        return filters.reduce((acc, filterOperator) => acc.pipe(filterOperator),
+            this.attachedIoCachedReplies$
         ) as Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
     }
 
-    public onIoDetach(portId?: number): Observable<AttachedIODetachInboundMessage> {
-        return this.attachedIoCachedReplies$.pipe(
-            filter((message) => {
-                if (message.event !== AttachIoEvent.Detached) {
-                    return false;
-                }
-                if (portId !== undefined) {
-                    return message.portId === portId;
-                }
-                return true;
-            })
+    public onIoDetach(
+        filterOptions?: OnIoDetachFilter
+    ): Observable<AttachedIODetachInboundMessage> {
+        const filters: Array<MonoTypeOperatorFunction<AttachedIOInboundMessage>> = [
+            filter((message) => message.event === AttachIoEvent.Detached)
+        ];
+        if (filterOptions?.portIds !== undefined) {
+            const portIdsSet = new Set(filterOptions.portIds);
+            filters.push(filter((message) => portIdsSet.has(message.portId)));
+        }
+
+        return filters.reduce((acc, filterOperator) => acc.pipe(filterOperator),
+            this.attachedIoCachedReplies$
         ) as Observable<AttachedIODetachInboundMessage>;
     }
 

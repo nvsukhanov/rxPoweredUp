@@ -6,7 +6,7 @@ export {
     GoToPositionOptions,
     IMotorsFeature
 } from './i-motors-feature';
-export { IPortsFeature } from './i-ports-feature';
+export { IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from './i-ports-feature';
 export { IMessageMiddleware } from './i-message-middleware';
 export { OutboundMessengerConfig } from './outbound-messenger-config';
 export { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';

@@ -7,26 +7,36 @@ import {
     PortModeInboundMessage,
     PortModeInformationInboundMessage
 } from '../types';
-import { PortModeInformationType } from '../constants';
+import { AttachIoEvent, IOType, PortModeInformationType } from '../constants';
+
+export type OnIoAttachFilter = {
+    ports?: ReadonlyArray<number>;
+    ioTypes?: ReadonlyArray<IOType>;
+    eventTypes?: ReadonlyArray<AttachIoEvent.Attached | AttachIoEvent.AttachedVirtual>;
+}
+
+export type OnIoDetachFilter = {
+    portIds?: ReadonlyArray<number>;
+}
 
 export interface IPortsFeature {
     /**
      * Emits when an io device is attached to a port.
      * If portId is not specified, it will emit for all ports.
      * Events are cached, so if you subscribe after an io device is attached, you will still get the event.
-     * @param portId
+     * @param filterOptions
      */
     onIoAttach(
-        portId?: number
+        filterOptions?: OnIoAttachFilter
     ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
 
     /**
      * Emits when an io device is detached from a port.
      * If portId is not specified, it will emit for all ports.
-     * @param portId
+     * @param filterOptions
      */
     onIoDetach(
-        portId?: number
+        filterOptions?: OnIoDetachFilter
     ): Observable<AttachedIODetachInboundMessage>;
 
     /**
