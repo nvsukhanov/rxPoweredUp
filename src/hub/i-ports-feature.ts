@@ -16,7 +16,7 @@ export type OnIoAttachFilter = {
 }
 
 export type OnIoDetachFilter = {
-    portIds?: ReadonlyArray<number>;
+    ports?: ReadonlyArray<number>;
 }
 
 export interface IPortsFeature {

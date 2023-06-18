@@ -64,8 +64,8 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         const filters: Array<MonoTypeOperatorFunction<AttachedIOInboundMessage>> = [
             filter((message) => message.event === AttachIoEvent.Detached)
         ];
-        if (filterOptions?.portIds !== undefined) {
-            const portIdsSet = new Set(filterOptions.portIds);
+        if (filterOptions?.ports !== undefined) {
+            const portIdsSet = new Set(filterOptions.ports);
             filters.push(filter((message) => portIdsSet.has(message.portId)));
         }
 
