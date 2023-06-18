@@ -28,95 +28,41 @@ import 'reflect-metadata';
 
 ### Async example
 
-Wait for hub to connect, then wait for IO to attach to port 0, then if IO is a specific kind of motor, set speed to max
-for 1 second.
-
 ```typescript
-const bluetooth = navigator.bluetooth;
-// connect to hub
-const hub = await firstValueFrom(connectHub(bluetooth, { logLevel: LogLevel.Debug }));
-
-// wait for IO to attach to port 0
-const io = await firstValueFrom(hub.ports.onIoAttach(0));
-
-// if IO is a specific motor, set speed to max for 1 second
-if (io.ioTypeId === IOType.largeTechnicMotor) {
+async function test(): Promise<void> {
+    const hub = await firstValueFrom(connectHub(navigator.bluetooth));
+    await firstValueFrom(hub.ports.onIoAttach({
+        ports: [ 0 ],
+        ioTypes: [ IOType.largeTechnicMotor ]
+    }));
     await lastValueFrom(hub.motors.setSpeed(0, MOTOR_LIMITS.maxSpeed));
-    setTimeout(async () => {
-        await lastValueFrom(hub.motors.setSpeed(0, MOTOR_LIMITS.minSpeed));
-        await lastValueFrom(hub.disconnect());
-        console.log('done');
-    }, 1000);
+    await lastValueFrom(timer(1000));
+    await lastValueFrom(hub.motors.setSpeed(0, MOTOR_LIMITS.minSpeed));
+    await lastValueFrom(hub.disconnect());
 }
+
+document.addEventListener('click', () => test());
 ```
 
-### Reactive example 1
-
-Wait for hub to connect, then wait for IO to attach to port 0, then if IO is a specific kind of motor, set speed to max
-for 1 second.
+### Reactive example
 
 ```typescript
-const bluetooth = navigator.bluetooth;
-connectHub(bluetooth, { logLevel: LogLevel.Debug }).pipe(
-    mergeMap((hub) => hub.ports.onIoAttach(0).pipe(
-        map((io) => ({ hub, ioType: io.ioTypeId }))
-    )),
-    filter(({ ioType }) => ioType === IOType.largeTechnicMotor),
-    concatMap(({ hub }) => hub.motors.setSpeed(0, MOTOR_LIMITS.maxSpeed).pipe(
-        map(() => hub)
-    )),
-    delay(1000),
-    concatMap((hub) => hub.motors.setSpeed(0, MOTOR_LIMITS.minSpeed).pipe(
-        map(() => hub))
-    ),
-    concatMap((hub) => hub.disconnect())
-).subscribe({
-    complete: () => console.log('done')
-});
-```
+function test(): Observable<unknown> {
+    return connectHub(navigator.bluetooth).pipe(
+        audit((hub) => hub.ports.onIoAttach({
+            ports: [ 0 ],
+            ioTypes: [ IOType.largeTechnicMotor ]
+        })),
+        switchMap((hub) => concat(
+            hub.motors.setSpeed(0, 100),
+            timer(1000),
+            hub.motors.setSpeed(0, 0),
+            hub.disconnect()
+        )),
+    );
+}
 
-### Reactive example 2
-
-Wait for hub to connect, then listen to IO attach events at any port, then if IO is a specific kind of motor, listen to
-arrow up keypress and rotate/stop motor when key is pressed or released.
-
-Motors and hubs can be connected and disconnected at any time. This example will work with any number of motors and
-hubs.
-
-```typescript
-const bluetooth = navigator.bluetooth;
-connectHub(bluetooth, { logLevel: LogLevel.Debug }).pipe(
-    // listen to IO attach events at any port
-    mergeMap((hub) => hub.ports.onIoAttach().pipe(
-        map((attachEvent) => ({ hub, attachEvent }))
-    )),
-    // filter for specific motors
-    filter(({ attachEvent }) => attachEvent.ioTypeId === IOType.largeTechnicMotor),
-    // listen to keyup and keydown events and map to resulting speed
-    mergeMap(({ hub, attachEvent }) => merge(
-        fromEvent(document, 'keydown').pipe(
-            filter((e: Event) => (e as KeyboardEvent).key === 'ArrowUp'),
-            map(() => MOTOR_LIMITS.maxSpeed)
-        ),
-        fromEvent(document, 'keyup').pipe(
-            filter((e: Event) => (e as KeyboardEvent).key === 'ArrowUp'),
-            map(() => MOTOR_LIMITS.minSpeed)
-        )
-    ).pipe(
-        distinctUntilChanged(),
-        takeUntil(hub.disconnected),
-        takeUntil(hub.ports.onIoDetach(attachEvent.portId)),
-        map((speed) => ({ hub, port: attachEvent.portId, speed }))
-    )),
-    // execute command
-    mergeMap(({ hub, port, speed }) => hub.motors.setSpeed(port, speed).pipe(
-        map(() => ({ brr: !!speed, port })),
-    ))
-).subscribe((opResult) => {
-    if (opResult.brr) {
-        console.log(`motor at port ${opResult.port} goes brr`);
-    } else {
-        console.log(`motor at port ${opResult.port} stops`);
-    }
-});
+fromEvent(document, 'click').pipe(
+    exhaustMap(() => test())
+).subscribe();
 ```
