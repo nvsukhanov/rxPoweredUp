@@ -11,4 +11,5 @@ export type RawMessage<T extends MessageType> = {
 
 export type RawPortOutputCommandMessage = RawMessage<MessageType.portOutputCommand> & {
     portId: number;
+    waitForFeedback: boolean;
 };

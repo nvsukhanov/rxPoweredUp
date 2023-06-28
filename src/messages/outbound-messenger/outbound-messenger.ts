@@ -42,7 +42,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     }
 
     public sendPortOutputCommand(
-        message: RawPortOutputCommandMessage,
+        message: RawPortOutputCommandMessage
     ): Observable<PortCommandExecutionStatus> {
         const task = new TaskPortOutputCommand(message);
         return this.createExecutionStreamForTask(task);
