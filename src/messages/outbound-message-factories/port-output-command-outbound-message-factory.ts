@@ -40,7 +40,8 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 speed,
                 power,
                 profile
-            ])
+            ]),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
         };
     }
 
@@ -70,7 +71,8 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 speed2,
                 power,
                 useProfile
-            ])
+            ]),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
         };
     }
 
@@ -102,7 +104,8 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 power,
                 endState,
                 profile
-            ])
+            ]),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
         };
     }
 
@@ -137,7 +140,8 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 power,
                 endState,
                 useProfile
-            ])
+            ]),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
         };
     }
 
@@ -158,7 +162,8 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 OutputSubCommand.writeDirectModeData,
                 WriteDirectModeDataSubCommand.presetEncoder,
                 ...numberToUint32LEArray(absolutePosition),
-            ])
+            ]),
+            waitForFeedback: true,
         };
     }
 
@@ -181,7 +186,8 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 OutputSubCommand.setAccTime,
                 timeMs,
                 profileId
-            ])
+            ]),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
         };
     }
 
@@ -204,7 +210,8 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 OutputSubCommand.setDecTime,
                 timeMs,
                 profileId
-            ])
+            ]),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
         };
     }
 
