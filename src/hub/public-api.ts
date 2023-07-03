@@ -4,6 +4,7 @@ export {
     PortCommandExecutionStatus,
     SetSpeedOptions,
     GoToPositionOptions,
+    RotateByDegreeOptions,
     IMotorsFeature
 } from './i-motors-feature';
 export { IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from './i-ports-feature';

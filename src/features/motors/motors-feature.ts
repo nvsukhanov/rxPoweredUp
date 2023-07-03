@@ -11,7 +11,7 @@ import {
     PortOperationStartupInformation,
     WELL_KNOWN_MOTOR_PORT_MODE_IDS,
 } from '../../constants';
-import { GoToPositionOptions, IMotorsFeature, IOutboundMessenger, PortCommandExecutionStatus, SetSpeedOptions } from '../../hub';
+import { GoToPositionOptions, IMotorsFeature, IOutboundMessenger, PortCommandExecutionStatus, RotateByDegreeOptions, SetSpeedOptions } from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
 import { IRawPortValueProvider } from './i-raw-port-value-provider';
@@ -154,6 +154,24 @@ export class MotorsFeature implements IMotorsFeature {
         );
     }
 
+    public rotateByDegree(
+        portId: number,
+        degree: number,
+        options?: RotateByDegreeOptions
+    ): Observable<PortCommandExecutionStatus> {
+        const message = this.portOutputCommandOutboundMessageFactoryService.startSpeedForDegrees(
+            portId,
+            degree,
+            options?.speed ?? MOTOR_LIMITS.maxSpeed,
+            options?.power ?? MOTOR_LIMITS.maxPower,
+            options?.endState ?? MotorServoEndState.brake,
+            options?.useProfile ?? MotorUseProfile.dontUseProfiles,
+            PortOperationStartupInformation.bufferIfNecessary,
+            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
+        );
+        return this.execute(message);
+    }
+    
     public getPosition(
         portId: number,
         modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.position]

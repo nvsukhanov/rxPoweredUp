@@ -6,7 +6,7 @@ import { bufferCount, concatWith, map } from 'rxjs';
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
-import { AttachIoEvent, HubType, LogLevel } from '../constants';
+import { AttachIoEvent, HubType, LogLevel, MotorServoEndState } from '../constants';
 import { PrefixedConsoleLogger } from '../logger';
 
 let hub: IHub | undefined;
@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function onConnected(nextHub: IHub): void {
     hub = nextHub;
     setControlsState(true);
+    const abortController = new AbortController();
+    const abortSignal = abortController.signal;
     const hubDisconnectHandle = (): unknown => nextHub.disconnect().subscribe(() => console.log('disconnect command sent'));
 
     const switchOffHandle = (): unknown => nextHub.switchOff().subscribe(() => console.log('switch off command sent'));
@@ -42,10 +44,6 @@ function onConnected(nextHub: IHub): void {
 
     nextHub.willSwitchOff.subscribe(() => {
         console.log('willSwitchOff emitted');
-    });
-
-    nextHub.disconnected.subscribe(() => {
-        console.log('disconnected emitted');
     });
 
     nextHub.properties.getBatteryLevel().subscribe((v) => {
@@ -83,71 +81,34 @@ function onConnected(nextHub: IHub): void {
         }
     });
 
-    document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle);
-    document.getElementById('switch-off')!.addEventListener('click', switchOffHandle);
-    document.getElementById('increment-angle')!.addEventListener('click', incrementAngle);
-    document.getElementById('decrement-angle')!.addEventListener('click', decrementAngle);
-    document.getElementById('go-to-zero')!.addEventListener('click', goToZero);
-    document.getElementById('set-as-zero')!.addEventListener('click', setAsZero);
-    document.getElementById('read-pos')!.addEventListener('click', readPOS);
-    document.getElementById('read-apos')!.addEventListener('click', readAPOS);
-    document.getElementById('reset-zero')!.addEventListener('click', resetZero);
-    document.getElementById('read-pos-apos')!.addEventListener('click', readPOSandAPOS);
-    document.getElementById('read-port-value')!.addEventListener('click', readPortValueRaw);
-    document.getElementById('read-port-value')!.addEventListener('click', readPortValueRaw);
-    document.getElementById('createVirtualPort')!.addEventListener('click', createVirtualPort);
-    document.getElementById('deleteVirtualPort')!.addEventListener('click', deleteVirtualPort);
-    document.getElementById('virtualPortSetSpeed')!.addEventListener('click', setVirtualPortSpeed);
-    document.getElementById('virtualPortSetAngle')!.addEventListener('click', setVirtualPortAngle);
-    document.getElementById('setPortSpeed')!.addEventListener('click', setPortSpeed);
-    document.getElementById('runSeqOps')!.addEventListener('click', runSequentialOperations);
+    document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle, { signal: abortSignal });
+    document.getElementById('switch-off')!.addEventListener('click', switchOffHandle, { signal: abortSignal });
+    document.getElementById('increment-angle')!.addEventListener('click', incrementAngle, { signal: abortSignal });
+    document.getElementById('decrement-angle')!.addEventListener('click', decrementAngle, { signal: abortSignal });
+    document.getElementById('go-to-zero')!.addEventListener('click', goToZero, { signal: abortSignal });
+    document.getElementById('set-as-zero')!.addEventListener('click', setAsZero, { signal: abortSignal });
+    document.getElementById('read-pos')!.addEventListener('click', readPOS, { signal: abortSignal });
+    document.getElementById('read-apos')!.addEventListener('click', readAPOS, { signal: abortSignal });
+    document.getElementById('reset-zero')!.addEventListener('click', resetZero, { signal: abortSignal });
+    document.getElementById('read-pos-apos')!.addEventListener('click', readPOSandAPOS, { signal: abortSignal });
+    document.getElementById('read-port-value')!.addEventListener('click', readPortValueRaw, { signal: abortSignal });
+    document.getElementById('read-port-value')!.addEventListener('click', readPortValueRaw, { signal: abortSignal });
+    document.getElementById('createVirtualPort')!.addEventListener('click', createVirtualPort, { signal: abortSignal });
+    document.getElementById('deleteVirtualPort')!.addEventListener('click', deleteVirtualPort, { signal: abortSignal });
+    document.getElementById('virtualPortSetSpeed')!.addEventListener('click', setVirtualPortSpeed, { signal: abortSignal });
+    document.getElementById('virtualPortSetAngle')!.addEventListener('click', setVirtualPortAngle, { signal: abortSignal });
+    document.getElementById('setPortSpeed')!.addEventListener('click', setPortSpeed, { signal: abortSignal });
+    document.getElementById('runSeqOps')!.addEventListener('click', runSequentialOperations, { signal: abortSignal });
 
     nextHub.disconnected.subscribe(() => {
-        document.getElementById('disconnect')!.removeEventListener('click', hubDisconnectHandle);
-        document.getElementById('switch-off')!.removeEventListener('click', switchOffHandle);
-        document.getElementById('increment-angle')!.removeEventListener('click', incrementAngle);
-        document.getElementById('decrement-angle')!.removeEventListener('click', decrementAngle);
-        document.getElementById('go-to-zero')!.removeEventListener('click', goToZero);
-        document.getElementById('set-as-zero')!.removeEventListener('click', setAsZero);
-        document.getElementById('read-pos')!.removeEventListener('click', readPOS);
-        document.getElementById('read-apos')!.removeEventListener('click', readAPOS);
-        document.getElementById('reset-zero')!.removeEventListener('click', resetZero);
-        document.getElementById('read-pos-apos')!.removeEventListener('click', readPOSandAPOS);
-        document.getElementById('read-port-value')!.removeEventListener('click', readPortValueRaw);
-        document.getElementById('createVirtualPort')!.removeEventListener('click', createVirtualPort);
-        document.getElementById('deleteVirtualPort')!.removeEventListener('click', deleteVirtualPort);
-        document.getElementById('virtualPortSetSpeed')!.removeEventListener('click', setVirtualPortSpeed);
-        document.getElementById('virtualPortSetAngle')!.removeEventListener('click', setVirtualPortAngle);
-        document.getElementById('setPortSpeed')!.removeEventListener('click', setPortSpeed);
-        document.getElementById('runSeqOps')!.removeEventListener('click', runSequentialOperations);
-        onDisconnected();
+        console.log('disconnected emitted');
+        abortController.abort();
+        setControlsState(false);
     });
 }
-
-const angleStep = 90;
-let currentAngle = 0;
 
 function getPort(): number {
     return (document.getElementById('port') as HTMLInputElement).valueAsNumber;
-}
-
-function incrementAngle(): void {
-    currentAngle += angleStep;
-    const targetAngle = currentAngle;
-    const noFeedback = !(document.getElementById('wait-for-feedback-checkbox') as HTMLInputElement).checked;
-    console.log('incrementing angle to', targetAngle);
-    hub?.motors.goToPosition(
-        getPort(),
-        targetAngle,
-        { noFeedback: noFeedback }
-    ).subscribe({
-        next: (r) => {
-            console.log('settings angle', targetAngle, PortCommandExecutionStatus[r]);
-        },
-        complete: () => {
-            console.log('incrementing angle complete', targetAngle);
-        }
-    });
 }
 
 function readPortValueRaw(): void {
@@ -188,21 +149,34 @@ function deleteVirtualPort(): void {
     });
 }
 
-function decrementAngle(): void {
-    currentAngle -= angleStep;
-    const targetAngle = currentAngle;
+function incrementAngle(): void {
     const noFeedback = !(document.getElementById('wait-for-feedback-checkbox') as HTMLInputElement).checked;
-    console.log('decrementing angle to', targetAngle);
-    hub?.motors.goToPosition(
+    hub?.motors.rotateByDegree(
         getPort(),
-        targetAngle,
-        { noFeedback: noFeedback }
+        45,
+        { noFeedback: noFeedback, endState: MotorServoEndState.hold }
     ).subscribe({
         next: (r) => {
-            console.log('settings angle', targetAngle, PortCommandExecutionStatus[r]);
+            console.log('incrementing angle by 45 degrees', PortCommandExecutionStatus[r]);
         },
         complete: () => {
-            console.log('decrementing angle complete', targetAngle);
+            console.log('incrementing angle complete');
+        }
+    });
+}
+
+function decrementAngle(): void {
+    const noFeedback = !(document.getElementById('wait-for-feedback-checkbox') as HTMLInputElement).checked;
+    hub?.motors.rotateByDegree(
+        getPort(),
+        45,
+        { noFeedback: noFeedback, endState: MotorServoEndState.hold }
+    ).subscribe({
+        next: (r) => {
+            console.log('decrementing angle by 45 degrees', PortCommandExecutionStatus[r]);
+        },
+        complete: () => {
+            console.log('decrementing angle complete');
         }
     });
 }
@@ -217,7 +191,6 @@ function goToZero(): void {
             console.log('settings angle', port, PortCommandExecutionStatus[r]);
         },
         complete: () => {
-            currentAngle = 0;
             console.log('goToZero complete', port);
         }
     });
@@ -233,7 +206,6 @@ function setAsZero(): void {
             console.log('setAsZero', port, PortCommandExecutionStatus[r]);
         },
         complete: () => {
-            currentAngle = 0;
             console.log('setAsZero complete', port);
         }
     });
@@ -266,10 +238,6 @@ function resetZero(): void {
     hub?.motors.resetEncoder(getPort()).subscribe((r) => {
         console.log('resetZero', r);
     });
-}
-
-function onDisconnected(): void {
-    setControlsState(false);
 }
 
 function setControlsState(isConnected: boolean): void {
