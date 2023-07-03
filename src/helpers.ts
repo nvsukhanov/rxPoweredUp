@@ -18,8 +18,10 @@ export function numberToUint32LEArray(value: number): number[] {
     ];
 }
 
-export function readNumberFromUint8LEArray(value: Uint8Array): number {
-    return value.reduce((acc, val, index) => acc + (val << (index * 8)), 0);
+export function readNumberFromUint8LEArray(value: Uint8Array): number;
+export function readNumberFromUint8LEArray(value: number[]): number;
+export function readNumberFromUint8LEArray(value: number[] | Uint8Array): number {
+    return [ ...value ].reduce((acc, val, index) => acc + (val << (index * 8)), 0);
 }
 
 export function convertUint8ToSignedInt(value: number): number {
