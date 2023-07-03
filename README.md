@@ -18,14 +18,6 @@ Following examples use experimental navigator.bluetooth browser API to connect t
 fully supported by all browsers.
 Web Bluetooth API is not available in NodeJS, however, it is may by possible to use libraries which provide similar API.
 
-Please note that browsers require user interaction for connecting to Bluetooth devices
-
-reflect-metadata must be imported before using rxPoweredUP. This should be done only once in the application.
-
-```typescript
-import 'reflect-metadata';
-```
-
 ### Async example
 
 ```typescript
