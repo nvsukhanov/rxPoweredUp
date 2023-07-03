@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { RawPortValueParser } from './raw-port-value-parser';
 
 describe('RawPortValueParser', () => {

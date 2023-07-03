@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import { instance, mock, verify, when } from 'ts-mockito';
 import { take } from 'rxjs';
 

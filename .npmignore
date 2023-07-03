@@ -9,7 +9,9 @@ dist/web-entry.*
 .github
 tsconfig.d.json
 tsconfig.dev.json
-jest.config.js
+jest.config.ts
 docs/
 typedoc.json
 coverage/
+jest/
+.run/

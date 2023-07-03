@@ -9,8 +9,9 @@
     ]
   },
   "exclude": [
-    "node_modules",
+    "./node_modules",
     "dist",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "jest"
   ]
 }
