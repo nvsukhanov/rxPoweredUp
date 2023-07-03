@@ -11,7 +11,7 @@
     "clean": "rimraf dist",
     "docs": "typedoc",
     "lint": "eslint src/ --ext .ts",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest --detectOpenHandles --forceExit --config jest/jest.config.ts",
     "start": "webpack-dev-server --mode development",
     "ci": "npm run lint && npm run test && npm run build && npm run docs",
     "prepare": "npm run lint && npm run test && npm run build"
@@ -33,6 +33,7 @@
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.2",
     "ts-mockito": "^2.6.1",
+    "ts-node": "^10.9.1",
     "typedoc": "^0.24.7",
     "typescript": "~4.9.5",
     "webpack": "^5.82.0",
