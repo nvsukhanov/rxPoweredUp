@@ -18,7 +18,7 @@ Following examples use experimental navigator.bluetooth browser API to connect t
 fully supported by all browsers.
 Web Bluetooth API is not available in NodeJS, however, it is may by possible to use libraries which provide similar API.
 
-### Async example
+### Async
 
 ```typescript
 async function test(): Promise<void> {
@@ -27,16 +27,16 @@ async function test(): Promise<void> {
         ports: [ 0 ],
         ioTypes: [ IOType.largeTechnicMotor ]
     }));
-    await lastValueFrom(hub.motors.setSpeed(0, MOTOR_LIMITS.maxSpeed));
+    await lastValueFrom(hub.motors.setSpeed(0, 100));
     await lastValueFrom(timer(1000));
-    await lastValueFrom(hub.motors.setSpeed(0, MOTOR_LIMITS.minSpeed));
+    await lastValueFrom(hub.motors.setSpeed(0, 0));
     await lastValueFrom(hub.disconnect());
 }
 
 document.addEventListener('click', () => test());
 ```
 
-### Reactive example
+### Reactive
 
 ```typescript
 function test(): Observable<unknown> {
