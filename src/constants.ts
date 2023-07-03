@@ -192,6 +192,7 @@ export enum OutputSubCommand {
     setDecTime = 0x06,
     startSpeed = 0x07,
     startSpeedSynchronized = 0x08,
+    startSpeedForDegrees = 0x0B,
     gotoAbsolutePosition = 0x0D, // 13
     gotoAbsolutePositionSynchronized = 0x0E, // 14
     writeDirectModeData = 0x51, // 81

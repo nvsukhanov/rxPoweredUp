@@ -46,6 +46,17 @@ export interface IMotorCommandsOutboundMessageFactory {
         completionMode?: PortOperationCompletionInformation,
     ): RawPortOutputCommandMessage;
 
+    startSpeedForDegrees(
+        portId: number,
+        degree: number,
+        speed?: number,
+        power?: number,
+        endState?: MotorServoEndState,
+        useProfile?: MotorUseProfile,
+        startupMode?: PortOperationStartupInformation,
+        completionMode?: PortOperationCompletionInformation,
+    ): RawPortOutputCommandMessage
+
     presetEncoder(
         portId: number,
         absolutePosition: number,

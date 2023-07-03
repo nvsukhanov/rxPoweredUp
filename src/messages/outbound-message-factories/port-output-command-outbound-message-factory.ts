@@ -109,6 +109,38 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
         };
     }
 
+    public startSpeedForDegrees(
+        portId: number,
+        degree: number,
+        speed: number = MOTOR_LIMITS.maxSpeed,
+        power: number = MOTOR_LIMITS.maxPower,
+        endState: MotorServoEndState = MotorServoEndState.hold,
+        useProfile: MotorUseProfile = MotorUseProfile.dontUseProfiles,
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
+    ): RawPortOutputCommandMessage {
+        this.ensureSpeedIsWithinLimits(speed);
+        this.ensurePowerIsWithinLimits(power);
+
+        return {
+            header: {
+                messageType: MessageType.portOutputCommand,
+            },
+            portId,
+            payload: new Uint8Array([
+                portId,
+                startupMode | completionMode,
+                OutputSubCommand.startSpeedForDegrees,
+                ...numberToUint32LEArray(degree),
+                speed,
+                power,
+                endState,
+                useProfile
+            ]),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
+        };
+    }
+
     public goToAbsolutePositionSynchronized(
         virtualPortId: number,
         absolutePosition1: number,

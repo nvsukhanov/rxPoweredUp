@@ -23,6 +23,22 @@ export type GoToPositionOptions = {
     noFeedback?: boolean;
 }
 
+/**
+ * Options for the rotateByDegree method.
+ * @param speed - speed of the motor, 0 - 100
+ * @param power - power of the motor, 0 - 100
+ * @param endState - end state of the motor, default is 'hold'
+ * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
+ * @param noFeedback - if true, the stream will complete immediately after the command is received by the hub.
+ */
+export type RotateByDegreeOptions = {
+    speed?: number;
+    power?: number;
+    endState?: MotorServoEndState;
+    useProfile?: MotorUseProfile;
+    noFeedback?: boolean;
+}
+
 export interface IMotorsFeature {
     /**
      * Sets the acceleration time for the motor.
@@ -113,6 +129,18 @@ export interface IMotorsFeature {
         targetDegree1: number,
         targetDegree2: number,
         options?: GoToPositionOptions
+    ): Observable<PortCommandExecutionStatus>;
+
+    /**
+     * Rotates the motor by the specified degree (positive values rotate clockwise, negative values rotate counter-clockwise).
+     * @param portId
+     * @param degree
+     * @param options - see RotateByDegreeOptions
+     */
+    rotateByDegree(
+        portId: number,
+        degree: number,
+        options?: RotateByDegreeOptions
     ): Observable<PortCommandExecutionStatus>;
 
     /**
