@@ -1,7 +1,7 @@
 /* eslint-disable no-console,@typescript-eslint/no-non-null-assertion */
 import 'reflect-metadata';
 
-import { bufferCount, concatWith, map } from 'rxjs';
+import { bufferCount, concatWith, map, takeUntil, zip } from 'rxjs';
 
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
@@ -81,6 +81,17 @@ function onConnected(nextHub: IHub): void {
         }
     });
 
+    zip(
+        nextHub.ports.onIoAttach({ ports: [ 0 ] }),
+        nextHub.ports.onIoAttach({ ports: [ 1 ] }),
+    ).pipe(
+        takeUntil(nextHub.disconnected)
+    ).subscribe(([ a, b ]) => {
+        (document.getElementById('dualPort1') as HTMLInputElement).value = a.portId.toString();
+        (document.getElementById('dualPort2') as HTMLInputElement).value = b.portId.toString();
+        document.getElementById('dual-increment-angle')!.removeAttribute('disabled');
+    });
+
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle, { signal: abortSignal });
     document.getElementById('switch-off')!.addEventListener('click', switchOffHandle, { signal: abortSignal });
     document.getElementById('increment-angle')!.addEventListener('click', incrementAngle, { signal: abortSignal });
@@ -99,6 +110,7 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('virtualPortSetAngle')!.addEventListener('click', setVirtualPortAngle, { signal: abortSignal });
     document.getElementById('setPortSpeed')!.addEventListener('click', setPortSpeed, { signal: abortSignal });
     document.getElementById('runSeqOps')!.addEventListener('click', runSequentialOperations, { signal: abortSignal });
+    document.getElementById('dual-increment-angle')!.addEventListener('click', dualIncrementAngle, { signal: abortSignal });
 
     nextHub.disconnected.subscribe(() => {
         console.log('disconnected emitted');
@@ -109,6 +121,22 @@ function onConnected(nextHub: IHub): void {
 
 function getPort(): number {
     return (document.getElementById('port') as HTMLInputElement).valueAsNumber;
+}
+
+function dualIncrementAngle(): void {
+    const port1 = +(document.getElementById('dualPort1') as HTMLInputElement).value;
+    const port2 = +(document.getElementById('dualPort2') as HTMLInputElement).value;
+    if (!hub) {
+        return;
+    }
+    hub.motors.rotateByDegree(port1, 90, { speed: 50 }).subscribe({
+        next: (status) => console.log(`Port 1: ${PortCommandExecutionStatus[status]}`),
+        complete: () => console.log('Port 1: complete'),
+    });
+    hub.motors.rotateByDegree(port2, 90, { speed: 50 }).subscribe({
+        next: (status) => console.log(`Port 2: ${PortCommandExecutionStatus[status]}`),
+        complete: () => console.log('Port 2: complete'),
+    });
 }
 
 function readPortValueRaw(): void {
@@ -150,11 +178,10 @@ function deleteVirtualPort(): void {
 }
 
 function incrementAngle(): void {
-    const noFeedback = !(document.getElementById('wait-for-feedback-checkbox') as HTMLInputElement).checked;
     hub?.motors.rotateByDegree(
         getPort(),
         45,
-        { noFeedback: noFeedback, endState: MotorServoEndState.hold }
+        { endState: MotorServoEndState.hold }
     ).subscribe({
         next: (r) => {
             console.log('incrementing angle by 45 degrees', PortCommandExecutionStatus[r]);
@@ -166,11 +193,10 @@ function incrementAngle(): void {
 }
 
 function decrementAngle(): void {
-    const noFeedback = !(document.getElementById('wait-for-feedback-checkbox') as HTMLInputElement).checked;
     hub?.motors.rotateByDegree(
         getPort(),
         45,
-        { noFeedback: noFeedback, endState: MotorServoEndState.hold }
+        { endState: MotorServoEndState.hold }
     ).subscribe({
         next: (r) => {
             console.log('decrementing angle by 45 degrees', PortCommandExecutionStatus[r]);
@@ -298,23 +324,22 @@ function runSequentialOperations(): void {
     }
     const portId = (document.getElementById('port') as HTMLInputElement).valueAsNumber;
     const startTime = Date.now();
-    const noFeedback = !(document.getElementById('wait-for-feedback-checkbox') as HTMLInputElement).checked;
-    hub.motors.setSpeed(portId, 100, { noFeedback: noFeedback }).pipe(
+    hub.motors.setSpeed(portId, 100).pipe(
         map((result) => ({ op: 'speed 100', result })),
         concatWith(
-            hub.motors.setSpeed(portId, 90, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 90', result }))),
-            hub.motors.setSpeed(portId, 80, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 80', result }))),
-            hub.motors.setSpeed(portId, 70, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 70', result }))),
-            hub.motors.setSpeed(portId, 60, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 60', result }))),
-            hub.motors.setSpeed(portId, 50, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 50', result }))),
-            hub.motors.goToPosition(portId, 45, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'angle 45', result }))),
-            hub.motors.goToPosition(portId, 90, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'angle 90', result }))),
-            hub.motors.setSpeed(portId, 40, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 40', result }))),
-            hub.motors.setSpeed(portId, 30, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 30', result }))),
-            hub.motors.goToPosition(portId, 180, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'angle 180', result }))),
-            hub.motors.setSpeed(portId, 20, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 20', result }))),
-            hub.motors.setSpeed(portId, 10, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 10', result }))),
-            hub.motors.setSpeed(portId, 0, { noFeedback: noFeedback }).pipe(map((result) => ({ op: 'speed 0', result })))
+            hub.motors.setSpeed(portId, 90).pipe(map((result) => ({ op: 'speed 90', result }))),
+            hub.motors.setSpeed(portId, 80).pipe(map((result) => ({ op: 'speed 80', result }))),
+            hub.motors.setSpeed(portId, 70).pipe(map((result) => ({ op: 'speed 70', result }))),
+            hub.motors.setSpeed(portId, 60).pipe(map((result) => ({ op: 'speed 60', result }))),
+            hub.motors.setSpeed(portId, 50).pipe(map((result) => ({ op: 'speed 50', result }))),
+            hub.motors.goToPosition(portId, 45).pipe(map((result) => ({ op: 'angle 45', result }))),
+            hub.motors.goToPosition(portId, 90).pipe(map((result) => ({ op: 'angle 90', result }))),
+            hub.motors.setSpeed(portId, 40).pipe(map((result) => ({ op: 'speed 40', result }))),
+            hub.motors.setSpeed(portId, 30).pipe(map((result) => ({ op: 'speed 30', result }))),
+            hub.motors.goToPosition(portId, 180).pipe(map((result) => ({ op: 'angle 180', result }))),
+            hub.motors.setSpeed(portId, 20).pipe(map((result) => ({ op: 'speed 20', result }))),
+            hub.motors.setSpeed(portId, 10).pipe(map((result) => ({ op: 'speed 10', result }))),
+            hub.motors.setSpeed(portId, 0).pipe(map((result) => ({ op: 'speed 0', result })))
         )
     ).subscribe({
         next: (v) => {

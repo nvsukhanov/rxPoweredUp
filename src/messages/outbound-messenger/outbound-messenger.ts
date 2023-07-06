@@ -3,22 +3,27 @@ import { Observable, bufferCount, concatWith, map } from 'rxjs';
 import { IDisposable, LastOfTuple, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { OutboundMessageTypes } from '../../constants';
 import { IOutboundMessenger, PortCommandExecutionStatus, WithResponseSequenceItem } from '../../hub';
-import { IQueueTask, TaskQueue } from './queue';
+import { IQueueTask, TaskQueue, TaskQueueFactory } from './queue';
 import { TaskPortOutputCommand, TaskWithResponse, TaskWithoutResponse } from './queue-tasks';
 
 export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     private isDisposed = false;
 
+    private genericTaskQueue: TaskQueue;
+
+    private portOutputCommandTaskQueues = new Map<number, TaskQueue>();
+
     constructor(
-        private readonly tasksQueue: TaskQueue,
+        private readonly taskQueueFactory: TaskQueueFactory
     ) {
+        this.genericTaskQueue = this.taskQueueFactory.createTaskQueue();
     }
 
     public sendWithoutResponse(
         message: RawMessage<OutboundMessageTypes>
     ): Observable<void> {
         const task = new TaskWithoutResponse(message);
-        return this.createExecutionStreamForTask(task);
+        return this.createExecutionStreamForTask(task, this.genericTaskQueue);
     }
 
     public sendWithResponse<
@@ -28,7 +33,7 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         ...sequenceItems: TSequenceItems
     ): Observable<TResult> {
         const tasks = sequenceItems.map(({ message, reply }) => new TaskWithResponse(message, reply));
-        const executionStreams: Array<Observable<unknown>> = tasks.map((task) => this.createExecutionStreamForTask(task));
+        const executionStreams: Array<Observable<unknown>> = tasks.map((task) => this.createExecutionStreamForTask(task, this.genericTaskQueue));
 
         if (executionStreams.length === 1) {
             return executionStreams[0] as Observable<TResult>;
@@ -45,16 +50,20 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         message: RawPortOutputCommandMessage
     ): Observable<PortCommandExecutionStatus> {
         const task = new TaskPortOutputCommand(message);
-        return this.createExecutionStreamForTask(task);
+        return this.createExecutionStreamForTask(
+            task,
+            this.getQueueForPort(task.portId)
+        );
     }
 
     public createExecutionStreamForTask<TTaskResult>(
-        task: IQueueTask<TTaskResult>
+        task: IQueueTask<TTaskResult>,
+        queue: TaskQueue
     ): Observable<TTaskResult> {
         let isEnqueued = false;
         return new Observable((observer) => {
             if (!isEnqueued) {
-                this.tasksQueue.enqueueTask(task);
+                queue.enqueueTask(task);
                 isEnqueued = true;
             }
             const sub = task.result.subscribe(observer);
@@ -68,9 +77,23 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
                 throw new Error('Already disposed');
             }
             this.isDisposed = true;
-            this.tasksQueue.dispose();
+            this.genericTaskQueue.dispose();
+            for (const queue of this.portOutputCommandTaskQueues.values()) {
+                queue.dispose();
+            }
             observer.next(void 0);
             observer.complete();
         });
+    }
+
+    private getQueueForPort(
+        portId: number
+    ): TaskQueue {
+        let queue = this.portOutputCommandTaskQueues.get(portId);
+        if (!queue) {
+            queue = this.taskQueueFactory.createTaskQueue();
+            this.portOutputCommandTaskQueues.set(portId, queue);
+        }
+        return queue;
     }
 }

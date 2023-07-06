@@ -44,4 +44,29 @@ describe('Channel', () => {
         await subject.sendMessage(message);
         verify(messageMiddlewareMock[0].handle(message)).once();
     });
+
+    it('should not send message before the previous one is sent', (done) => {
+        let isMessage2Sent = false;
+
+        const message1 = {} as RawMessage<MessageType>;
+        const packet1 = new Uint8Array(0);
+        when(packetBuilderMock.buildPacket(message1)).thenReturn(packet1);
+        when(messageMiddlewareMock[0].handle(message1)).thenReturn(message1);
+        when(characteristicMock.writeValueWithoutResponse(packet1)).thenCall(() => Promise.resolve());
+
+        const message2 = {} as RawMessage<MessageType>;
+        const packet2 = new Uint8Array(0);
+        when(packetBuilderMock.buildPacket(message2)).thenReturn(packet2);
+        when(messageMiddlewareMock[0].handle(message2)).thenReturn(message2);
+        when(characteristicMock.writeValueWithoutResponse(packet2)).thenCall(() => {
+            isMessage2Sent = true;
+            return Promise.resolve();
+        });
+
+        subject.sendMessage(message1).then(() => {
+            expect(isMessage2Sent).toBe(false);
+            done();
+        });
+        subject.sendMessage(message2);
+    });
 });

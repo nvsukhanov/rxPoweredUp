@@ -7,7 +7,6 @@ import {
     MotorServoEndState,
     MotorUseProfile,
     PortModeName,
-    PortOperationCompletionInformation,
     PortOperationStartupInformation,
     WELL_KNOWN_MOTOR_PORT_MODE_IDS,
 } from '../../constants';
@@ -61,7 +60,6 @@ export class MotorsFeature implements IMotorsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
             PortOperationStartupInformation.bufferIfNecessary,
-            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
     }
@@ -79,7 +77,6 @@ export class MotorsFeature implements IMotorsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
             PortOperationStartupInformation.bufferIfNecessary,
-            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
     }
@@ -97,7 +94,6 @@ export class MotorsFeature implements IMotorsFeature {
             options?.endState ?? MotorServoEndState.hold,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
             PortOperationStartupInformation.bufferIfNecessary,
-            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
     }
@@ -117,7 +113,6 @@ export class MotorsFeature implements IMotorsFeature {
             options?.endState ?? MotorServoEndState.hold,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
             PortOperationStartupInformation.bufferIfNecessary,
-            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
     }
@@ -167,11 +162,10 @@ export class MotorsFeature implements IMotorsFeature {
             options?.endState ?? MotorServoEndState.brake,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
             PortOperationStartupInformation.bufferIfNecessary,
-            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
     }
-    
+
     public getPosition(
         portId: number,
         modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.position]
