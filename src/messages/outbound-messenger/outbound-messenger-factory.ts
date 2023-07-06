@@ -15,8 +15,8 @@ import {
 } from '../../hub';
 import { OutboundMessenger } from './outbound-messenger';
 import { ChannelFactory } from './channel';
-import { TaskQueueFactory } from './queue';
 import { TaskVisitorFactory } from './task-visitor';
+import { TaskQueueFactoryFactory } from './queue/task-queue-factory-factory';
 
 @injectable()
 export class OutboundMessengerFactory implements IOutboundMessengerFactory {
@@ -24,7 +24,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER) private readonly feedbackIReplyParser: IReplyParser<MessageType.portOutputCommandFeedback>,
         private readonly channelFactory: ChannelFactory,
-        private readonly taskQueueFactory: TaskQueueFactory,
+        private readonly taskQueueFactoryFactory: TaskQueueFactoryFactory,
         private readonly feedbackHandlerFactory: TaskVisitorFactory,
     ) {
     }
@@ -53,7 +53,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
             commandsFeedbackStream,
         );
 
-        const queue = this.taskQueueFactory.createTaskQueue(
+        const taskQueueFactory = this.taskQueueFactoryFactory.create(
             channel,
             config.messageSendTimeout,
             config.maxMessageSendRetries,
@@ -63,7 +63,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         );
 
         return new OutboundMessenger(
-            queue
+            taskQueueFactory
         );
     }
 }

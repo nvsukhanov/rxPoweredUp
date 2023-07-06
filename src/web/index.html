@@ -8,6 +8,7 @@
         padding-left: 10px;
         margin-top: 10px;
         margin-bottom: 10px;
+        margin-left: 10px;
         border-left: 3px solid #AACAE2;
     }
 
@@ -37,8 +38,6 @@
     <p>
         <label for="port">Port id</label>
         <input type="number" id="port" value="0" class="connected-control"/>
-        <input type="checkbox" id="wait-for-feedback-checkbox" checked="checked" class="connected-control"/>
-        <label for="wait-for-feedback-checkbox">Wait for feedback</label>
     </p>
     <div class="row-controls">
         <button id="increment-angle" class="connected-control">Increment angle</button>
@@ -50,6 +49,19 @@
         <button id="reset-zero" class="connected-control">Set POS zero to APOS zero</button>
         <button id="read-pos-apos" class="connected-control">Read POS and APOS</button>
         <button id="runSeqOps" class="connected-control">Run sequential operations</button>
+    </div>
+</section>
+
+<section class="control-section">
+    <h2>Dual ports controls</h2>
+    <p>
+        <label for="dualPort1">Port 1 id</label>
+        <input type="number" id="dualPort1" value="0" class="connected-control"/>
+        <label for="dualPort2">Port 2 id</label>
+        <input type="number" id="dualPort2" value="0" class="connected-control"/>
+    </p>
+    <div class="row-controls">
+        <button id="dual-increment-angle" class="connected-control" disabled>Increment angle</button>
     </div>
 </section>
 

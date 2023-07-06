@@ -12,7 +12,6 @@ export enum PortCommandExecutionStatus {
 export type SetSpeedOptions = {
     power?: number;
     useProfile?: MotorUseProfile;
-    noFeedback?: boolean;
 }
 
 export type GoToPositionOptions = {
@@ -20,7 +19,6 @@ export type GoToPositionOptions = {
     power?: number;
     endState?: MotorServoEndState;
     useProfile?: MotorUseProfile;
-    noFeedback?: boolean;
 }
 
 /**
@@ -29,14 +27,12 @@ export type GoToPositionOptions = {
  * @param power - power of the motor, 0 - 100
  * @param endState - end state of the motor, default is 'hold'
  * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
- * @param noFeedback - if true, the stream will complete immediately after the command is received by the hub.
  */
 export type RotateByDegreeOptions = {
     speed?: number;
     power?: number;
     endState?: MotorServoEndState;
     useProfile?: MotorUseProfile;
-    noFeedback?: boolean;
 }
 
 export interface IMotorsFeature {
@@ -65,7 +61,6 @@ export interface IMotorsFeature {
     /**
      * Starts motor rotation at the specified speed.
      * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
-     * If 'noFeedback' option is set to true, the stream will complete immediately after the command is received by the hub.
      *
      * @param portId
      * @param speed - speed in range (-100 - 100), where positive values rotate the motor clockwise, negative values rotate the motor counter-clockwise.
@@ -80,7 +75,6 @@ export interface IMotorsFeature {
     /**
      * Starts motors rotation at the specified speed in synchronized mode (applicable only for virtual ports).
      * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
-     * If 'noFeedback' option is set to true, the stream will complete immediately after the command is received by the hub.
      *
      * @param virtualPortId
      * @param speed1
@@ -104,7 +98,6 @@ export interface IMotorsFeature {
      * 1. The motor has reached the specified degree.
      * 2. The motor was unable to reach the specified degree (e.g. blocked).
      * 3. The command was discarded by the hub (e.g. another port output command was sent to the motor).
-     * If 'noFeedback' option is set to true, the stream will complete immediately after the command is received by the hub.
      * @param portId
      * @param targetDegree - must be in range from -2147483647 to 2147483647
      * @param options

@@ -5,6 +5,8 @@ import { IMessageMiddleware } from '../../../hub';
 import { IChannel } from '../i-channel';
 
 export class Channel implements IChannel {
+    private queue: Promise<void> = Promise.resolve();
+
     constructor(
         private readonly characteristic: BluetoothRemoteGATTCharacteristic,
         private readonly packetBuilder: PacketBuilder,
@@ -15,9 +17,12 @@ export class Channel implements IChannel {
     public sendMessage(
         message: RawMessage<MessageType>,
     ): Promise<void> {
-        const resultingMessage = this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message);
-        const packet = this.packetBuilder.buildPacket(resultingMessage);
-
-        return this.characteristic.writeValueWithoutResponse(packet);
+        const p = this.queue.then(() => {
+            const resultingMessage = this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message);
+            const packet = this.packetBuilder.buildPacket(resultingMessage);
+            return this.characteristic.writeValueWithoutResponse(packet);
+        });
+        this.queue = p.catch(() => void 0);
+        return p;
     }
 }
