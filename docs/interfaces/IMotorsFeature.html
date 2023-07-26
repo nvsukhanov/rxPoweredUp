@@ -20,7 +20,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">IMotorsFeature</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L38">src/hub/i-motors-feature.ts:38</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L60">src/hub/i-motors-feature.ts:60</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -63,7 +63,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L169">src/hub/i-motors-feature.ts:169</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L194">src/hub/i-motors-feature.ts:194</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getPosition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Position</span><a href="#getPosition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -85,19 +85,14 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L160">src/hub/i-motors-feature.ts:160</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L185">src/hub/i-motors-feature.ts:185</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="goToPosition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>go<wbr/>To<wbr/>Position</span><a href="#goToPosition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="goToPosition.goToPosition-1"><span class="tsd-kind-call-signature">go<wbr/>To<wbr/>Position</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">targetDegree</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span><a href="#goToPosition.goToPosition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Rotates the motor to the specified position (relative to zero).<br>Zero is the position when the motor was last switched on or connected to the hub.<br>Positive values are calculated clockwise, negative values are calculated counter-clockwise.</p>
-<p>Stream emits inProgress status when the motor starts rotating.<br>Stream completes when one of the following happens:</p>
-<ol>
-<li>The motor has reached the specified degree.</li>
-<li>The motor was unable to reach the specified degree (e.g. blocked).</li>
-<li>The command was discarded by the hub (e.g. another port output command was sent to the motor).</li>
-</ol>
+<p>WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if<br>the next command is issued in quick succession. Use with caution.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -116,13 +111,14 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L105">src/hub/i-motors-feature.ts:105</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L124">src/hub/i-motors-feature.ts:124</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="goToPositionSynchronized" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>go<wbr/>To<wbr/>Position<wbr/>Synchronized</span><a href="#goToPositionSynchronized" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="goToPositionSynchronized.goToPositionSynchronized-1"><span class="tsd-kind-call-signature">go<wbr/>To<wbr/>Position<wbr/>Synchronized</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">virtualPortId</span>, <span class="tsd-kind-parameter">targetDegree1</span>, <span class="tsd-kind-parameter">targetDegree2</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span><a href="#goToPositionSynchronized.goToPositionSynchronized-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Rotates virtual port motors to the specified positions (relative to zero).</p>
+<p>WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if<br>the next command is issued in quick succession. Use with caution.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -144,7 +140,7 @@
 <h4>See</h4><p>goToPosition</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L120">src/hub/i-motors-feature.ts:120</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L142">src/hub/i-motors-feature.ts:142</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="resetEncoder" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>reset<wbr/>Encoder</span><a href="#resetEncoder" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -166,13 +162,14 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L178">src/hub/i-motors-feature.ts:178</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L203">src/hub/i-motors-feature.ts:203</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="rotateByDegree" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>rotate<wbr/>By<wbr/>Degree</span><a href="#rotateByDegree" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="rotateByDegree.rotateByDegree-1"><span class="tsd-kind-call-signature">rotate<wbr/>By<wbr/>Degree</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">degree</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span><a href="#rotateByDegree.rotateByDegree-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Rotates the motor by the specified degree (positive values rotate clockwise, negative values rotate counter-clockwise).</p>
+<p>WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if<br>the next command is issued in quick succession. Use with caution.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -191,7 +188,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L133">src/hub/i-motors-feature.ts:133</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L158">src/hub/i-motors-feature.ts:158</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setAccelerationTime" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Acceleration<wbr/>Time</span><a href="#setAccelerationTime" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -213,7 +210,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L45">src/hub/i-motors-feature.ts:45</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L67">src/hub/i-motors-feature.ts:67</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setDecelerationTime" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Deceleration<wbr/>Time</span><a href="#setDecelerationTime" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -235,7 +232,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L56">src/hub/i-motors-feature.ts:56</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L78">src/hub/i-motors-feature.ts:78</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setSpeed" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Speed</span><a href="#setSpeed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -260,7 +257,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L69">src/hub/i-motors-feature.ts:69</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L91">src/hub/i-motors-feature.ts:91</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setSpeedSynchronized" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Speed<wbr/>Synchronized</span><a href="#setSpeedSynchronized" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -286,7 +283,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L84">src/hub/i-motors-feature.ts:84</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L106">src/hub/i-motors-feature.ts:106</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setZeroPositionRelativeToCurrentPosition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Zero<wbr/>Position<wbr/>Relative<wbr/>To<wbr/>Current<wbr/>Position</span><a href="#setZeroPositionRelativeToCurrentPosition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -307,7 +304,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/PortCommandExecutionStatus.html" class="tsd-signature-type tsd-kind-enum">PortCommandExecutionStatus</a><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/27e66f2/src/hub/i-motors-feature.ts#L147">src/hub/i-motors-feature.ts:147</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUP/blob/9c9249c/src/hub/i-motors-feature.ts#L172">src/hub/i-motors-feature.ts:172</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

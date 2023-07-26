@@ -2,6 +2,13 @@ import { Observable } from 'rxjs';
 
 import { MotorServoEndState, MotorUseProfile } from '../constants';
 
+/**
+ * Status of the port command execution.
+ * @param inProgress - command is sent to the hub and is executing
+ * @param discarded - command was discarded by the hub (e.g. another port output command was sent to the motor)
+ * @param completed - command was completed successfully
+ * @param executionError - an error occurred during command execution
+ */
 export enum PortCommandExecutionStatus {
     inProgress,
     discarded,
@@ -9,30 +16,45 @@ export enum PortCommandExecutionStatus {
     executionError,
 }
 
+/**
+ * Options for the setSpeed method.
+ * @param power - power of the motor, range: [0, 100]
+ * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
+ * @param noFeedback - do not wait for feedback from the motor, default is false
+ */
 export type SetSpeedOptions = {
     power?: number;
     useProfile?: MotorUseProfile;
+    noFeedback?: boolean;
 }
 
+/**
+ * Options for the goToPosition method.
+ * @param speed - speed of the motor, range: [-100, - 100]
+ * @param power - power of the motor, range: [0, 100]
+ */
 export type GoToPositionOptions = {
     speed?: number;
     power?: number;
     endState?: MotorServoEndState;
     useProfile?: MotorUseProfile;
+    noFeedback?: boolean;
 }
 
 /**
  * Options for the rotateByDegree method.
- * @param speed - speed of the motor, 0 - 100
- * @param power - power of the motor, 0 - 100
+ * @param speed - speed of the motor, range: [-100, - 100]
+ * @param power - power of the motor, range: [0, 100]
  * @param endState - end state of the motor, default is 'hold'
  * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
+ * @param noFeedback - do not wait for feedback from the motor, default is false
  */
 export type RotateByDegreeOptions = {
     speed?: number;
     power?: number;
     endState?: MotorServoEndState;
     useProfile?: MotorUseProfile;
+    noFeedback?: boolean;
 }
 
 export interface IMotorsFeature {
@@ -93,11 +115,8 @@ export interface IMotorsFeature {
      * Zero is the position when the motor was last switched on or connected to the hub.
      * Positive values are calculated clockwise, negative values are calculated counter-clockwise.
      *
-     * Stream emits inProgress status when the motor starts rotating.
-     * Stream completes when one of the following happens:
-     * 1. The motor has reached the specified degree.
-     * 2. The motor was unable to reach the specified degree (e.g. blocked).
-     * 3. The command was discarded by the hub (e.g. another port output command was sent to the motor).
+     * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if
+     * the next command is issued in quick succession. Use with caution.
      * @param portId
      * @param targetDegree - must be in range from -2147483647 to 2147483647
      * @param options
@@ -110,6 +129,9 @@ export interface IMotorsFeature {
 
     /**
      * Rotates virtual port motors to the specified positions (relative to zero).
+     *
+     * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if
+     * the next command is issued in quick succession. Use with caution.
      * @see goToPosition
      *
      * @param virtualPortId
@@ -126,6 +148,9 @@ export interface IMotorsFeature {
 
     /**
      * Rotates the motor by the specified degree (positive values rotate clockwise, negative values rotate counter-clockwise).
+     *
+     * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if
+     * the next command is issued in quick succession. Use with caution.
      * @param portId
      * @param degree
      * @param options - see RotateByDegreeOptions

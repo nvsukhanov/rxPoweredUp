@@ -15,6 +15,7 @@ describe('TaskPortOutputCommand', () => {
         portId = Symbol() as unknown as number;
         message = {
             portId,
+            waitForFeedback: true
         } as RawPortOutputCommandMessage;
         subject = new TaskPortOutputCommand(message);
     });
