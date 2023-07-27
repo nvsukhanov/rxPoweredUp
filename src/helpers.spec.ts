@@ -1,6 +1,6 @@
 import {
-    concatUint8Arrays,
     concatUint8ToUint16,
+    concatUintArraysToUint8Array,
     convertUint16ToSignedInt,
     numberToUint32LEArray,
     readBitAtPosition,
@@ -54,9 +54,9 @@ describe('Helpers', () => {
         });
     });
 
-    describe('concatUint8Arrays', () => {
+    describe('concatUintArraysToUint8Array', () => {
         it('should concat multiple Uint8Arrays', () => {
-            expect(concatUint8Arrays(
+            expect(concatUintArraysToUint8Array(
                 new Uint8Array([ 0x01, 0x02 ]),
                 new Uint8Array([ 0x03, 0x04 ]))
             ).toEqual(new Uint8Array([ 0x01, 0x02, 0x03, 0x04 ]));

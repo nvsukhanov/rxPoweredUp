@@ -6,7 +6,7 @@ import { bufferCount, concatWith, map, takeUntil, zip } from 'rxjs';
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
 import { IHub, PortCommandExecutionStatus } from '../hub';
-import { AttachIoEvent, HubType, LogLevel, MotorServoEndState } from '../constants';
+import { AttachIoEvent, HubType, LogLevel, MotorServoEndState, MotorUseProfile } from '../constants';
 import { PrefixedConsoleLogger } from '../logger';
 
 let hub: IHub | undefined;
@@ -63,6 +63,9 @@ function onConnected(nextHub: IHub): void {
         if (v.event === AttachIoEvent.AttachedVirtual) {
             (document.getElementById('virtualPortControlsId') as HTMLInputElement).value = v.portId.toString();
             (document.getElementById('deleteVirtualPortId') as HTMLInputElement).value = v.portId.toString();
+        } else {
+            (document.getElementById('setAccelerationTimePortId') as HTMLInputElement).value = v.portId.toString();
+            (document.getElementById('setDecelerationTimePortId') as HTMLInputElement).value = v.portId.toString();
         }
     });
 
@@ -111,6 +114,8 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('setPortSpeed')!.addEventListener('click', setPortSpeed, { signal: abortSignal });
     document.getElementById('runSeqOps')!.addEventListener('click', runSequentialOperations, { signal: abortSignal });
     document.getElementById('dual-increment-angle')!.addEventListener('click', dualIncrementAngle, { signal: abortSignal });
+    document.getElementById('setAccelerationTimeButton')!.addEventListener('click', setAccelerationTime, { signal: abortSignal });
+    document.getElementById('setDecelerationTimeButton')!.addEventListener('click', setDecelerationTime, { signal: abortSignal });
 
     nextHub.disconnected.subscribe(() => {
         console.log('disconnected emitted');
@@ -121,6 +126,21 @@ function onConnected(nextHub: IHub): void {
 
 function getPort(): number {
     return (document.getElementById('port') as HTMLInputElement).valueAsNumber;
+}
+
+function getAccDecProfile(): MotorUseProfile {
+    const useAccProfile = (document.getElementById('useAccelerationProfile') as HTMLInputElement).checked;
+    const useDecProfile = (document.getElementById('useDecelerationProfile') as HTMLInputElement).checked;
+    if (useAccProfile && useDecProfile) {
+        return MotorUseProfile.useAccelerationAndDecelerationProfiles;
+    }
+    if (useAccProfile) {
+        return MotorUseProfile.useAccelerationProfile;
+    }
+    if (useDecProfile) {
+        return MotorUseProfile.useDecelerationProfile;
+    }
+    return MotorUseProfile.dontUseProfiles;
 }
 
 function dualIncrementAngle(): void {
@@ -181,7 +201,7 @@ function incrementAngle(): void {
     hub?.motors.rotateByDegree(
         getPort(),
         45,
-        { endState: MotorServoEndState.hold }
+        { endState: MotorServoEndState.hold, useProfile: getAccDecProfile() }
     ).subscribe({
         next: (r) => {
             console.log('incrementing angle by 45 degrees', PortCommandExecutionStatus[r]);
@@ -196,7 +216,7 @@ function decrementAngle(): void {
     hub?.motors.rotateByDegree(
         getPort(),
         45,
-        { endState: MotorServoEndState.hold }
+        { endState: MotorServoEndState.hold, useProfile: getAccDecProfile() }
     ).subscribe({
         next: (r) => {
             console.log('decrementing angle by 45 degrees', PortCommandExecutionStatus[r]);
@@ -211,7 +231,8 @@ function goToZero(): void {
     const port = getPort();
     hub?.motors.goToPosition(
         port,
-        0
+        0,
+        { useProfile: getAccDecProfile() }
     ).subscribe({
         next: (r) => {
             console.log('settings angle', port, PortCommandExecutionStatus[r]);
@@ -305,7 +326,11 @@ function setPortSpeed(): void {
     if (!Number.isInteger(portId) || !Number.isInteger(speed)) {
         return;
     }
-    hub?.motors.setSpeed(portId, speed).subscribe({
+    hub?.motors.setSpeed(
+        portId,
+        speed,
+        { useProfile: getAccDecProfile() }
+    ).subscribe({
         next: (r) => {
             console.log('setPortSpeed', PortCommandExecutionStatus[r]);
         },
@@ -324,22 +349,23 @@ function runSequentialOperations(): void {
     }
     const portId = (document.getElementById('port') as HTMLInputElement).valueAsNumber;
     const startTime = Date.now();
+    const config = { useProfile: getAccDecProfile() };
     hub.motors.setSpeed(portId, 100).pipe(
         map((result) => ({ op: 'speed 100', result })),
         concatWith(
-            hub.motors.setSpeed(portId, 90).pipe(map((result) => ({ op: 'speed 90', result }))),
-            hub.motors.setSpeed(portId, 80).pipe(map((result) => ({ op: 'speed 80', result }))),
-            hub.motors.setSpeed(portId, 70).pipe(map((result) => ({ op: 'speed 70', result }))),
-            hub.motors.setSpeed(portId, 60).pipe(map((result) => ({ op: 'speed 60', result }))),
-            hub.motors.setSpeed(portId, 50).pipe(map((result) => ({ op: 'speed 50', result }))),
-            hub.motors.goToPosition(portId, 45).pipe(map((result) => ({ op: 'angle 45', result }))),
-            hub.motors.goToPosition(portId, 90).pipe(map((result) => ({ op: 'angle 90', result }))),
-            hub.motors.setSpeed(portId, 40).pipe(map((result) => ({ op: 'speed 40', result }))),
-            hub.motors.setSpeed(portId, 30).pipe(map((result) => ({ op: 'speed 30', result }))),
-            hub.motors.goToPosition(portId, 180).pipe(map((result) => ({ op: 'angle 180', result }))),
-            hub.motors.setSpeed(portId, 20).pipe(map((result) => ({ op: 'speed 20', result }))),
-            hub.motors.setSpeed(portId, 10).pipe(map((result) => ({ op: 'speed 10', result }))),
-            hub.motors.setSpeed(portId, 0).pipe(map((result) => ({ op: 'speed 0', result })))
+            hub.motors.setSpeed(portId, 90, config).pipe(map((result) => ({ op: 'speed 90', result }))),
+            hub.motors.setSpeed(portId, 80, config).pipe(map((result) => ({ op: 'speed 80', result }))),
+            hub.motors.setSpeed(portId, 70, config).pipe(map((result) => ({ op: 'speed 70', result }))),
+            hub.motors.setSpeed(portId, 60, config).pipe(map((result) => ({ op: 'speed 60', result }))),
+            hub.motors.setSpeed(portId, 50, config).pipe(map((result) => ({ op: 'speed 50', result }))),
+            hub.motors.goToPosition(portId, 45, config).pipe(map((result) => ({ op: 'angle 45', result }))),
+            hub.motors.goToPosition(portId, 90, config).pipe(map((result) => ({ op: 'angle 90', result }))),
+            hub.motors.setSpeed(portId, 40, config).pipe(map((result) => ({ op: 'speed 40', result }))),
+            hub.motors.setSpeed(portId, 30, config).pipe(map((result) => ({ op: 'speed 30', result }))),
+            hub.motors.goToPosition(portId, 180, config).pipe(map((result) => ({ op: 'angle 180', result }))),
+            hub.motors.setSpeed(portId, 20, config).pipe(map((result) => ({ op: 'speed 20', result }))),
+            hub.motors.setSpeed(portId, 10, config).pipe(map((result) => ({ op: 'speed 10', result }))),
+            hub.motors.setSpeed(portId, 0, config).pipe(map((result) => ({ op: 'speed 0', result })))
         )
     ).subscribe({
         next: (v) => {
@@ -347,6 +373,44 @@ function runSequentialOperations(): void {
         },
         complete: () => {
             console.log('sequential ops executed in', Date.now() - startTime);
+        }
+    });
+}
+
+function setAccelerationTime(): void {
+    const portId = (document.getElementById('setAccelerationTimePortId') as HTMLInputElement).valueAsNumber;
+    const accelerationTimeMs = (document.getElementById('setAccelerationTimeMs') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(accelerationTimeMs)) {
+        return;
+    }
+    hub?.motors.setAccelerationTime(portId, accelerationTimeMs).subscribe({
+        next: (r) => {
+            console.log('setAccelerationTime', PortCommandExecutionStatus[r]);
+        },
+        error: (e) => {
+            console.log('setAccelerationTime error', e);
+        },
+        complete: () => {
+            console.log('setAccelerationTime stream complete');
+        }
+    });
+}
+
+function setDecelerationTime(): void {
+    const portId = (document.getElementById('setDecelerationTimePortId') as HTMLInputElement).valueAsNumber;
+    const decelerationTimeMs = (document.getElementById('setDecelerationTimeMs') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(decelerationTimeMs)) {
+        return;
+    }
+    hub?.motors.setDecelerationTime(portId, decelerationTimeMs).subscribe({
+        next: (r) => {
+            console.log('setDecelerationTime', PortCommandExecutionStatus[r]);
+        },
+        error: (e) => {
+            console.log('setDecelerationTime error', e);
+        },
+        complete: () => {
+            console.log('setDecelerationTime stream complete');
         }
     });
 }

@@ -18,6 +18,13 @@ export function numberToUint32LEArray(value: number): number[] {
     ];
 }
 
+export function numberToUint16LEArray(value: number): number[] {
+    return [
+        value & 0xff,
+        (value >> 8) & 0xff
+    ];
+}
+
 export function readNumberFromUint8LEArray(value: Uint8Array): number;
 export function readNumberFromUint8LEArray(value: number[]): number;
 export function readNumberFromUint8LEArray(value: number[] | Uint8Array): number {
@@ -37,6 +44,17 @@ export function convertUint16ToSignedInt(value: number): number {
 }
 
 export function concatUint8Arrays(...a: Uint8Array[]): Uint8Array {
+    const totalLength = a.reduce((acc, val) => acc + val.length, 0);
+    const result = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const arr of a) {
+        result.set(arr, offset);
+        offset += arr.length;
+    }
+    return result;
+}
+
+export function concatUintArraysToUint8Array(...a: Array<Uint8Array | Uint16Array | Uint16Array>): Uint8Array {
     const totalLength = a.reduce((acc, val) => acc + val.length, 0);
     const result = new Uint8Array(totalLength);
     let offset = 0;

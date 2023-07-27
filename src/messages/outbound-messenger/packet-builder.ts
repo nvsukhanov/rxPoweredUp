@@ -2,7 +2,7 @@ import { injectable } from 'tsyringe';
 
 import { RawMessage } from '../../types';
 import { MessageType } from '../../constants';
-import { concatUint8Arrays } from '../../helpers';
+import { concatUintArraysToUint8Array } from '../../helpers';
 
 @injectable()
 export class PacketBuilder {
@@ -12,7 +12,7 @@ export class PacketBuilder {
         message: RawMessage<MessageType>
     ): Uint8Array {
         const header = this.composeHeader(message);
-        return concatUint8Arrays(header, message.payload);
+        return concatUintArraysToUint8Array(header, message.payload);
     }
 
     private composeHeader(
