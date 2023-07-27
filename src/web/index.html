@@ -38,6 +38,10 @@
     <p>
         <label for="port">Port id</label>
         <input type="number" id="port" value="0" class="connected-control"/>
+        <label for="useAccelerationProfile">Use acceleration profile</label>
+        <input type="checkbox" id="useAccelerationProfile" checked class="connected-control"/>
+        <label for="useDecelerationProfile">Use deceleration profile</label>
+        <input type="checkbox" id="useDecelerationProfile" checked class="connected-control"/>
     </p>
     <div class="row-controls">
         <button id="increment-angle" class="connected-control">Increment angle</button>
@@ -86,6 +90,44 @@
         Results:
     </div>
     <pre id="portValueResults"></pre>
+</section>
+
+<section class="control-section">
+    <h2>
+        Port set acceleration time
+    </h2>
+    <div class="row-controls">
+        <div>
+            <label for="portSpeedCommandPort">Port id</label>
+            <input type="number" id="setAccelerationTimePortId" value="" class="connected-control"/>
+        </div>
+        <div>
+            <label for="portSpeedCommandSpeed">Time (ms)</label>
+            <input type="number" id="setAccelerationTimeMs" value="1000" class="connected-control"/>
+        </div>
+        <div>
+            <button id="setAccelerationTimeButton" class="connected-control">Set acceleration time</button>
+        </div>
+    </div>
+</section>
+
+<section class="control-section">
+    <h2>
+        Port set deceleration time
+    </h2>
+    <div class="row-controls">
+        <div>
+            <label for="portSpeedCommandPort">Port id</label>
+            <input type="number" id="setDecelerationTimePortId" value="" class="connected-control"/>
+        </div>
+        <div>
+            <label for="portSpeedCommandSpeed">Time (ms)</label>
+            <input type="number" id="setDecelerationTimeMs" value="1000" class="connected-control"/>
+        </div>
+        <div>
+            <button id="setDecelerationTimeButton" class="connected-control">Set deceleration time</button>
+        </div>
+    </div>
 </section>
 
 <section class="control-section">

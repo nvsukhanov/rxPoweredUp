@@ -12,7 +12,7 @@ import {
     PortOperationStartupInformation,
     WriteDirectModeDataSubCommand
 } from '../../constants';
-import { numberToUint32LEArray } from '../../helpers';
+import { concatUintArraysToUint8Array, numberToUint16LEArray, numberToUint32LEArray } from '../../helpers';
 import { IMotorCommandsOutboundMessageFactory } from '../../features';
 
 @injectable()
@@ -212,13 +212,15 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 messageType: MessageType.portOutputCommand,
             },
             portId,
-            payload: new Uint8Array([
-                portId,
-                startupMode | completionMode,
-                OutputSubCommand.setAccTime,
-                timeMs,
-                profileId
-            ]),
+            payload: concatUintArraysToUint8Array(
+                new Uint8Array([
+                    portId,
+                    startupMode | completionMode,
+                    OutputSubCommand.setAccTime
+                ]),
+                new Uint16Array(numberToUint16LEArray(timeMs)),
+                new Uint8Array([ profileId ])
+            ),
             waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback
         };
     }
@@ -236,13 +238,15 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 messageType: MessageType.portOutputCommand,
             },
             portId,
-            payload: new Uint8Array([
-                portId,
-                startupMode | completionMode,
-                OutputSubCommand.setDecTime,
-                timeMs,
-                profileId
-            ]),
+            payload: concatUintArraysToUint8Array(
+                new Uint8Array([
+                    portId,
+                    startupMode | completionMode,
+                    OutputSubCommand.setDecTime
+                ]),
+                new Uint16Array(numberToUint16LEArray(timeMs)),
+                new Uint8Array([ profileId ])
+            ),
             waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback
         };
     }
