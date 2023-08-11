@@ -1,4 +1,4 @@
-import { MonoTypeOperatorFunction, Observable, filter, map, take } from 'rxjs';
+import { MonoTypeOperatorFunction, Observable, Subscription, filter, last, map, switchMap, take } from 'rxjs';
 
 import { AttachIoEvent, PortModeInformationType } from '../../constants';
 import {
@@ -90,12 +90,78 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
             take(1)
         );
 
+        const portValuesReplies$ = this.rawPortValueReplies.pipe(
+            filter((r) => r.portId === portId),
+        );
+
         return this.messenger.sendWithResponse(
             { message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ },
-            { message: portValueRequestMessage, reply: this.rawPortValueReplies }
+            { message: portValueRequestMessage, reply: portValuesReplies$ }
         ).pipe(
             map((r) => r.value)
         );
+    }
+
+    public valueChanges(
+        portId: number,
+        modeId: number,
+        deltaThreshold?: number
+    ): Observable<number[]> {
+        let notificationsRequestSent = false;
+        let subscribersCount = 0;
+
+        const portValueHandshakeReplies$ = this.portValueSetupSingleHandshakeReplies$.pipe(
+            filter((r) => r.portId === portId && r.modeId === modeId),
+            take(1)
+        );
+
+        const teardownLogic = (sub: Subscription): void => {
+            subscribersCount--;
+            if (subscribersCount === 0) {
+                const disableNotificationsMessage = this.portInputFormatSetupMessageFactory.createMessage(
+                    portId,
+                    modeId,
+                    false,
+                );
+                this.messenger.sendWithResponse(
+                    { message: disableNotificationsMessage, reply: portValueHandshakeReplies$ }
+                ).pipe(
+                    take(1)
+                ).subscribe();
+            }
+            sub.unsubscribe();
+        };
+
+        return new Observable<number[]>((subscriber) => {
+            subscribersCount++;
+            const portValuesReplies$ = this.rawPortValueReplies.pipe(
+                filter((r) => r.portId === portId),
+            );
+
+            if (!notificationsRequestSent) {
+                const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
+                    portId,
+                    modeId,
+                    true,
+                    deltaThreshold
+                );
+
+                const sub = this.messenger.sendWithResponse(
+                    { message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ }
+                ).pipe(
+                    last(),
+                    switchMap(() => portValuesReplies$),
+                    map((r) => r.value)
+                ).subscribe(subscriber);
+                notificationsRequestSent = true;
+                return () => teardownLogic(sub);
+            } else {
+                const sub = portValuesReplies$.pipe(
+                    map((r) => r.value)
+                ).subscribe(subscriber);
+                return () => teardownLogic(sub);
+            }
+        });
     }
 
     public getPortModes(

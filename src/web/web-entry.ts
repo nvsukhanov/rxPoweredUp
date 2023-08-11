@@ -1,7 +1,7 @@
 /* eslint-disable no-console,@typescript-eslint/no-non-null-assertion */
 import 'reflect-metadata';
 
-import { bufferCount, concatWith, map, takeUntil, zip } from 'rxjs';
+import { Subscription, bufferCount, concatWith, map, takeUntil, zip } from 'rxjs';
 
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
@@ -116,6 +116,8 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('dual-increment-angle')!.addEventListener('click', dualIncrementAngle, { signal: abortSignal });
     document.getElementById('setAccelerationTimeButton')!.addEventListener('click', setAccelerationTime, { signal: abortSignal });
     document.getElementById('setDecelerationTimeButton')!.addEventListener('click', setDecelerationTime, { signal: abortSignal });
+    document.getElementById('subscribe-port-value')!.addEventListener('click', subscribeToPortValue, { signal: abortSignal });
+    document.getElementById('unsubscribe-port-value')!.addEventListener('click', unsubscribeFromPortValue, { signal: abortSignal });
 
     nextHub.disconnected.subscribe(() => {
         console.log('disconnected emitted');
@@ -413,4 +415,27 @@ function setDecelerationTime(): void {
             console.log('setDecelerationTime stream complete');
         }
     });
+}
+
+let portValueSubscription: Subscription | undefined;
+
+function subscribeToPortValue(): void {
+    portValueSubscription?.unsubscribe();
+    if (!hub) {
+        return;
+    }
+    const portId = (document.getElementById('portValuePort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('portValueMode') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    portValueSubscription = hub.ports.valueChanges(portId, modeId, 1).subscribe((v) => {
+        (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = JSON.stringify(v);
+    });
+}
+
+function unsubscribeFromPortValue(): void {
+    portValueSubscription?.unsubscribe();
+    (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'unsubscribed';
 }
