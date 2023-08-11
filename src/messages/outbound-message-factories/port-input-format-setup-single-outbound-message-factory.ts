@@ -9,18 +9,16 @@ import { IPortInputFormatSetupMessageFactory } from '../../features';
 export class PortInputFormatSetupSingleOutboundMessageFactory implements IPortInputFormatSetupMessageFactory {
     private readonly defaultUnsubscribePortPollingInterval = 0xFFFFFFFF; // UInt32 max
 
-    private readonly minimumAllowedIOPollIntervalMs = 100;
-
-    private readonly defaultIOPollIntervalMs = 500;
+    private readonly minAllowedDeltaThreshold = 1;
 
     public createMessage(
         portId: number,
         mode: number,
         notificationsEnabled: boolean,
-        deltaInterval: number = this.defaultIOPollIntervalMs
+        deltaThreshold: number = 1
     ): RawMessage<MessageType.portInputFormatSetupSingle> {
         const pollInterval = notificationsEnabled
-                             ? Math.max(deltaInterval, this.minimumAllowedIOPollIntervalMs)
+                             ? Math.max(deltaThreshold, this.minAllowedDeltaThreshold)
                              : this.defaultUnsubscribePortPollingInterval;
         return {
             header: {

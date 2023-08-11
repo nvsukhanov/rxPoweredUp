@@ -8,7 +8,7 @@ export interface IPortInputFormatSetupMessageFactory {
         portId: number,
         mode: number,
         notificationsEnabled: true,
-        deltaInterval?: number,
+        deltaThreshold?: number,
     ): RawMessage<MessageType.portInputFormatSetupSingle>;
 
     createMessage(

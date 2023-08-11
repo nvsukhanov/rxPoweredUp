@@ -52,6 +52,19 @@ export interface IPortsFeature {
     ): Observable<number[]>;
 
     /**
+     * Provides port value updates for a given port and mode id.
+     *
+     * @param portId
+     * @param modeId
+     * @param deltaThreshold If the difference between the current value and the previous value is less than this threshold, the value will not be emitted.
+     */
+    valueChanges(
+        portId: number,
+        modeId: number,
+        deltaThreshold: number
+    ): Observable<number[]>;
+
+    /**
      * Reads port modes and capabilities for a given port.
      * Stream completes when the response is received from the hub.
      *
