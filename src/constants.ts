@@ -222,6 +222,13 @@ export enum GenericErrorCode {
     internalError = 0x08,
 }
 
+export enum ButtonGroupButtonId {
+    None = 0,
+    Plus = 1,
+    Red = 127,
+    Minus = 255,
+}
+
 export const MOTOR_ACC_DEC_DEFAULT_PROFILE_ID = 0;
 
 export enum LogLevel {

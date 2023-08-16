@@ -12,7 +12,8 @@ export {
     MotorUseProfile,
     GenericErrorCode,
     LogLevel,
-    MOTOR_LIMITS
+    MOTOR_LIMITS,
+    ButtonGroupButtonId
 } from './constants';
 export * from './types/public-api';
 export { ConnectionError } from './errors';
