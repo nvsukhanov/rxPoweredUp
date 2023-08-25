@@ -112,6 +112,8 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('virtualPortSetSpeed')!.addEventListener('click', setVirtualPortSpeed, { signal: abortSignal });
     document.getElementById('virtualPortSetAngle')!.addEventListener('click', setVirtualPortAngle, { signal: abortSignal });
     document.getElementById('setPortSpeed')!.addEventListener('click', setPortSpeed, { signal: abortSignal });
+    document.getElementById('setPortPosition')!.addEventListener('click', setPortPosition, { signal: abortSignal });
+    document.getElementById('rotateByDegree')!.addEventListener('click', rotateByDegree, { signal: abortSignal });
     document.getElementById('runSeqOps')!.addEventListener('click', runSequentialOperations, { signal: abortSignal });
     document.getElementById('dual-increment-angle')!.addEventListener('click', dualIncrementAngle, { signal: abortSignal });
     document.getElementById('setAccelerationTimeButton')!.addEventListener('click', setAccelerationTime, { signal: abortSignal });
@@ -341,6 +343,52 @@ function setPortSpeed(): void {
         },
         complete: () => {
             console.log('setPortSpeed stream complete');
+        }
+    });
+}
+
+function setPortPosition(): void {
+    const portId = (document.getElementById('portPositionCommandPort') as HTMLInputElement).valueAsNumber;
+    const angle = (document.getElementById('portPositionCommandAngle') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(angle)) {
+        return;
+    }
+    hub?.motors.goToPosition(
+        portId,
+        angle,
+        { useProfile: getAccDecProfile() }
+    ).subscribe({
+        next: (r) => {
+            console.log('setPortPosition', PortCommandExecutionStatus[r]);
+        },
+        error: (e) => {
+            console.log('setPortPosition error', e);
+        },
+        complete: () => {
+            console.log('setPortPosition stream complete');
+        }
+    });
+}
+
+function rotateByDegree(): void {
+    const portId = (document.getElementById('portRotateByDegreeCommandPort') as HTMLInputElement).valueAsNumber;
+    const degree = (document.getElementById('portRotateByDegreeCommandDegree') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(degree)) {
+        return;
+    }
+    hub?.motors.rotateByDegree(
+        portId,
+        degree,
+        { useProfile: getAccDecProfile() }
+    ).subscribe({
+        next: (r) => {
+            console.log('rotateByDegree', PortCommandExecutionStatus[r]);
+        },
+        error: (e) => {
+            console.log('rotateByDegree error', e);
+        },
+        complete: () => {
+            console.log('rotateByDegree stream complete');
         }
     });
 }

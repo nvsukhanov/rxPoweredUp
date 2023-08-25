@@ -161,8 +161,8 @@ export class MotorsFeature implements IMotorsFeature {
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.startSpeedForDegrees(
             portId,
-            degree,
-            options?.speed ?? MOTOR_LIMITS.maxSpeed,
+            Math.abs(degree),
+            Math.abs(options?.speed ?? MOTOR_LIMITS.maxSpeed) * Math.sign(degree),
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.endState ?? MotorServoEndState.brake,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
