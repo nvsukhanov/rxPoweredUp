@@ -148,6 +148,7 @@ export interface IMotorsFeature {
 
     /**
      * Rotates the motor by the specified degree (positive values rotate clockwise, negative values rotate counter-clockwise).
+     * The sign of the speed is ignored
      *
      * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if
      * the next command is issued in quick succession. Use with caution.
