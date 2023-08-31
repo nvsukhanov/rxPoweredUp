@@ -8,5 +8,6 @@
   "markedOptions": {
     "gfm": true,
     "breaks": true
-  }
+  },
+  "gitRevision": "main"
 }
