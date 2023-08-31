@@ -12,6 +12,7 @@ import { CharacteristicDataStreamConfig } from './characteristic-data-stream-con
 export type HubConfig = {
     readonly maxGattConnectRetries: number;
     readonly logLevel: LogLevel;
+    readonly hubConnectionTimeoutMs: number;
 } & OutboundMessengerConfig & CharacteristicDataStreamConfig;
 
 export const HUB_CONFIG_DEFAULTS: HubConfig = {
@@ -21,4 +22,5 @@ export const HUB_CONFIG_DEFAULTS: HubConfig = {
     logLevel: LogLevel.Warning,
     messageSendTimeout: 300,
     maxMessageSendRetries: 4,
+    hubConnectionTimeoutMs: 2000,
 };

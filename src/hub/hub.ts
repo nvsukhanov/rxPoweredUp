@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, catchError, concatWith, from, fromEvent, last, of, share, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Observable, ReplaySubject, catchError, concatWith, from, fromEvent, last, of, share, switchMap, take, takeUntil, tap, timeout } from 'rxjs';
 
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
@@ -110,6 +110,7 @@ export class Hub implements IHub {
                     this.dispose();
                 });
             }),
+            timeout(this.config.hubConnectionTimeoutMs),
             switchMap((primaryCharacteristic) => from(this.createFeatures(primaryCharacteristic))),
             tap(() => {
                 this._isConnected = true;
@@ -119,6 +120,7 @@ export class Hub implements IHub {
             catchError((e) => {
                 this.logger.error('Hub connection failed');
                 this.device.gatt.disconnect();
+                this._disconnected$.next();
                 this._isConnected = false;
                 throw e;
             })
