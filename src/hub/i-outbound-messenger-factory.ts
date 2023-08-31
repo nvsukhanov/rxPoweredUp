@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { IOutboundMessenger } from './i-outbound-messenger';
 import { GenericErrorInboundMessage, ILogger, RawMessage } from '../types';
 import { MessageType } from '../constants';
-import { IMessageMiddleware } from './i-message-middleware';
 import { OutboundMessengerConfig } from './outbound-messenger-config';
 
 export interface IOutboundMessengerFactory {
@@ -12,7 +11,6 @@ export interface IOutboundMessengerFactory {
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         genericErrorsStream: Observable<GenericErrorInboundMessage>,
         characteristic: BluetoothRemoteGATTCharacteristic,
-        messageMiddleware: ReadonlyArray<IMessageMiddleware>,
         onDisconnected$: Observable<void>,
         logger: ILogger,
         config: OutboundMessengerConfig

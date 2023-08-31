@@ -178,7 +178,6 @@ export class Hub implements IHub {
             dataStream,
             genericErrorsStream,
             primaryCharacteristic,
-            this.config.outgoingMessageMiddleware,
             this._disconnected$,
             this.logger,
             this.config

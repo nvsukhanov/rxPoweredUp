@@ -11,7 +11,8 @@ export class TaskQueueFactoryFactory {
     public create(
         channel: IChannel,
         messageSendTimeout: number,
-        maxMessageSendRetries: number,
+        maxMessageSendAttempts: number,
+        initialMessageSendRetryDelay: number,
         logger: ILogger,
         genericErrorsStream: Observable<GenericErrorInboundMessage>,
         taskVisitor: ITaskVisitor
@@ -19,7 +20,8 @@ export class TaskQueueFactoryFactory {
         return new TaskQueueFactory(
             channel,
             messageSendTimeout,
-            maxMessageSendRetries,
+            maxMessageSendAttempts,
+            initialMessageSendRetryDelay,
             logger,
             genericErrorsStream,
             taskVisitor

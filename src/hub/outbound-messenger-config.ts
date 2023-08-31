@@ -5,11 +5,13 @@ import { IMessageMiddleware } from './i-message-middleware';
  * @public
  * @typedef {Object} OutboundMessengerConfig
  * @property {number} messageSendTimeout - The amount of time to wait for a message to be sent before timing out
- * @property {number} maxMessageSendRetries - The maximum number of times to retry sending a message before giving up
+ * @property {number} maxMessageSendAttempts - The maximum number of message send attempts before giving up
+ * @property {number} initialMessageSendRetryDelayMs - The initial delay between retries when sending a message. Used as the base for exponential backoff
  * @property {IMessageMiddleware[]} outgoingMessageMiddleware - The middleware to apply to outgoing messages before sending them
  */
 export type OutboundMessengerConfig = {
     readonly messageSendTimeout: number;
-    readonly maxMessageSendRetries: number;
+    readonly maxMessageSendAttempts: number;
+    readonly initialMessageSendRetryDelayMs: number;
     readonly outgoingMessageMiddleware: IMessageMiddleware[];
-}
+};
