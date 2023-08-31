@@ -1,4 +1,4 @@
-import { Observable, TimeoutError, filter, merge, of, retry, switchMap, take, throwError, timeout } from 'rxjs';
+import { Observable, TimeoutError, filter, merge, of, retry, switchMap, take, throwError, timeout, timer } from 'rxjs';
 
 import { GenericErrorInboundMessage, IDisposable, ILogger } from '../../../types';
 import { IQueueTask } from './i-queue-task';
@@ -13,7 +13,8 @@ export class TaskQueue implements IDisposable {
     constructor(
         private readonly channel: IChannel,
         private readonly messageSendTimeout: number,
-        private readonly maxMessageSendRetries: number,
+        private readonly maxMessageSendAttempts: number,
+        private readonly initialMessageSendRetryDelay: number,
         private readonly logger: ILogger,
         private readonly genericErrorsStream: Observable<GenericErrorInboundMessage>,
         private readonly taskVisitor: ITaskVisitor
@@ -90,12 +91,13 @@ export class TaskQueue implements IDisposable {
     ): (error: Error, retryCount: number) => Observable<unknown> {
         return (error: Error, retryCount: number): Observable<unknown> => {
             if (error instanceof TimeoutError) {
-                if (retryCount >= this.maxMessageSendRetries) {
+                if (retryCount >= this.maxMessageSendAttempts) {
                     this.logMaxRetriesReachedError(task);
                     return throwError(() => error);
                 }
                 this.logTimeoutError(task);
-                return of(null);
+                const delayMs = Math.pow(2, retryCount - 1) * this.initialMessageSendRetryDelay;
+                return timer(delayMs);
             }
             return throwError(() => error);
         };

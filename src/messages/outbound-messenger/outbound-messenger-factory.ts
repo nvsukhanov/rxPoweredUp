@@ -6,7 +6,6 @@ import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
 import { MessageType } from '../../constants';
 import {
     IInboundMessageListenerFactory,
-    IMessageMiddleware,
     INBOUND_MESSAGE_LISTENER_FACTORY,
     IOutboundMessenger,
     IOutboundMessengerFactory,
@@ -33,7 +32,6 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         genericErrorsStream: Observable<GenericErrorInboundMessage>,
         characteristic: BluetoothRemoteGATTCharacteristic,
-        messageMiddleware: ReadonlyArray<IMessageMiddleware>,
         onDisconnected$: Observable<void>,
         logger: ILogger,
         config: OutboundMessengerConfig
@@ -56,7 +54,8 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         const taskQueueFactory = this.taskQueueFactoryFactory.create(
             channel,
             config.messageSendTimeout,
-            config.maxMessageSendRetries,
+            config.maxMessageSendAttempts,
+            config.initialMessageSendRetryDelayMs,
             logger,
             genericErrorsStream,
             feedbackHandler

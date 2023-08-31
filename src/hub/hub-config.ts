@@ -21,6 +21,7 @@ export const HUB_CONFIG_DEFAULTS: HubConfig = {
     outgoingMessageMiddleware: [],
     logLevel: LogLevel.Warning,
     messageSendTimeout: 300,
-    maxMessageSendRetries: 4,
-    hubConnectionTimeoutMs: 2000,
+    maxMessageSendAttempts: 5,
+    initialMessageSendRetryDelayMs: 50,
+    hubConnectionTimeoutMs: 5000,
 };
