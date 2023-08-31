@@ -1,8 +1,16 @@
 {
-  "name": "@nvsukhanov/rxpoweredup",
+  "name": "rxpoweredup",
   "version": "0.0.36",
   "description": "A Typescript RxJS-based library for controlling LEGO Powered UP MOCs",
   "homepage": "https://github.com/nvsukhanov/rxPoweredUP/",
+  "keywords": [
+    "LEGO",
+    "Powered UP",
+    "BLE",
+    "Bluetooth",
+    "RxJS",
+    "TypeScript"
+  ],
   "main": "dist/index.js",
   "private": false,
   "types": "dist/index.d.ts",
@@ -40,11 +48,9 @@
     "webpack-cli": "^5.0.2",
     "webpack-dev-server": "^4.13.3"
   },
-  "dependencies": {
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "tsyringe": "^4.7.0"
-  },
-  "peerDependencies": {
-    "reflect-metadata": "^0.1.13"
   }
 }
