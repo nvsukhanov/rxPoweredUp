@@ -97,6 +97,8 @@ function onConnected(nextHub: IHub): void {
 
     document.getElementById('disconnect')!.addEventListener('click', hubDisconnectHandle, { signal: abortSignal });
     document.getElementById('switch-off')!.addEventListener('click', switchOffHandle, { signal: abortSignal });
+    document.getElementById('read-system-type-id')!.addEventListener('click', readSystemTypeId, { signal: abortSignal });
+    document.getElementById('read-manufacturer-name')!.addEventListener('click', readManufacturerName, { signal: abortSignal });
     document.getElementById('increment-angle')!.addEventListener('click', incrementAngle, { signal: abortSignal });
     document.getElementById('decrement-angle')!.addEventListener('click', decrementAngle, { signal: abortSignal });
     document.getElementById('go-to-zero')!.addEventListener('click', goToZero, { signal: abortSignal });
@@ -486,4 +488,17 @@ function subscribeToPortValue(): void {
 function unsubscribeFromPortValue(): void {
     portValueSubscription?.unsubscribe();
     (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'unsubscribed';
+}
+
+function readSystemTypeId(): void {
+    hub?.properties.getSystemTypeId().subscribe((v) => {
+        console.log('raw systemTypeId', v);
+        console.log('systemTypeId', HubType[v]);
+    });
+}
+
+function readManufacturerName(): void {
+    hub?.properties.getManufacturerName().subscribe((v) => {
+        console.log('manufacturerName', v);
+    });
 }

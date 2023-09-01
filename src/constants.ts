@@ -102,6 +102,7 @@ export enum HubProperty {
     button = 0x02,
     RSSI = 0x05,
     batteryVoltage = 0x06,
+    manufacturerName = 0x08,
     systemTypeId = 0x0B, // 11
     primaryMacAddress = 0x0D, // 13
 }
@@ -112,15 +113,17 @@ export enum HubType {
     BoostHub,
     TwoPortHub,
     TwoPortHandset,
-    Unknown
+    Unknown,
+    FourPortHub,
 }
 
 export const HUB_DEVICE_TYPE_MAP = {
-    [0b00000000]: HubType.WeDoHub,
-    [0b00100000]: HubType.DuploTrain,
-    [0b01000000]: HubType.BoostHub,
-    [0b01000001]: HubType.TwoPortHub,
-    [0b01000010]: HubType.TwoPortHandset,
+    [0b00000000]: HubType.WeDoHub, // 0
+    [0b00100000]: HubType.DuploTrain, // 32
+    [0b01000000]: HubType.BoostHub, // 64
+    [0b01000001]: HubType.TwoPortHub, // 65
+    [0b01000010]: HubType.TwoPortHandset, // 66
+    [0b10000000]: HubType.FourPortHub // 128 // missing in docs but present in responses of Lego 88012 (4-port Powered Up Hub)
 } satisfies { [k in number]: HubType };
 
 export enum PortModeName {
