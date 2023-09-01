@@ -1,4 +1,4 @@
-import { EMPTY, Observable, Subject, from, of, switchMap, tap } from 'rxjs';
+import { Observable, Subject, from, of, switchMap, tap } from 'rxjs';
 
 import { IQueueTask, ITaskVisitor } from '../queue';
 import { RawMessage } from '../../../types';
@@ -22,8 +22,8 @@ export class TaskWithoutResponse implements IQueueTask<void> {
         this.result.complete();
     }
 
-    public dispose(): Observable<void> {
-        return EMPTY;
+    public dispose(): void {
+        return void 0;
     }
 
     public accept(

@@ -1,9 +1,9 @@
-import { Observable, ReplaySubject, catchError, concatWith, from, fromEvent, last, of, share, switchMap, take, takeUntil, tap, timeout } from 'rxjs';
+import { Observable, ReplaySubject, catchError, from, fromEvent, of, share, switchMap, take, tap, timeout } from 'rxjs';
 
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
-import { BluetoothDeviceWithGatt, IDisposable, ILogger } from '../types';
+import { BluetoothDeviceWithGatt, ILogger } from '../types';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
@@ -17,6 +17,7 @@ import { IReplyParser } from './i-reply-parser';
 import { HubConfig } from './hub-config';
 import { IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
 import { IHubActionsFeature } from './i-hub-actions-feature';
+import { IOutboundMessenger } from './i-outbound-messenger';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
@@ -25,13 +26,15 @@ export class Hub implements IHub {
 
     private _motors?: IMotorsFeature;
 
-    private _properties?: (IHubPropertiesFeature & IDisposable);
+    private _properties?: IHubPropertiesFeature;
 
     private _isConnected = false;
 
     private _disconnected$ = new ReplaySubject<void>(1);
 
     private _actionsFeature?: IHubActionsFeature;
+
+    private outboundMessenger?: IOutboundMessenger;
 
     constructor(
         private readonly device: BluetoothDeviceWithGatt,
@@ -105,9 +108,16 @@ export class Hub implements IHub {
             tap(() => {
                 this.logger.debug('Got primary characteristic');
                 fromEvent(this.device, this.gattServerDisconnectEventName).pipe(
-                    takeUntil(this._disconnected$)
-                ).subscribe(() => {
-                    this.dispose();
+                    take(1),
+                    tap(() => this.logger.debug('GATT server disconnected')),
+                ).subscribe({
+                    complete: () => {
+                        this.outboundMessenger?.dispose();
+                        this._isConnected = false;
+                        this._disconnected$.next();
+                        this._disconnected$.complete();
+                        this.logger.debug('Disconnected subject completed');
+                    }
                 });
             }),
             timeout(this.config.hubConnectionTimeoutMs),
@@ -128,32 +138,19 @@ export class Hub implements IHub {
     }
 
     public disconnect(): Observable<void> {
-        if (!this._isConnected) {
+        if (!this._actionsFeature) {
             throw new Error('Hub not connected');
         }
-        return of(void 0).pipe(
-            tap(() => this.logger.debug('Disconnection invoked')),
-            concatWith(this._actionsFeature?.disconnect() ?? of(void 0)),
-            last()
-        );
+        this.logger.debug('Disconnect invoked');
+        return this._actionsFeature.disconnect();
     }
 
     public switchOff(): Observable<void> {
         if (!this._actionsFeature) {
             throw new Error('Hub not connected');
         }
+        this.logger.debug('Switch off invoked');
         return this._actionsFeature.switchOff();
-    }
-
-    private dispose(): Observable<void> {
-        if (this._isConnected) {
-            this._isConnected = false;
-            this._disconnected$.next();
-            return (this._properties?.dispose() ?? of(void 0)).pipe(
-                tap(() => this.logger.debug('Disconnected')),
-            );
-        }
-        return of(void 0);
     }
 
     private async createFeatures(
@@ -174,7 +171,7 @@ export class Hub implements IHub {
             share()
         );
 
-        const messenger = this.outboundMessengerFactory.create(
+        this.outboundMessenger = this.outboundMessengerFactory.create(
             dataStream,
             genericErrorsStream,
             primaryCharacteristic,
@@ -185,26 +182,26 @@ export class Hub implements IHub {
 
         this._actionsFeature = this.hubActionsFeatureFactory.create(
             dataStream,
-            messenger,
+            this.outboundMessenger,
             this._disconnected$,
         );
 
         this._ports = this.ioFeatureFactory.create(
             dataStream,
             this._disconnected$,
-            messenger
+            this.outboundMessenger
         );
 
         this._properties = this.propertiesFeatureFactory.create(
             dataStream,
             this._disconnected$,
-            messenger,
+            this.outboundMessenger,
             this.logger
         );
 
         this._motors = this.commandsFeatureFactory.createCommandsFeature(
             dataStream,
-            messenger,
+            this.outboundMessenger,
             this._ports
         );
 

@@ -36,7 +36,8 @@ export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory
             messenger,
             logger,
             replies$,
-            this.errorsFactory
+            this.errorsFactory,
+            onHubDisconnected
         );
     }
 }

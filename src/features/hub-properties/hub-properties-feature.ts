@@ -1,4 +1,4 @@
-import { Observable, combineLatest, distinctUntilChanged, filter, from, map, of, share, switchMap } from 'rxjs';
+import { Observable, distinctUntilChanged, filter, finalize, from, map, of, share, switchMap, takeUntil } from 'rxjs';
 
 import { HubProperty, HubType, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
 import {
@@ -10,14 +10,13 @@ import {
     HubPropertyPrimaryMacAddressInboundMessage,
     HubPropertyRssiInboundMessage,
     HubPropertySystemTypeIdInboundMessage,
-    IDisposable,
     ILogger
 } from '../../types';
 import { IHubPropertiesFeature, IOutboundMessenger } from '../../hub';
 import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 import { IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 
-export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable {
+export class HubPropertiesFeature implements IHubPropertiesFeature {
     public batteryLevel = this.createPropertyStream(HubProperty.batteryVoltage).pipe(
         map((r) => r.level),
         distinctUntilChanged(),
@@ -43,7 +42,8 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         private readonly messenger: IOutboundMessenger,
         private readonly logging: ILogger,
         private readonly inboundMessages: Observable<HubPropertyInboundMessage>,
-        private readonly errorsFactory: IHubPropertiesFeatureErrorsFactory
+        private readonly errorsFactory: IHubPropertiesFeatureErrorsFactory,
+        private readonly onDisconnected$: Observable<void>
     ) {
     }
 
@@ -57,16 +57,6 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         const message = this.messageFactoryService.setProperty(HubProperty.advertisingName, charCodes);
 
         return this.messenger.sendWithoutResponse(message);
-    }
-
-    public dispose(): Observable<void> {
-        if (this.characteristicUnsubscribeHandlers.size) {
-            return combineLatest([ ...this.characteristicUnsubscribeHandlers.values() ].map((f) => f())).pipe(
-                map(() => void 0)
-            );
-        } else {
-            return of(void 0);
-        }
     }
 
     public getAdvertisingName(): Observable<string> {
@@ -163,6 +153,8 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
             const sub = from(this.sendSubscribeMessage(trackedProperty)).pipe(
                 switchMap(() => this.inboundMessages),
                 filter((reply) => reply.propertyType === trackedProperty),
+                takeUntil(this.onDisconnected$),
+                finalize(() => this.logging.debug(`Stopped listening to hub property '${HubProperty[trackedProperty]}' due to disconnect`))
             ).subscribe((message) => {
                 subscriber.next(message as HubPropertyInboundMessage & { propertyType: T });
             });

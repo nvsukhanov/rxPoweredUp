@@ -1,6 +1,6 @@
 import { Observable, bufferCount, concatWith, map } from 'rxjs';
 
-import { IDisposable, LastOfTuple, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import { IDisposable, ILogger, LastOfTuple, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { OutboundMessageTypes } from '../../constants';
 import { IOutboundMessenger, PortCommandExecutionStatus, WithResponseSequenceItem } from '../../hub';
 import { IQueueTask, TaskQueue, TaskQueueFactory } from './queue';
@@ -14,7 +14,8 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     private portOutputCommandTaskQueues = new Map<number, TaskQueue>();
 
     constructor(
-        private readonly taskQueueFactory: TaskQueueFactory
+        private readonly taskQueueFactory: TaskQueueFactory,
+        private readonly logger: ILogger
     ) {
         this.genericTaskQueue = this.taskQueueFactory.createTaskQueue();
     }
@@ -62,6 +63,10 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     ): Observable<TTaskResult> {
         let isEnqueued = false;
         return new Observable((observer) => {
+            if (this.isDisposed) {
+                observer.error(new Error('Outbound messenger is disposed'));
+                return;
+            }
             if (!isEnqueued) {
                 queue.enqueueTask(task);
                 isEnqueued = true;
@@ -71,19 +76,16 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
         });
     }
 
-    public dispose(): Observable<void> {
-        return new Observable((observer) => {
-            if (this.isDisposed) {
-                throw new Error('Already disposed');
-            }
-            this.isDisposed = true;
-            this.genericTaskQueue.dispose();
-            for (const queue of this.portOutputCommandTaskQueues.values()) {
-                queue.dispose();
-            }
-            observer.next(void 0);
-            observer.complete();
-        });
+    public dispose(): void {
+        if (this.isDisposed) {
+            throw new Error('Already disposed');
+        }
+        this.isDisposed = true;
+        this.genericTaskQueue.dispose();
+        for (const queue of this.portOutputCommandTaskQueues.values()) {
+            queue.dispose();
+        }
+        this.logger.debug('Outbound messenger disposed');
     }
 
     private getQueueForPort(
