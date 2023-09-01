@@ -29,6 +29,11 @@ export type HubPropertySystemTypeIdInboundMessage = {
     hubType: HubType;
 } & HubPropertyBaseInboundMessage;
 
+export type HubPropertyManufacturerNameInboundMessage = {
+    propertyType: HubProperty.manufacturerName;
+    manufacturerName: string;
+} & HubPropertyBaseInboundMessage;
+
 export type HubPropertyButtonStateInboundMessage = {
     propertyType: HubProperty.button;
     isPressed: boolean;
@@ -49,7 +54,8 @@ export type HubPropertyInboundMessage = HubPropertyBatteryInboundMessage
     | HubPropertySystemTypeIdInboundMessage
     | HubPropertyButtonStateInboundMessage
     | HubPropertyPrimaryMacAddressInboundMessage
-    | HubPropertyAdvertisingNameInboundMessage;
+    | HubPropertyAdvertisingNameInboundMessage
+    | HubPropertyManufacturerNameInboundMessage;
 
 export type AttachedIoAttachInboundMessage = {
     messageType: MessageType.attachedIO,

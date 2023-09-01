@@ -6,6 +6,7 @@ import {
     HubPropertyBatteryInboundMessage,
     HubPropertyButtonStateInboundMessage,
     HubPropertyInboundMessage,
+    HubPropertyManufacturerNameInboundMessage,
     HubPropertyPrimaryMacAddressInboundMessage,
     HubPropertyRssiInboundMessage,
     HubPropertySystemTypeIdInboundMessage,
@@ -125,6 +126,16 @@ export class HubPropertiesFeature implements IHubPropertiesFeature, IDisposable 
         ) as Observable<HubPropertySystemTypeIdInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((r) => r.hubType),
+        );
+    }
+
+    public getManufacturerName(): Observable<string> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.manufacturerName);
+        const reply = this.inboundMessages.pipe(
+            filter((r) => r.propertyType === HubProperty.manufacturerName)
+        ) as Observable<HubPropertyManufacturerNameInboundMessage>;
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
+            map((r) => r.manufacturerName),
         );
     }
 

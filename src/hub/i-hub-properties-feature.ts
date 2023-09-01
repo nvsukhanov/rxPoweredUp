@@ -56,6 +56,11 @@ export interface IHubPropertiesFeature {
     getSystemTypeId(): Observable<HubType>;
 
     /**
+     * Reads the manufacturer name of the hub.
+     */
+    getManufacturerName(): Observable<string>;
+
+    /**
      * Reads the primary MAC address of the hub (can be used as a unique identifier for the hub)
      * Stream completes when the response is received from the hub.
      */

@@ -7,6 +7,7 @@ import {
     HubPropertyBatteryInboundMessage,
     HubPropertyButtonStateInboundMessage,
     HubPropertyInboundMessage,
+    HubPropertyManufacturerNameInboundMessage,
     HubPropertyPrimaryMacAddressInboundMessage,
     HubPropertyRssiInboundMessage,
     HubPropertySystemTypeIdInboundMessage,
@@ -29,7 +30,8 @@ export class HubPropertiesReplyParser implements IReplyParser<MessageType.proper
         [HubProperty.systemTypeId]: (v): HubPropertySystemTypeIdInboundMessage => this.parseSystemTypeId(v),
         [HubProperty.button]: (v): HubPropertyButtonStateInboundMessage => this.parseButtonState(v),
         [HubProperty.primaryMacAddress]: (v): HubPropertyPrimaryMacAddressInboundMessage => this.parsePrimaryMacAddress(v),
-        [HubProperty.advertisingName]: (v): HubPropertyAdvertisingNameInboundMessage => this.parseAdvertisingName(v)
+        [HubProperty.advertisingName]: (v): HubPropertyAdvertisingNameInboundMessage => this.parseAdvertisingName(v),
+        [HubProperty.manufacturerName]: (v): HubPropertyManufacturerNameInboundMessage => this.parseManufacturerName(v)
     } satisfies { [k in HubProperty]: (payload: Uint8Array) => HubPropertyInboundMessage };
 
     public parseMessage(
@@ -71,6 +73,14 @@ export class HubPropertiesReplyParser implements IReplyParser<MessageType.proper
             messageType: MessageType.properties,
             propertyType: HubProperty.systemTypeId,
             hubType: HUB_DEVICE_TYPE_MAP[payload[0] as keyof typeof HUB_DEVICE_TYPE_MAP]
+        };
+    }
+
+    private parseManufacturerName(payload: Uint8Array): HubPropertyManufacturerNameInboundMessage {
+        return {
+            messageType: MessageType.properties,
+            propertyType: HubProperty.manufacturerName,
+            manufacturerName: [ ...payload ].map((v) => String.fromCharCode(v)).join('')
         };
     }
 
