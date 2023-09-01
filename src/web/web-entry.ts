@@ -127,6 +127,7 @@ function onConnected(nextHub: IHub): void {
         console.log('disconnected emitted');
         abortController.abort();
         setControlsState(false);
+        hub = undefined;
     });
 }
 
@@ -480,8 +481,9 @@ function subscribeToPortValue(): void {
         (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'input error';
         return;
     }
-    portValueSubscription = hub.ports.valueChanges(portId, modeId, 1).subscribe((v) => {
-        (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = JSON.stringify(v);
+    portValueSubscription = hub.ports.valueChanges(portId, modeId, 1).subscribe({
+        next: (v) => (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
+        complete: () => (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'complete',
     });
 }
 

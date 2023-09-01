@@ -2,7 +2,7 @@ import { Observable, Subscription } from 'rxjs';
 
 import { ITaskVisitor } from '../queue';
 import { TaskPortOutputCommand } from '../queue-tasks';
-import { PortOutputCommandFeedbackInboundMessage } from '../../../types';
+import { ILogger, PortOutputCommandFeedbackInboundMessage } from '../../../types';
 import { FeedbackHandler } from './feedback-handler';
 
 /**
@@ -16,6 +16,7 @@ export class TaskVisitor implements ITaskVisitor {
 
     constructor(
         private readonly feedbackStream: Observable<PortOutputCommandFeedbackInboundMessage>,
+        private readonly logger: ILogger,
         feedbackHandler: FeedbackHandler
     ) {
         this.subscription.add(this.feedbackStream.subscribe((message) => feedbackHandler.handlePortOutputCommandFeedback(
@@ -47,12 +48,9 @@ export class TaskVisitor implements ITaskVisitor {
         return void 0;
     }
 
-    public dispose(): Observable<void> {
-        return new Observable<void>((observer) => {
-            this.subscription.unsubscribe();
-            observer.complete();
-            return () => void 0;
-        });
+    public dispose(): void {
+        this.subscription.unsubscribe();
+        this.logger.debug('Task visitor disposed');
     }
 
     private removePortOutputCommand(

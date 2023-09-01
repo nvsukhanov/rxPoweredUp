@@ -33,12 +33,8 @@ export class TaskWithResponse<TResponse> implements IQueueTask<TResponse> {
         visitor.visitTaskWithResponse(this);
     }
 
-    public dispose(): Observable<void> {
-        return new Observable<void>((observer) => {
-            this.earlyResponseCaptureSubscription?.unsubscribe();
-            observer.complete();
-            return () => void 0;
-        });
+    public dispose(): void {
+        this.earlyResponseCaptureSubscription?.unsubscribe();
     }
 
     public emitError(

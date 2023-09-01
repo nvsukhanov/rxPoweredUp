@@ -49,6 +49,7 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
 
         const feedbackHandler = this.feedbackHandlerFactory.createFeedbackHandler(
             commandsFeedbackStream,
+            logger
         );
 
         const taskQueueFactory = this.taskQueueFactoryFactory.create(
@@ -62,7 +63,8 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         );
 
         return new OutboundMessenger(
-            taskQueueFactory
+            taskQueueFactory,
+            logger
         );
     }
 }

@@ -1,4 +1,4 @@
-import { BehaviorSubject, EMPTY, Observable, Subject, filter, from, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, filter, from, of, switchMap, take, tap } from 'rxjs';
 
 import { IQueueTask, ITaskVisitor } from '../queue';
 import { PortCommandExecutionStatus } from '../../../hub';
@@ -78,8 +78,8 @@ export class TaskPortOutputCommand implements IQueueTask<PortCommandExecutionSta
         }
     }
 
-    public dispose(): Observable<void> {
-        return EMPTY;
+    public dispose(): void {
+        return void 0;
     }
 
     public accept(

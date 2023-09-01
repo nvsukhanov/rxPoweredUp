@@ -8,6 +8,8 @@ import { GenericError } from '../../../errors';
 import { ITaskVisitor } from './i-task-visitor';
 
 export class TaskQueue implements IDisposable {
+    private isDisposed = false;
+
     private readonly queue: Array<IQueueTask<unknown>> = [];
 
     constructor(
@@ -24,6 +26,9 @@ export class TaskQueue implements IDisposable {
     public enqueueTask(
         task: IQueueTask<unknown>
     ): void {
+        if (this.isDisposed) {
+            throw new Error('Task queue is already disposed');
+        }
         task.accept(this.taskVisitor);
         const lastTask = this.queue.at(-1);
         this.queue.push(task);
@@ -39,12 +44,18 @@ export class TaskQueue implements IDisposable {
         }
     }
 
-    public dispose(): Observable<void> {
-        return new Observable<void>((observer) => {
-            this.queue.forEach((i) => i.discard());
-            this.queue.splice(0, this.queue.length);
-            observer.complete();
+    public dispose(): void {
+        if (this.isDisposed) {
+            throw new Error('Task queue is already disposed');
+        }
+        this.isDisposed = true;
+        this.queue.forEach((i) => {
+            i.discard();
+            i.dispose();
         });
+        this.queue.splice(0, this.queue.length);
+        this.logger.debug('Task queue disposed');
+        this.taskVisitor.dispose();
     }
 
     private executeTask(
@@ -82,7 +93,7 @@ export class TaskQueue implements IDisposable {
         const index = this.queue.indexOf(task);
         if (index >= 0) {
             this.queue.splice(index, 1);
-            task.dispose().subscribe();
+            task.dispose();
         }
     }
 
