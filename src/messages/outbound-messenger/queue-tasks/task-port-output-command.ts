@@ -29,7 +29,9 @@ export class TaskPortOutputCommand implements IQueueTask<PortCommandExecutionSta
 
     private stateTransitions: ReadonlyMap<PortOutputCommandTaskState, PortOutputCommandTaskState> = new Map([
         [ PortOutputCommandTaskState.pending, PortOutputCommandTaskState.waitingForResponse ],
-        [ PortOutputCommandTaskState.waitingForResponse, PortOutputCommandTaskState.inProgress ]
+        [ PortOutputCommandTaskState.waitingForResponse, PortOutputCommandTaskState.inProgress ],
+        // backwards transition is possible when the hub is not responding and the task is retried
+        [ PortOutputCommandTaskState.inProgress, PortOutputCommandTaskState.waitingForResponse ]
     ]);
 
     constructor(
