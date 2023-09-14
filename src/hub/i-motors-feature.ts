@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { MotorServoEndState, MotorUseProfile } from '../constants';
+import { MotorServoEndState, MotorUseProfile, PortOperationStartupInformation } from '../constants';
 
 /**
  * Status of the port command execution.
@@ -21,17 +21,25 @@ export enum PortCommandExecutionStatus {
  * @param power - power of the motor, range: [0, 100]
  * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
  * @param noFeedback - do not wait for feedback from the motor, default is false
+ * @param bufferMode - startup information for the motor, default is 'bufferIfNecessary'
  */
 export type SetSpeedOptions = {
     power?: number;
     useProfile?: MotorUseProfile;
     noFeedback?: boolean;
+    bufferMode?: PortOperationStartupInformation;
 }
 
 /**
  * Options for the goToPosition method.
  * @param speed - speed of the motor, range: [-100, - 100]
  * @param power - power of the motor, range: [0, 100]
+ * @param endState - end state of the motor, default is 'hold'
+ * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
+ * @param noFeedback - do not wait for feedback from the motor, default is false.
+ * @param bufferMode - startup information for the motor, default is 'bufferIfNecessary'
+ *
+ * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if the next command is issued in quick succession.
  */
 export type GoToPositionOptions = {
     speed?: number;
@@ -39,6 +47,7 @@ export type GoToPositionOptions = {
     endState?: MotorServoEndState;
     useProfile?: MotorUseProfile;
     noFeedback?: boolean;
+    bufferMode?: PortOperationStartupInformation;
 }
 
 /**
@@ -48,6 +57,9 @@ export type GoToPositionOptions = {
  * @param endState - end state of the motor, default is 'hold'
  * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
  * @param noFeedback - do not wait for feedback from the motor, default is false
+ * @param bufferMode - startup information for the motor, default is 'executeImmediately' * @param endState - end state of the motor, default is 'hold'
+ *
+ * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if the next command is issued in quick succession.
  */
 export type RotateByDegreeOptions = {
     speed?: number;
@@ -55,6 +67,7 @@ export type RotateByDegreeOptions = {
     endState?: MotorServoEndState;
     useProfile?: MotorUseProfile;
     noFeedback?: boolean;
+    bufferMode?: PortOperationStartupInformation;
 }
 
 export interface IMotorsFeature {

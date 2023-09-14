@@ -60,7 +60,7 @@ export class MotorsFeature implements IMotorsFeature {
             speed,
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
@@ -78,7 +78,7 @@ export class MotorsFeature implements IMotorsFeature {
             speed2,
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
@@ -96,7 +96,7 @@ export class MotorsFeature implements IMotorsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.endState ?? MotorServoEndState.hold,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
@@ -116,7 +116,7 @@ export class MotorsFeature implements IMotorsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.endState ?? MotorServoEndState.hold,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
