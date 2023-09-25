@@ -200,9 +200,9 @@ export class Hub implements IHub {
         );
 
         this._motors = this.commandsFeatureFactory.createCommandsFeature(
-            dataStream,
             this.outboundMessenger,
-            this._ports
+            this._ports,
+            this.config
         );
 
         await primaryCharacteristic.startNotifications();
