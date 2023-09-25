@@ -6,7 +6,7 @@
 
 A Typescript RxJS-based library for controlling LEGO Powered UP MOCs.
 
-Documentation can be found [here](https://nvsukhanov.github.io/rxPoweredUP)
+Documentation can be found [here](https://nvsukhanov.github.io/rxPoweredUp)
 
 ## Disclaimer
 
