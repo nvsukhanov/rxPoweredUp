@@ -1,17 +1,15 @@
-import { Observable } from 'rxjs';
 import { InjectionToken } from 'tsyringe';
 
-import { RawMessage } from '../types';
-import { MessageType } from '../constants';
 import { IMotorsFeature } from './i-motors-feature';
 import { IOutboundMessenger } from './i-outbound-messenger';
 import { IRawPortValueProvider } from '../features';
+import { HubConfig } from './hub-config';
 
 export interface IMotorsFeatureFactory {
     createCommandsFeature(
-        characteristicDataStream: Observable<RawMessage<MessageType>>,
         messenger: IOutboundMessenger,
-        portValueProvider: IRawPortValueProvider
+        portValueProvider: IRawPortValueProvider,
+        config: HubConfig
     ): IMotorsFeature;
 }
 

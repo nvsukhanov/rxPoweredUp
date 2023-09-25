@@ -11,7 +11,15 @@ import {
     PortOperationStartupInformation,
     WELL_KNOWN_MOTOR_PORT_MODE_IDS,
 } from '../../constants';
-import { GoToPositionOptions, IMotorsFeature, IOutboundMessenger, PortCommandExecutionStatus, RotateByDegreeOptions, SetSpeedOptions } from '../../hub';
+import {
+    GoToPositionOptions,
+    HubConfig,
+    IMotorsFeature,
+    IOutboundMessenger,
+    PortCommandExecutionStatus,
+    RotateByDegreeOptions,
+    SetSpeedOptions
+} from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
 import { IRawPortValueProvider } from './i-raw-port-value-provider';
@@ -22,7 +30,8 @@ export class MotorsFeature implements IMotorsFeature {
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: IMotorCommandsOutboundMessageFactory,
         private readonly rawPortValueProvider: IRawPortValueProvider,
-        private readonly rawMotorPortValueParser: IRawMotorPortValueParser
+        private readonly rawMotorPortValueParser: IRawMotorPortValueParser,
+        private readonly config: HubConfig
     ) {
     }
 
@@ -60,7 +69,7 @@ export class MotorsFeature implements IMotorsFeature {
             speed,
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? this.config.defaultBufferMode,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
@@ -78,7 +87,7 @@ export class MotorsFeature implements IMotorsFeature {
             speed2,
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? this.config.defaultBufferMode,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
@@ -96,7 +105,7 @@ export class MotorsFeature implements IMotorsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.endState ?? MotorServoEndState.hold,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? this.config.defaultBufferMode,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
@@ -116,7 +125,7 @@ export class MotorsFeature implements IMotorsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.endState ?? MotorServoEndState.hold,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            options?.bufferMode ?? PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? this.config.defaultBufferMode,
             options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
