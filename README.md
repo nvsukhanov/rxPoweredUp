@@ -4,7 +4,7 @@
 [![CI Status](https://github.com/nvsukhanov/rxpoweredup/actions/workflows/ci.yml/badge.svg)](https://github.com/nvsukhanov/rxpoweredup/actions)
 [![NPM Version](https://img.shields.io/npm/v/rxpoweredup.svg?style=flat)](https://www.npmjs.com/package/rxpoweredup)
 
-A Typescript RxJS-based library for controlling LEGO Powered UP MOCs.
+A Typescript RxJS-based library for controlling LEGO Powered hubs & peripherals.
 
 Documentation can be found [here](https://nvsukhanov.github.io/rxPoweredUp)
 
@@ -16,7 +16,7 @@ LEGO® is a trademark of the LEGO Group of companies which does not sponsor, aut
 
 Following examples use experimental navigator.bluetooth browser API to connect to Bluetooth devices, which is not yet
 fully supported by all browsers.
-Web Bluetooth API is not available in NodeJS, however, it is may by possible to use libraries which provide similar API.
+Web Bluetooth API is not available in Node.js, however, it may be possible to use libraries which provide similar API.
 
 ### Async
 

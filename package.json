@@ -1,8 +1,8 @@
 {
   "name": "rxpoweredup",
-  "version": "0.0.41",
-  "description": "A Typescript RxJS-based library for controlling LEGO Powered UP MOCs",
-  "homepage": "https://github.com/nvsukhanov/rxPoweredUP/",
+  "version": "0.0.42",
+  "description": "A Typescript RxJS-based library for controlling LEGO Powered hubs & peripherals.",
+  "homepage": "https://github.com/nvsukhanov/rxPoweredUp/",
   "keywords": [
     "LEGO",
     "Powered UP",
@@ -26,6 +26,11 @@
   },
   "author": "Nikolai Sukhanov <nvsukhanov@outlook.com>",
   "license": "MIT",
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
+    "tsyringe": "^4.7.0"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.1",
     "@types/node": "^20.0.0",
@@ -47,10 +52,5 @@
     "webpack": "^5.82.0",
     "webpack-cli": "^5.0.2",
     "webpack-dev-server": "^4.13.3"
-  },
-  "peerDependencies": {
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1",
-    "tsyringe": "^4.7.0"
   }
 }
