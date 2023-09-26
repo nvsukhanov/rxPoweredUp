@@ -141,7 +141,7 @@ export class MotorsFeature implements IMotorsFeature {
             // 1. presetting encoder sets absolute zero relative to current absolute motor position
             //      e.g. if current position is 100 and absolutePosition is 50, then absolute zero will be set to 150
             // 2. somehow hub treats absolute zero in an unusual way - while positive motor angle increase treated as clockwise rotation,
-            //      incrementing absolute zero by positive value shifts absolute zero in counter-clockwise direction
+            //      incrementing absolute zero by positive value shifts absolute zero in counter-clockwise direction,
             // so we invert value here to have an expected behavior of API.
             // Also, we invert value here (and not in presetEncoder method) in order to keep message factories as close
             // to original documentation as possible.

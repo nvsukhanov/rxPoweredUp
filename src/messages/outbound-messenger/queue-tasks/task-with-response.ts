@@ -51,7 +51,7 @@ export class TaskWithResponse<TResponse> implements IQueueTask<TResponse> {
         this.earlyResponseCaptureSubscription?.unsubscribe();
         // We should start listening for replies BEFORE we send the message,
         // because sometimes we receive feedback before the sending promise is resolved
-        // (hub responds faster then microtask queue is processed?)
+        // (hub responds faster than microtask queue is processed?)
         this.earlyResponseCaptureSubscription = this.responsesStream.pipe(
             take(1), // we expect exactly one response for each message sent
         ).subscribe({

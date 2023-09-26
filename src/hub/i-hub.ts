@@ -22,7 +22,7 @@ export interface IHub {
      * e.g. listen to port attach/detach events, request port value, etc.
      * Hub identifies ports by their numerical index (not by their literal name engraved on the hub).
      * e.g. port A is index 0, port B is index 1, etc.
-     * Also note that hubs usually have internal ports that can be accessed by their index as well (eg. 50).
+     * Also note that hubs usually have internal ports that can be accessed by their index as well (e.g. 50).
      * On hub connection, the hub will emit a port attach event for each port that has a device attached to it, including internal ports.
      */
     readonly ports: IPortsFeature;

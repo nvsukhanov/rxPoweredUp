@@ -8,27 +8,19 @@ import { IHubScannerErrorFactory } from '../hub-scanner';
 
 @injectable()
 export class ConnectionErrorFactory implements IHubPropertiesFeatureErrorsFactory, IHubConnectionErrorsFactory, IHubScannerErrorFactory {
-    public createConnectionError(): ConnectionError {
-        return new ConnectionError('Hub connection error', 'hubConnectionError');
-    }
-
-    public createUnableToGetPropertyError(property: HubProperty): ConnectionError {
-        return new ConnectionError('Unable to get primary MAC address', 'hubErrorUnableToGetProperty', { property: HubProperty[property] });
-    }
-
     public createInvalidPropertyValueError(property: HubProperty, value: number[] | number | string | string[]): ConnectionError {
-        return new ConnectionError('Invalid property value', 'hubErrorInvalidPropertyValue', { property: HubProperty[property], value: value.toString() });
+        return new ConnectionError(`Invalid property value ${value} for property ${HubProperty[property]}`);
     }
 
     public createGattUnavailableError(): ConnectionError {
-        return new ConnectionError('Hub GATT is unavailable', 'hubGattUnavailable');
+        return new ConnectionError('Hub GATT is unavailable');
     }
 
     public createConnectionCancelledByUserError(): ConnectionError {
-        return new ConnectionError('Hub connection has been cancelled by user"', 'hubConnectionCancelled');
+        return new ConnectionError('Hub connection has been cancelled by user"');
     }
 
     public createGattConnectionError(): ConnectionError {
-        return new ConnectionError('Hub GATT connection error', 'hubGattConnectionError');
+        return new ConnectionError('Hub GATT connection error');
     }
 }

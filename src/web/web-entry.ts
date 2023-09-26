@@ -1,4 +1,6 @@
 /* eslint-disable no-console,@typescript-eslint/no-non-null-assertion */
+// noinspection DuplicatedCode
+
 import 'reflect-metadata';
 
 import { Subscription, bufferCount, concatWith, map, takeUntil, zip } from 'rxjs';

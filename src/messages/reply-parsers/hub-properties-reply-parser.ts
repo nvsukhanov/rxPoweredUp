@@ -54,7 +54,7 @@ export class HubPropertiesReplyParser implements IReplyParser<MessageType.proper
         return {
             messageType: MessageType.properties,
             propertyType: HubProperty.RSSI,
-            // rssi is a int8 stored as uint8, so we have to convert it,
+            // rssi is an int8 stored as uint8, so we have to convert it,
             // ref: https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-property-payload
             level: convertUint8ToSignedInt(payload[0])
         };
