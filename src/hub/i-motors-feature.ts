@@ -129,7 +129,7 @@ export interface IMotorsFeature {
      * Positive values are calculated clockwise, negative values are calculated counter-clockwise.
      *
      * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if
-     * the next command is issued in quick succession. Use with caution.
+     * the next command issued in quick succession. Use with caution.
      * @param portId
      * @param targetDegree - must be in range from -2147483647 to 2147483647
      * @param options

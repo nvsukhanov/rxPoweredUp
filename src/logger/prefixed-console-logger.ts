@@ -2,7 +2,7 @@ import { ConsoleLogger } from './console-logger';
 import { LogLevel } from '../constants';
 
 export class PrefixedConsoleLogger extends ConsoleLogger {
-    private prefix: string;
+    private readonly prefix: string;
 
     constructor(
         prefix: string,

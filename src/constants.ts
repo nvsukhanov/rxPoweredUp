@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 export const HUB_SERVICE_UUID = '00001623-1212-efde-1623-785feabcd123';
 export const HUB_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
 

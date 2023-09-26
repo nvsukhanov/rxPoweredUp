@@ -9,7 +9,7 @@ import { TaskPortOutputCommand, TaskWithResponse, TaskWithoutResponse } from './
 export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     private isDisposed = false;
 
-    private genericTaskQueue: TaskQueue;
+    private readonly genericTaskQueue: TaskQueue;
 
     private portOutputCommandTaskQueues = new Map<number, TaskQueue>();
 
