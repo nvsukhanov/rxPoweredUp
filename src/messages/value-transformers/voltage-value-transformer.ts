@@ -1,8 +1,8 @@
-import { IVoltageValueParser } from '../../../features';
-import { HubType } from '../../../constants';
-import { readNumberFromUint8LEArray } from '../../../helpers';
+import { IVoltageValueTransformer } from '../../features';
+import { HubType } from '../../constants';
+import { readNumberFromUint8LEArray } from '../../helpers';
 
-export class VoltageValueParser implements IVoltageValueParser {
+export class VoltageValueTransformer implements IVoltageValueTransformer {
     private readonly fallbackVoltageCoefficient: number = 400;
 
     // Empirically determined voltage coefficients for different hub types.

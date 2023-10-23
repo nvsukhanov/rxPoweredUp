@@ -3,13 +3,13 @@ import { inject, injectable } from 'tsyringe';
 import { MotorsFeature } from './motors-feature';
 import { HubConfig, IMotorsFeature, IMotorsFeatureFactory, IOutboundMessenger, IRawPortValueProvider } from '../../hub';
 import { IMotorCommandsOutboundMessageFactory, PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-motor-commands-outbound-message-factory';
-import { IRawMotorPortValueParser, RAW_MOTOR_PORT_VALUE_PARSER } from './i-raw-motor-port-value-parser';
+import { IMotorValueTransformer, MOTOR_VALUE_TRANSFORMER } from './i-motor-value-transformer';
 
 @injectable()
 export class MotorsFeatureFactory implements IMotorsFeatureFactory {
     constructor(
         @inject(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY) private readonly messageFactory: IMotorCommandsOutboundMessageFactory,
-        @inject(RAW_MOTOR_PORT_VALUE_PARSER) private readonly rawMotorPortValueParser: IRawMotorPortValueParser
+        @inject(MOTOR_VALUE_TRANSFORMER) private readonly motorValueTransformer: IMotorValueTransformer
     ) {
     }
 
@@ -22,7 +22,7 @@ export class MotorsFeatureFactory implements IMotorsFeatureFactory {
             messenger,
             this.messageFactory,
             portValueProvider,
-            this.rawMotorPortValueParser,
+            this.motorValueTransformer,
             config
         );
     }

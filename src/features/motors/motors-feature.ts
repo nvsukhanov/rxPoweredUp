@@ -23,14 +23,14 @@ import {
 } from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
-import { IRawMotorPortValueParser } from './i-raw-motor-port-value-parser';
+import { IMotorValueTransformer } from './i-motor-value-transformer';
 
 export class MotorsFeature implements IMotorsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: IMotorCommandsOutboundMessageFactory,
         private readonly rawPortValueProvider: IRawPortValueProvider,
-        private readonly rawMotorPortValueParser: IRawMotorPortValueParser,
+        private readonly motorValueTransformer: IMotorValueTransformer,
         private readonly config: HubConfig
     ) {
     }
@@ -159,7 +159,7 @@ export class MotorsFeature implements IMotorsFeature {
             portId,
             modeId,
         ).pipe(
-            map((r) => this.rawMotorPortValueParser.parseAbsolutePosition(r))
+            map((r) => this.motorValueTransformer.fromRawToAbsolutePosition(r))
         );
     }
 
@@ -188,7 +188,7 @@ export class MotorsFeature implements IMotorsFeature {
             portId,
             modeId,
         ).pipe(
-            map((r) => this.rawMotorPortValueParser.parsePosition(r))
+            map((r) => this.motorValueTransformer.fromRawToPosition(r))
         );
     }
 
