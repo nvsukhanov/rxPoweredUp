@@ -11,11 +11,10 @@ import {
     PortModeInformationInboundMessage,
     PortValueInboundMessage
 } from '../../types';
-import { IOutboundMessenger, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
+import { IOutboundMessenger, IPortsFeature, IRawPortValueProvider, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
-import { IRawPortValueProvider } from '../motors';
 import { IVirtualPortSetupMessageFactory } from './i-virtual-port-setup-message-factory';
 
 export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
@@ -102,7 +101,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         );
     }
 
-    public valueChanges(
+    public rawPortValueChanges(
         portId: number,
         modeId: number,
         deltaThreshold?: number

@@ -16,6 +16,7 @@ import { IReplyParser } from './i-reply-parser';
 import { IPrefixedConsoleLoggerFactory, PREFIXED_CONSOLE_LOGGER_FACTORY } from './i-prefixed-console-logger-factory';
 import { HUB_CONFIG_DEFAULTS, HubConfig } from './hub-config';
 import { HUB_ACTIONS_FEATURE_FACTORY, IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
+import { ISensorsFeatureFactory, SENSORS_FEATURE_FACTORY } from './i-sensors-feature-factory';
 
 @injectable()
 export class HubFactory {
@@ -30,6 +31,7 @@ export class HubFactory {
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PREFIXED_CONSOLE_LOGGER_FACTORY) private readonly loggerFactory: IPrefixedConsoleLoggerFactory,
         @inject(HUB_ACTIONS_FEATURE_FACTORY) private readonly hubActionsFeatureFactory: IHubActionsFeatureFactory,
+        @inject(SENSORS_FEATURE_FACTORY) private readonly sensorsFeatureFactory: ISensorsFeatureFactory
     ) {
     }
 
@@ -50,7 +52,8 @@ export class HubFactory {
             this.commandsFeatureFactory,
             this.genericErrorsReplyParser,
             this.messageListenerFactory,
-            this.hubActionsFeatureFactory
+            this.hubActionsFeatureFactory,
+            this.sensorsFeatureFactory
         );
     }
 

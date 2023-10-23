@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IMotorsFeature } from './i-motors-feature';
 import { IPortsFeature } from './i-ports-feature';
+import { ISensorsFeature } from './i-sensors-feature';
 
 export interface IHub {
     /**
@@ -38,6 +39,11 @@ export interface IHub {
      * e.g. listen to battery level changes, set hub advertising name, etc.
      */
     readonly properties: IHubPropertiesFeature;
+
+    /**
+     * Provides access to sensors attached to the hub.
+     */
+    readonly sensors: ISensorsFeature;
 
     /**
      * Emits when the hub is disconnected.

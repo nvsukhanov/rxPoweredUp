@@ -3,7 +3,7 @@
 
 import 'reflect-metadata';
 
-import { Subscription, bufferCount, concatWith, map, takeUntil, zip } from 'rxjs';
+import { Subscription, bufferCount, concatWith, map, mergeMap, switchMap, takeUntil, zip } from 'rxjs';
 
 import { connectHub } from '../register';
 import { MessageLoggingMiddleware } from '../middleware';
@@ -124,6 +124,9 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('setDecelerationTimeButton')!.addEventListener('click', setDecelerationTime, { signal: abortSignal });
     document.getElementById('subscribe-port-value')!.addEventListener('click', subscribeToPortValue, { signal: abortSignal });
     document.getElementById('unsubscribe-port-value')!.addEventListener('click', unsubscribeFromPortValue, { signal: abortSignal });
+    document.getElementById('voltageRead')!.addEventListener('click', readVoltage, { signal: abortSignal });
+    document.getElementById('voltageSubscribe')!.addEventListener('click', subscribeToVoltage, { signal: abortSignal });
+    document.getElementById('voltageUnsubscribe')!.addEventListener('click', unsubscribeFromVoltage, { signal: abortSignal });
 
     nextHub.disconnected.subscribe(() => {
         console.log('disconnected emitted');
@@ -483,7 +486,7 @@ function subscribeToPortValue(): void {
         (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'input error';
         return;
     }
-    portValueSubscription = hub.ports.valueChanges(portId, modeId, 1).subscribe({
+    portValueSubscription = hub.ports.rawPortValueChanges(portId, modeId, 1).subscribe({
         next: (v) => (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
         complete: () => (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'complete',
     });
@@ -492,6 +495,57 @@ function subscribeToPortValue(): void {
 function unsubscribeFromPortValue(): void {
     portValueSubscription?.unsubscribe();
     (document.getElementById('portValueResults') as HTMLPreElement).innerHTML = 'unsubscribed';
+}
+
+let voltageValueSubscription: Subscription | undefined;
+
+function readVoltage(): void {
+    voltageValueSubscription?.unsubscribe();
+    if (!hub) {
+        return;
+    }
+    const portId = (document.getElementById('voltageReadPort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('voltageReadPortModeId') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    const h = hub;
+    voltageValueSubscription = h.properties.getSystemTypeId().pipe(
+        mergeMap((systemTypeId) => h.sensors.getVoltage(portId, modeId, systemTypeId))
+    ).subscribe({
+        next: (v) => (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
+        complete: () => console.log('voltage receive data complete'),
+    });
+}
+
+let voltageChangeSubscription: Subscription | undefined;
+
+function subscribeToVoltage(): void {
+    voltageChangeSubscription?.unsubscribe();
+    if (!hub) {
+        return;
+    }
+    const portId = (document.getElementById('voltageReadPort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('voltageReadPortModeId') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    const h = hub;
+    voltageChangeSubscription = h.properties.getSystemTypeId().pipe(
+        switchMap((systemTypeId) => h.sensors.getVoltage(portId, modeId, systemTypeId).pipe(
+            concatWith(h.sensors.voltageChanges(portId, modeId, 1, systemTypeId))
+        ))
+    ).subscribe({
+        next: (v) => (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
+        complete: () => console.log('voltage changes unsubscribed'),
+    });
+}
+
+function unsubscribeFromVoltage(): void {
+    voltageChangeSubscription?.unsubscribe();
+    (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = 'unsubscribed';
 }
 
 function readSystemTypeId(): void {

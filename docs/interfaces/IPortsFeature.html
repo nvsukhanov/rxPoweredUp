@@ -18,9 +18,11 @@
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><span class="target">IPortsFeature</span></li></ul></section><aside class="tsd-sources">
+<li><a href="IRawPortValueProvider.html" class="tsd-signature-type tsd-kind-interface">IRawPortValueProvider</a>
+<ul class="tsd-hierarchy">
+<li><span class="target">IPortsFeature</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L22">src/hub/i-ports-feature.ts:22</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L23">src/hub/i-ports-feature.ts:23</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -32,10 +34,10 @@
 <a href="IPortsFeature.html#deleteVirtualPort" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>delete<wbr/>Virtual<wbr/>Port</span></a>
 <a href="IPortsFeature.html#getPortModeInformation" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Port<wbr/>Mode<wbr/>Information</span></a>
 <a href="IPortsFeature.html#getPortModes" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Port<wbr/>Modes</span></a>
-<a href="IPortsFeature.html#getRawPortValue" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Raw<wbr/>Port<wbr/>Value</span></a>
+<a href="IPortsFeature.html#getRawPortValue" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Raw<wbr/>Port<wbr/>Value</span></a>
 <a href="IPortsFeature.html#onIoAttach" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>on<wbr/>Io<wbr/>Attach</span></a>
 <a href="IPortsFeature.html#onIoDetach" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>on<wbr/>Io<wbr/>Detach</span></a>
-<a href="IPortsFeature.html#valueChanges" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>value<wbr/>Changes</span></a>
+<a href="IPortsFeature.html#rawPortValueChanges" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>raw<wbr/>Port<wbr/>Value<wbr/>Changes</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
@@ -55,7 +57,7 @@
 <h5><span class="tsd-kind-parameter">portIdB</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/AttachedIOAttachVirtualInboundMessage.html" class="tsd-signature-type tsd-kind-type-alias">AttachedIOAttachVirtualInboundMessage</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L98">src/hub/i-ports-feature.ts:98</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L74">src/hub/i-ports-feature.ts:74</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="deleteVirtualPort" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Virtual<wbr/>Port</span><a href="#deleteVirtualPort" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -70,7 +72,7 @@
 <h5><span class="tsd-kind-parameter">virtualPortId</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/AttachedIODetachInboundMessage.html" class="tsd-signature-type tsd-kind-type-alias">AttachedIODetachInboundMessage</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L108">src/hub/i-ports-feature.ts:108</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L84">src/hub/i-ports-feature.ts:84</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getPortModeInformation" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Port<wbr/>Mode<wbr/>Information</span><a href="#getPortModeInformation" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -94,7 +96,7 @@
 <h5><span class="tsd-kind-parameter">modeInformationType</span>: <span class="tsd-signature-type tsd-kind-type-parameter">T</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L85">src/hub/i-ports-feature.ts:85</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L61">src/hub/i-ports-feature.ts:61</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getPortModes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Port<wbr/>Modes</span><a href="#getPortModes" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -109,10 +111,10 @@
 <h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/PortModeInboundMessage.html" class="tsd-signature-type tsd-kind-type-alias">PortModeInboundMessage</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L73">src/hub/i-ports-feature.ts:73</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member"><a id="getRawPortValue" class="tsd-anchor"></a>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L49">src/hub/i-ports-feature.ts:49</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="getRawPortValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Raw<wbr/>Port<wbr/>Value</span><a href="#getRawPortValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures">
+<ul class="tsd-signatures tsd-is-inherited">
 <li class="tsd-signature tsd-anchor-link" id="getRawPortValue.getRawPortValue-1"><span class="tsd-kind-call-signature">get<wbr/>Raw<wbr/>Port<wbr/>Value</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getRawPortValue.getRawPortValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Reads raw port value for a given port and mode id.<br>Stream completes when the response is received from the hub.</p>
@@ -125,8 +127,9 @@
 <li>
 <h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="IRawPortValueProvider.html">IRawPortValueProvider</a>.<a href="IRawPortValueProvider.html#getRawPortValue">getRawPortValue</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L49">src/hub/i-ports-feature.ts:49</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-raw-port-value-provider.ts#L11">src/hub/i-raw-port-value-provider.ts:11</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="onIoAttach" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Io<wbr/>Attach</span><a href="#onIoAttach" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -141,7 +144,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">filterOptions</span>: <a href="../types/OnIoAttachFilter.html" class="tsd-signature-type tsd-kind-type-alias">OnIoAttachFilter</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/AttachedIoAttachInboundMessage.html" class="tsd-signature-type tsd-kind-type-alias">AttachedIoAttachInboundMessage</a><span class="tsd-signature-symbol"> | </span><a href="../types/AttachedIOAttachVirtualInboundMessage.html" class="tsd-signature-type tsd-kind-type-alias">AttachedIOAttachVirtualInboundMessage</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L29">src/hub/i-ports-feature.ts:29</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L30">src/hub/i-ports-feature.ts:30</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="onIoDetach" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Io<wbr/>Detach</span><a href="#onIoDetach" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -156,11 +159,11 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">filterOptions</span>: <a href="../types/OnIoDetachFilter.html" class="tsd-signature-type tsd-kind-type-alias">OnIoDetachFilter</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/AttachedIODetachInboundMessage.html" class="tsd-signature-type tsd-kind-type-alias">AttachedIODetachInboundMessage</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L38">src/hub/i-ports-feature.ts:38</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member"><a id="valueChanges" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>value<wbr/>Changes</span><a href="#valueChanges" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="valueChanges.valueChanges-1"><span class="tsd-kind-call-signature">value<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">deltaThreshold</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#valueChanges.valueChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L39">src/hub/i-ports-feature.ts:39</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="rawPortValueChanges" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>raw<wbr/>Port<wbr/>Value<wbr/>Changes</span><a href="#rawPortValueChanges" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="rawPortValueChanges.rawPortValueChanges-1"><span class="tsd-kind-call-signature">raw<wbr/>Port<wbr/>Value<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">deltaThreshold</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#rawPortValueChanges.rawPortValueChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Provides port value updates for a given port and mode id.</p>
 </div>
@@ -172,12 +175,13 @@
 <li>
 <h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li>
 <li>
-<h5><span class="tsd-kind-parameter">deltaThreshold</span>: <span class="tsd-signature-type">number</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">deltaThreshold</span>: <span class="tsd-signature-type">number</span></h5>
 <div class="tsd-comment tsd-typography"><p>If the difference between the current value and the previous value is less than this threshold, the value will not be emitted.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="IRawPortValueProvider.html">IRawPortValueProvider</a>.<a href="IRawPortValueProvider.html#rawPortValueChanges">rawPortValueChanges</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-ports-feature.ts#L61">src/hub/i-ports-feature.ts:61</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-raw-port-value-provider.ts#L23">src/hub/i-raw-port-value-provider.ts:23</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -201,10 +205,10 @@
 <li><a href="#deleteVirtualPort" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>delete<wbr/>Virtual<wbr/>Port</span></a></li>
 <li><a href="#getPortModeInformation" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Port<wbr/>Mode<wbr/>Information</span></a></li>
 <li><a href="#getPortModes" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Port<wbr/>Modes</span></a></li>
-<li><a href="#getRawPortValue" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Raw<wbr/>Port<wbr/>Value</span></a></li>
+<li><a href="#getRawPortValue" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Raw<wbr/>Port<wbr/>Value</span></a></li>
 <li><a href="#onIoAttach" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>on<wbr/>Io<wbr/>Attach</span></a></li>
 <li><a href="#onIoDetach" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>on<wbr/>Io<wbr/>Detach</span></a></li>
-<li><a href="#valueChanges" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>value<wbr/>Changes</span></a></li></ul></div></details></div>
+<li><a href="#rawPortValueChanges" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>raw<wbr/>Port<wbr/>Value<wbr/>Changes</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>rxpoweredup</span></a>
 <ul class="tsd-small-nested-navigation">
@@ -232,6 +236,8 @@
 <li><a href="IMessageMiddleware.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IMessage<wbr/>Middleware</span></a></li>
 <li><a href="IMotorsFeature.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IMotors<wbr/>Feature</span></a></li>
 <li><a href="IPortsFeature.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IPorts<wbr/>Feature</span></a></li>
+<li><a href="IRawPortValueProvider.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IRaw<wbr/>Port<wbr/>Value<wbr/>Provider</span></a></li>
+<li><a href="ISensorsFeature.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>ISensors<wbr/>Feature</span></a></li>
 <li><a href="../types/AttachedIOAttachVirtualInboundMessage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg><span>AttachedIOAttach<wbr/>Virtual<wbr/>Inbound<wbr/>Message</span></a></li>
 <li><a href="../types/AttachedIODetachInboundMessage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>AttachedIODetach<wbr/>Inbound<wbr/>Message</span></a></li>
 <li><a href="../types/AttachedIoAttachInboundMessage.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Attached<wbr/>Io<wbr/>Attach<wbr/>Inbound<wbr/>Message</span></a></li>

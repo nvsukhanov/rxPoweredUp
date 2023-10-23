@@ -5,21 +5,21 @@ import { convertUint16ToSignedInt, convertUint32ToSignedInt, readNumberFromUint8
 
 @injectable()
 export class RawPortValueParser implements IRawMotorPortValueParser {
-    public getAbsolutePosition(
+    public parseAbsolutePosition(
         rawPortValue: number[]
     ): number {
         const rawValue = readNumberFromUint8LEArray(rawPortValue);
         return convertUint16ToSignedInt(rawValue);
     }
 
-    public getPosition(
+    public parsePosition(
         rawPortValue: number[]
     ): number {
         const rawValue = readNumberFromUint8LEArray(rawPortValue);
         return convertUint32ToSignedInt(rawValue);
     }
 
-    public getSpeed(
+    public parseSpeed(
         rawPortValue: number[]
     ): number {
         return rawPortValue[0];
