@@ -16,13 +16,13 @@ import {
     HubConfig,
     IMotorsFeature,
     IOutboundMessenger,
+    IRawPortValueProvider,
     PortCommandExecutionStatus,
     RotateByDegreeOptions,
     SetSpeedOptions
 } from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
-import { IRawPortValueProvider } from './i-raw-port-value-provider';
 import { IRawMotorPortValueParser } from './i-raw-motor-port-value-parser';
 
 export class MotorsFeature implements IMotorsFeature {
@@ -159,7 +159,7 @@ export class MotorsFeature implements IMotorsFeature {
             portId,
             modeId,
         ).pipe(
-            map((r) => this.rawMotorPortValueParser.getAbsolutePosition(r))
+            map((r) => this.rawMotorPortValueParser.parseAbsolutePosition(r))
         );
     }
 
@@ -188,7 +188,7 @@ export class MotorsFeature implements IMotorsFeature {
             portId,
             modeId,
         ).pipe(
-            map((r) => this.rawMotorPortValueParser.getPosition(r))
+            map((r) => this.rawMotorPortValueParser.parsePosition(r))
         );
     }
 

@@ -99,6 +99,31 @@
 
 <section class="control-section">
     <h2>
+        Voltage read
+    </h2>
+    <div class="row-controls">
+        <div>
+            <label for="voltageReadPort">Port id</label>
+            <input type="number" id="voltageReadPort" value="" class="connected-control"/>
+        </div>
+        <div>
+            <label for="voltageReadPortModeId">Mode id</label>
+            <input type="number" id="voltageReadPortModeId" value="" class="connected-control"/>
+        </div>
+        <div>
+            <button id="voltageRead" class="connected-control">Read</button>
+            <button id="voltageSubscribe" class="connected-control">Subscribe</button>
+            <button id="voltageUnsubscribe" class="connected-control">Unsubscribe</button>
+        </div>
+    </div>
+    <div>
+        Results:
+    </div>
+    <pre id="voltageResults"></pre>
+</section>
+
+<section class="control-section">
+    <h2>
         Port set acceleration time
     </h2>
     <div class="row-controls">
