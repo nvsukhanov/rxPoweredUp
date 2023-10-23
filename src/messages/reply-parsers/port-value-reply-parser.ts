@@ -1,8 +1,8 @@
 import { injectable } from 'tsyringe';
 
-import { MessageType } from '../../../constants';
-import { PortValueInboundMessage, RawMessage } from '../../../types';
-import { IReplyParser } from '../../../hub';
+import { MessageType } from '../../constants';
+import { PortValueInboundMessage, RawMessage } from '../../types';
+import { IReplyParser } from '../../hub';
 
 @injectable()
 export class PortValueReplyParser implements IReplyParser<MessageType.portValueSingle> {

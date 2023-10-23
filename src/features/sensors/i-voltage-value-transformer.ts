@@ -2,7 +2,7 @@ import { InjectionToken } from 'tsyringe';
 
 import { HubType } from '../../constants';
 
-export interface IVoltageValueParser {
+export interface IVoltageValueTransformer {
     fromRawValue(
         value: number[],
         hubType: HubType
@@ -14,4 +14,4 @@ export interface IVoltageValueParser {
     ): number;
 }
 
-export const VOLTAGE_VALUE_PARSER: InjectionToken<IVoltageValueParser> = Symbol('VOLTAGE_VALUE_PARSER');
+export const VOLTAGE_VALUE_TRANSFORMER: InjectionToken<IVoltageValueTransformer> = Symbol('VOLTAGE_VALUE_TRANSFORMER');

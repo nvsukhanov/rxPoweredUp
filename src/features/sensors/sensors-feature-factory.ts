@@ -2,12 +2,12 @@ import { inject, injectable } from 'tsyringe';
 
 import { IRawPortValueProvider, ISensorsFeature, ISensorsFeatureFactory } from '../../hub';
 import { SensorsFeature } from './sensors-feature';
-import { IVoltageValueParser, VOLTAGE_VALUE_PARSER } from './i-voltage-value-parser';
+import { IVoltageValueTransformer, VOLTAGE_VALUE_TRANSFORMER } from './i-voltage-value-transformer';
 
 @injectable()
 export class SensorsFeatureFactory implements ISensorsFeatureFactory {
     constructor(
-        @inject(VOLTAGE_VALUE_PARSER) private readonly voltageValueParser: IVoltageValueParser
+        @inject(VOLTAGE_VALUE_TRANSFORMER) private readonly voltageValueTransformer: IVoltageValueTransformer
     ) {
     }
 
@@ -16,7 +16,7 @@ export class SensorsFeatureFactory implements ISensorsFeatureFactory {
     ): ISensorsFeature {
         return new SensorsFeature(
             rawPortValueProvider,
-            this.voltageValueParser
+            this.voltageValueTransformer
         );
     }
 }

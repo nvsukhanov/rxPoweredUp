@@ -1,13 +1,13 @@
 import { Observable, map } from 'rxjs';
 
 import { IRawPortValueProvider, ISensorsFeature } from '../../hub';
-import { IVoltageValueParser } from './i-voltage-value-parser';
+import { IVoltageValueTransformer } from './i-voltage-value-transformer';
 import { HubType } from '../../constants';
 
 export class SensorsFeature implements ISensorsFeature {
     constructor(
         private readonly rawPortValueProvider: IRawPortValueProvider,
-        private readonly voltageValueParser: IVoltageValueParser
+        private readonly voltageValueTransformer: IVoltageValueTransformer
     ) {
     }
 
@@ -17,7 +17,7 @@ export class SensorsFeature implements ISensorsFeature {
         hubType: HubType = HubType.Unknown
     ): Observable<number> {
         return this.rawPortValueProvider.getRawPortValue(portId, modeId).pipe(
-            map((r) => this.voltageValueParser.fromRawValue(r, hubType))
+            map((r) => this.voltageValueTransformer.fromRawValue(r, hubType))
         );
     }
 
@@ -27,9 +27,9 @@ export class SensorsFeature implements ISensorsFeature {
         threshold: number,
         hubType: HubType = HubType.Unknown
     ): Observable<number> {
-        const rawValueThreshold = this.voltageValueParser.toRawValue(threshold, hubType);
+        const rawValueThreshold = this.voltageValueTransformer.toRawValue(threshold, hubType);
         return this.rawPortValueProvider.rawPortValueChanges(portId, modeId, rawValueThreshold).pipe(
-            map((r) => this.voltageValueParser.fromRawValue(r, hubType))
+            map((r) => this.voltageValueTransformer.fromRawValue(r, hubType))
         );
     }
 }
