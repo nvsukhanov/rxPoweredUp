@@ -127,6 +127,9 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('voltageRead')!.addEventListener('click', readVoltage, { signal: abortSignal });
     document.getElementById('voltageSubscribe')!.addEventListener('click', subscribeToVoltage, { signal: abortSignal });
     document.getElementById('voltageUnsubscribe')!.addEventListener('click', unsubscribeFromVoltage, { signal: abortSignal });
+    document.getElementById('tiltRead')!.addEventListener('click', readTilt, { signal: abortSignal });
+    document.getElementById('tiltSubscribe')!.addEventListener('click', subscribeToTiltChanges, { signal: abortSignal });
+    document.getElementById('tiltUnsubscribe')!.addEventListener('click', unsubscribeFromTiltChanges, { signal: abortSignal });
 
     nextHub.disconnected.subscribe(() => {
         console.log('disconnected emitted');
@@ -541,6 +544,46 @@ function subscribeToVoltage(): void {
         next: (v) => (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
         complete: () => console.log('voltage changes unsubscribed'),
     });
+}
+
+function readTilt(): void {
+    if (!hub) {
+        return;
+    }
+    const portId = (document.getElementById('tiltReadPort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('tiltReadPortModeId') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('tiltResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    hub.sensors.getTilt(portId, modeId).subscribe({
+        next: (v) => (document.getElementById('tiltResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
+        complete: () => console.log('tilt receive data complete'),
+    });
+}
+
+let tiltChangeSubscription: Subscription | undefined;
+
+function subscribeToTiltChanges(): void {
+    tiltChangeSubscription?.unsubscribe();
+    if (!hub) {
+        return;
+    }
+    const portId = (document.getElementById('tiltReadPort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('tiltReadPortModeId') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('tiltResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    tiltChangeSubscription = hub.sensors.tiltChanges(portId, modeId, 5).subscribe({
+        next: (v) => (document.getElementById('tiltResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
+        complete: () => console.log('tilt changes unsubscribed'),
+    });
+}
+
+function unsubscribeFromTiltChanges(): void {
+    tiltChangeSubscription?.unsubscribe();
+    (document.getElementById('tiltResults') as HTMLPreElement).innerHTML = 'unsubscribed';
 }
 
 function unsubscribeFromVoltage(): void {
