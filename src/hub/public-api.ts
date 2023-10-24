@@ -12,5 +12,5 @@ export { IMessageMiddleware } from './i-message-middleware';
 export { OutboundMessengerConfig } from './outbound-messenger-config';
 export { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
 export { HubConfig } from './hub-config';
-export { ISensorsFeature } from './i-sensors-feature';
+export { ISensorsFeature, TiltData } from './i-sensors-feature';
 export { IRawPortValueProvider } from './i-raw-port-value-provider';
