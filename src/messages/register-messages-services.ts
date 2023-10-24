@@ -19,6 +19,7 @@ import {
     PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER,
     PORT_OUTPUT_COMMAND_MESSAGE_FACTORY,
     PORT_RAW_VALUE_REPLY_PARSER,
+    TILT_VALUE_TRANSFORMER,
     VIRTUAL_PORT_SETUP_MESSAGE_FACTORY,
     VOLTAGE_VALUE_TRANSFORMER
 } from '../features';
@@ -42,7 +43,7 @@ import {
     PortOutputCommandOutboundMessageFactory,
     VirtualPortSetupOutboundMessageFactory
 } from './outbound-message-factories';
-import { MotorValueTransformer, VoltageValueTransformer } from './value-transformers';
+import { MotorValueTransformer, TiltValueTransformer, VoltageValueTransformer } from './value-transformers';
 
 export function registerMessagesServices(
     container: DependencyContainer
@@ -66,5 +67,6 @@ export function registerMessagesServices(
     container.register(PORT_RAW_VALUE_REPLY_PARSER, PortValueReplyParser);
     container.register(MOTOR_VALUE_TRANSFORMER, MotorValueTransformer);
     container.register(VOLTAGE_VALUE_TRANSFORMER, VoltageValueTransformer);
+    container.register(TILT_VALUE_TRANSFORMER, TiltValueTransformer);
     container.register(VIRTUAL_PORT_SETUP_MESSAGE_FACTORY, VirtualPortSetupOutboundMessageFactory);
 }

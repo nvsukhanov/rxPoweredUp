@@ -124,6 +124,31 @@
 
 <section class="control-section">
     <h2>
+        Tilt read
+    </h2>
+    <div class="row-controls">
+        <div>
+            <label for="tiltReadPort">Port id</label>
+            <input type="number" id="tiltReadPort" value="" class="connected-control"/>
+        </div>
+        <div>
+            <label for="tiltReadPortModeId">Mode id</label>
+            <input type="number" id="tiltReadPortModeId" value="" class="connected-control"/>
+        </div>
+        <div>
+            <button id="tiltRead" class="connected-control">Read</button>
+            <button id="tiltSubscribe" class="connected-control">Subscribe</button>
+            <button id="tiltUnsubscribe" class="connected-control">Unsubscribe</button>
+        </div>
+    </div>
+    <div>
+        Results:
+    </div>
+    <pre id="tiltResults"></pre>
+</section>
+
+<section class="control-section">
+    <h2>
         Port set acceleration time
     </h2>
     <div class="row-controls">

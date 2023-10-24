@@ -5,7 +5,7 @@ import { IRawPortValueProvider } from './i-raw-port-value-provider';
 
 export interface ISensorsFeatureFactory {
     createSensorsFeature(
-        rawPortValueProvider: IRawPortValueProvider
+        rawPortValueProvider: IRawPortValueProvider,
     ): ISensorsFeature;
 }
 
