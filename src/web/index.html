@@ -149,6 +149,31 @@
 
 <section class="control-section">
     <h2>
+        Temperature read
+    </h2>
+    <div class="row-controls">
+        <div>
+            <label for="temperatureReadPort">Port id</label>
+            <input type="number" id="temperatureReadPort" value="" class="connected-control"/>
+        </div>
+        <div>
+            <label for="temperatureReadPortModeId">Mode id</label>
+            <input type="number" id="temperatureReadPortModeId" value="" class="connected-control"/>
+        </div>
+        <div>
+            <button id="temperatureRead" class="connected-control">Read</button>
+            <button id="temperatureSubscribe" class="connected-control">Subscribe</button>
+            <button id="temperatureUnsubscribe" class="connected-control">Unsubscribe</button>
+        </div>
+    </div>
+    <div>
+        Results:
+    </div>
+    <pre id="temperatureResults"></pre>
+</section>
+
+<section class="control-section">
+    <h2>
         Port set acceleration time
     </h2>
     <div class="row-controls">

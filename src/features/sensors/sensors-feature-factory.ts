@@ -4,12 +4,14 @@ import { IRawPortValueProvider, ISensorsFeature, ISensorsFeatureFactory } from '
 import { SensorsFeature } from './sensors-feature';
 import { IVoltageValueTransformer, VOLTAGE_VALUE_TRANSFORMER } from './i-voltage-value-transformer';
 import { ITiltValueTransformer, TILT_VALUE_TRANSFORMER } from './i-tilt-value-transformer';
+import { ITemperatureValueTransformer, TEMPERATURE_VALUE_TRANSFORMER } from './i-temperature-value-transformer';
 
 @injectable()
 export class SensorsFeatureFactory implements ISensorsFeatureFactory {
     constructor(
         @inject(VOLTAGE_VALUE_TRANSFORMER) private readonly voltageValueTransformer: IVoltageValueTransformer,
         @inject(TILT_VALUE_TRANSFORMER) private readonly tiltValueTransformer: ITiltValueTransformer,
+        @inject(TEMPERATURE_VALUE_TRANSFORMER) private readonly temperatureValueTransformer: ITemperatureValueTransformer
     ) {
     }
 
@@ -19,7 +21,8 @@ export class SensorsFeatureFactory implements ISensorsFeatureFactory {
         return new SensorsFeature(
             rawPortValueProvider,
             this.voltageValueTransformer,
-            this.tiltValueTransformer
+            this.tiltValueTransformer,
+            this.temperatureValueTransformer
         );
     }
 }
