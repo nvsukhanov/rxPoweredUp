@@ -145,6 +145,11 @@ export enum PortModeName {
     handsetKeyD = 'KEYD',
     handsetKeySD = 'KEYSD',
     raw = 'RAW',
+    impact = 'IMP',
+    load = 'LOAD',
+    temperature = 'TEMP',
+    gravity = 'GRV',
+    gesture = 'GEST'
 }
 
 export enum PortModeSymbol {
@@ -153,7 +158,9 @@ export enum PortModeSymbol {
     milliAmps = 'mA',
     milliVolts = 'mV',
     button = 'btn',
-    generic = ''
+    count = 'CNT',
+    generic = '',
+    milliG = 'mG'
 }
 
 export const MOTOR_LIMITS = {
