@@ -60,4 +60,26 @@ export interface ISensorsFeature {
         modeId: number,
         threshold: number
     ): Observable<TiltData>;
+
+    /**
+     * Read temperature from a sensor port in degrees Celsius.
+     * @param portId
+     * @param modeId
+     */
+    getTemperature(
+        portId: number,
+        modeId: number
+    ): Observable<number>;
+
+    /**
+     * Emits when the temperature changes. The temperature is in degrees Celsius.
+     * @param portId
+     * @param modeId
+     * @param threshold
+     */
+    temperatureChanges(
+        portId: number,
+        modeId: number,
+        threshold: number
+    ): Observable<number>;
 }

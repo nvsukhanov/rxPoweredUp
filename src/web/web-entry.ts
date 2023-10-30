@@ -130,6 +130,9 @@ function onConnected(nextHub: IHub): void {
     document.getElementById('tiltRead')!.addEventListener('click', readTilt, { signal: abortSignal });
     document.getElementById('tiltSubscribe')!.addEventListener('click', subscribeToTiltChanges, { signal: abortSignal });
     document.getElementById('tiltUnsubscribe')!.addEventListener('click', unsubscribeFromTiltChanges, { signal: abortSignal });
+    document.getElementById('temperatureRead')!.addEventListener('click', readTemperature, { signal: abortSignal });
+    document.getElementById('temperatureSubscribe')!.addEventListener('click', subscribeToTemperatureChanges, { signal: abortSignal });
+    document.getElementById('temperatureUnsubscribe')!.addEventListener('click', unsubscribeFromTemperatureChanges, { signal: abortSignal });
 
     nextHub.disconnected.subscribe(() => {
         console.log('disconnected emitted');
@@ -581,6 +584,42 @@ function subscribeToTiltChanges(): void {
     });
 }
 
+function readTemperature(): void {
+    if (!hub) {
+        return;
+    }
+    const portId = (document.getElementById('temperatureReadPort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('temperatureReadPortModeId') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('temperatureResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    hub.sensors.getTemperature(portId, modeId).subscribe({
+        next: (v) => (document.getElementById('temperatureResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
+        complete: () => console.log('temperature receive data complete'),
+    });
+}
+
+let temperatureChangeSubscription: Subscription | undefined;
+
+function subscribeToTemperatureChanges(): void {
+    console.log('q');
+    temperatureChangeSubscription?.unsubscribe();
+    if (!hub) {
+        return;
+    }
+    const portId = (document.getElementById('temperatureReadPort') as HTMLInputElement).valueAsNumber;
+    const modeId = (document.getElementById('temperatureReadPortModeId') as HTMLInputElement).valueAsNumber;
+    if (!Number.isInteger(portId) || !Number.isInteger(modeId)) {
+        (document.getElementById('temperatureResults') as HTMLPreElement).innerHTML = 'input error';
+        return;
+    }
+    temperatureChangeSubscription = hub.sensors.temperatureChanges(portId, modeId, 10).subscribe({
+        next: (v) => (document.getElementById('temperatureResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
+        complete: () => console.log('temperature changes unsubscribed'),
+    });
+}
+
 function unsubscribeFromTiltChanges(): void {
     tiltChangeSubscription?.unsubscribe();
     (document.getElementById('tiltResults') as HTMLPreElement).innerHTML = 'unsubscribed';
@@ -589,6 +628,11 @@ function unsubscribeFromTiltChanges(): void {
 function unsubscribeFromVoltage(): void {
     voltageChangeSubscription?.unsubscribe();
     (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = 'unsubscribed';
+}
+
+function unsubscribeFromTemperatureChanges(): void {
+    temperatureChangeSubscription?.unsubscribe();
+    (document.getElementById('temperatureResults') as HTMLPreElement).innerHTML = 'unsubscribed';
 }
 
 function readSystemTypeId(): void {
