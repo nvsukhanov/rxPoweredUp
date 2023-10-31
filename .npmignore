@@ -13,5 +13,6 @@ jest.config.ts
 docs/
 typedoc.json
 coverage/
-jest/
 .run/
+jest.config.ts
+setup.jest.ts
