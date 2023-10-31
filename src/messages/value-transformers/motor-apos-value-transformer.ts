@@ -1,23 +1,21 @@
 import { injectable } from 'tsyringe';
 
-import { convertUint16ToSignedInt, readNumberFromUint8LEArray } from '../../helpers';
 import { IPortValueTransformer } from '../../hub';
+import { convertUint16ToSignedInt, readNumberFromUint8LEArray } from '../../helpers';
 
 @injectable()
-export class TemperatureValueTransformer implements IPortValueTransformer<number> {
-    private readonly rawValueDivisor = 10;
-
+export class MotorAposValueTransformer implements IPortValueTransformer<number> {
     public fromRawValue(
         value: number[]
     ): number {
         return convertUint16ToSignedInt(
             readNumberFromUint8LEArray(value)
-        ) / this.rawValueDivisor;
+        );
     }
 
     public toValueThreshold(
-        value: number,
+        value: number
     ): number {
-        return value * this.rawValueDivisor;
+        return value;
     }
 }

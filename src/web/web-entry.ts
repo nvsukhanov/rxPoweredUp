@@ -541,7 +541,7 @@ function subscribeToVoltage(): void {
     const h = hub;
     voltageChangeSubscription = h.properties.getSystemTypeId().pipe(
         switchMap((systemTypeId) => h.sensors.getVoltage(portId, modeId, systemTypeId).pipe(
-            concatWith(h.sensors.voltageChanges(portId, modeId, 1, systemTypeId))
+            concatWith(h.sensors.voltageChanges(portId, modeId, 0.1, systemTypeId))
         ))
     ).subscribe({
         next: (v) => (document.getElementById('voltageResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
@@ -614,7 +614,7 @@ function subscribeToTemperatureChanges(): void {
         (document.getElementById('temperatureResults') as HTMLPreElement).innerHTML = 'input error';
         return;
     }
-    temperatureChangeSubscription = hub.sensors.temperatureChanges(portId, modeId, 10).subscribe({
+    temperatureChangeSubscription = hub.sensors.temperatureChanges(portId, modeId, 0.1).subscribe({
         next: (v) => (document.getElementById('temperatureResults') as HTMLPreElement).innerHTML = JSON.stringify(v),
         complete: () => console.log('temperature changes unsubscribed'),
     });

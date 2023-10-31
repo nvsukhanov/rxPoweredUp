@@ -14,3 +14,4 @@ export { CharacteristicDataStreamConfig } from './characteristic-data-stream-con
 export { HubConfig } from './hub-config';
 export { ISensorsFeature, TiltData } from './i-sensors-feature';
 export { IRawPortValueProvider } from './i-raw-port-value-provider';
+export { IPortValueTransformer } from './i-port-value-transformer';

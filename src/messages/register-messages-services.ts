@@ -9,7 +9,8 @@ import {
     HUB_ACTIONS_REPLY_PARSER,
     HUB_PROPERTIES_MESSAGE_FACTORY,
     HUB_PROPERTIES_REPLIES_PARSER,
-    MOTOR_VALUE_TRANSFORMER,
+    MOTOR_APOS_VALUE_TRANSFORMER,
+    MOTOR_POS_VALUE_TRANSFORMER,
     PORT_INFORMATION_REPLY_PARSER,
     PORT_INFORMATION_REQUEST_MESSAGE_FACTORY,
     PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY,
@@ -22,7 +23,7 @@ import {
     TEMPERATURE_VALUE_TRANSFORMER,
     TILT_VALUE_TRANSFORMER,
     VIRTUAL_PORT_SETUP_MESSAGE_FACTORY,
-    VOLTAGE_VALUE_TRANSFORMER
+    VOLTAGE_VALUE_TRANSFORMER_FACTORY
 } from '../features';
 import {
     AttachedIoReplyParser,
@@ -44,7 +45,8 @@ import {
     PortOutputCommandOutboundMessageFactory,
     VirtualPortSetupOutboundMessageFactory
 } from './outbound-message-factories';
-import { MotorValueTransformer, TemperatureValueTransformer, TiltValueTransformer, VoltageValueTransformer } from './value-transformers';
+import { MotorAposValueTransformer, MotorPosValueTransformer, TemperatureValueTransformer, TiltValueTransformer } from './value-transformers';
+import { VoltageValueTransformerFactory } from './value-transformers/voltage-value-transformer-factory';
 
 export function registerMessagesServices(
     container: DependencyContainer
@@ -66,8 +68,9 @@ export function registerMessagesServices(
     container.register(HUB_ACTIONS_REPLY_PARSER, HubActionsReplyParser);
     container.register(HUB_ACTIONS_MESSAGE_FACTORY, HubActionsOutboundMessageFactory);
     container.register(PORT_RAW_VALUE_REPLY_PARSER, PortValueReplyParser);
-    container.register(MOTOR_VALUE_TRANSFORMER, MotorValueTransformer);
-    container.register(VOLTAGE_VALUE_TRANSFORMER, VoltageValueTransformer);
+    container.register(MOTOR_APOS_VALUE_TRANSFORMER, MotorAposValueTransformer);
+    container.register(MOTOR_POS_VALUE_TRANSFORMER, MotorPosValueTransformer);
+    container.register(VOLTAGE_VALUE_TRANSFORMER_FACTORY, VoltageValueTransformerFactory);
     container.register(TILT_VALUE_TRANSFORMER, TiltValueTransformer);
     container.register(VIRTUAL_PORT_SETUP_MESSAGE_FACTORY, VirtualPortSetupOutboundMessageFactory);
     container.register(TEMPERATURE_VALUE_TRANSFORMER, TemperatureValueTransformer);

@@ -115,21 +115,34 @@
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="getRawPortValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Raw<wbr/>Port<wbr/>Value</span><a href="#getRawPortValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="getRawPortValue.getRawPortValue-1"><span class="tsd-kind-call-signature">get<wbr/>Raw<wbr/>Port<wbr/>Value</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getRawPortValue.getRawPortValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getRawPortValue.getRawPortValue-1"><span class="tsd-kind-call-signature">get<wbr/>Raw<wbr/>Port<wbr/>Value</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">transformer</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol"> extends </span><a href="IPortValueTransformer.html" class="tsd-signature-type tsd-kind-interface">IPortValueTransformer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getRawPortValue.getRawPortValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Reads raw port value for a given port and mode id.<br>Stream completes when the response is received from the hub.</p>
 </div>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><a href="IPortValueTransformer.html" class="tsd-signature-type tsd-kind-interface">IPortValueTransformer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">void</span></h4></li></ul></section>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The port id to read the value for.</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode id to read the value for.</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">transformer</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span></h5>
+<div class="tsd-comment tsd-typography"><p>Optional transformer to convert the raw value into a value that can be used by the application (or read by humans).</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol"> extends </span><a href="IPortValueTransformer.html" class="tsd-signature-type tsd-kind-interface">IPortValueTransformer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="IRawPortValueProvider.html">IRawPortValueProvider</a>.<a href="IRawPortValueProvider.html#getRawPortValue">getRawPortValue</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-raw-port-value-provider.ts#L11">src/hub/i-raw-port-value-provider.ts:11</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-raw-port-value-provider.ts#L14">src/hub/i-raw-port-value-provider.ts:14</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="onIoAttach" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Io<wbr/>Attach</span><a href="#onIoAttach" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -163,25 +176,38 @@
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="rawPortValueChanges" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>raw<wbr/>Port<wbr/>Value<wbr/>Changes</span><a href="#rawPortValueChanges" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="rawPortValueChanges.rawPortValueChanges-1"><span class="tsd-kind-call-signature">raw<wbr/>Port<wbr/>Value<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">deltaThreshold</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#rawPortValueChanges.rawPortValueChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="rawPortValueChanges.rawPortValueChanges-1"><span class="tsd-kind-call-signature">raw<wbr/>Port<wbr/>Value<wbr/>Changes</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">deltaThreshold</span>, <span class="tsd-kind-parameter">transformer</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol"> extends </span><a href="IPortValueTransformer.html" class="tsd-signature-type tsd-kind-interface">IPortValueTransformer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#rawPortValueChanges.rawPortValueChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Provides port value updates for a given port and mode id.</p>
 </div>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><a href="IPortValueTransformer.html" class="tsd-signature-type tsd-kind-interface">IPortValueTransformer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">void</span></h4></li></ul></section>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The port id to read the value for.</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode id to read the value for.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">deltaThreshold</span>: <span class="tsd-signature-type">number</span></h5>
+<h5><span class="tsd-kind-parameter">deltaThreshold</span>: <span class="tsd-signature-type">number</span></h5>
 <div class="tsd-comment tsd-typography"><p>If the difference between the current value and the previous value is less than this threshold, the value will not be emitted.</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">transformer</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span></h5>
+<div class="tsd-comment tsd-typography"><p>Optional transformer to convert the raw value into a value that can be used by the application (or read by humans).</p>
 </div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type tsd-kind-type-parameter">TTransformer</span><span class="tsd-signature-symbol"> extends </span><a href="IPortValueTransformer.html" class="tsd-signature-type tsd-kind-interface">IPortValueTransformer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">? </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">R</span><span class="tsd-signature-symbol">&gt;</span><br/><span>    </span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="IRawPortValueProvider.html">IRawPortValueProvider</a>.<a href="IRawPortValueProvider.html#rawPortValueChanges">rawPortValueChanges</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-raw-port-value-provider.ts#L23">src/hub/i-raw-port-value-provider.ts:23</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-raw-port-value-provider.ts#L28">src/hub/i-raw-port-value-provider.ts:28</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -235,6 +261,7 @@
 <li><a href="ILogger.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>ILogger</span></a></li>
 <li><a href="IMessageMiddleware.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IMessage<wbr/>Middleware</span></a></li>
 <li><a href="IMotorsFeature.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IMotors<wbr/>Feature</span></a></li>
+<li><a href="IPortValueTransformer.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IPort<wbr/>Value<wbr/>Transformer</span></a></li>
 <li><a href="IPortsFeature.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IPorts<wbr/>Feature</span></a></li>
 <li><a href="IRawPortValueProvider.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>IRaw<wbr/>Port<wbr/>Value<wbr/>Provider</span></a></li>
 <li><a href="ISensorsFeature.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>ISensors<wbr/>Feature</span></a></li>

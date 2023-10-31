@@ -1,4 +1,4 @@
-import { Observable, map, switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 import {
     MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
@@ -16,6 +16,7 @@ import {
     HubConfig,
     IMotorsFeature,
     IOutboundMessenger,
+    IPortValueTransformer,
     IRawPortValueProvider,
     PortCommandExecutionStatus,
     RotateByDegreeOptions,
@@ -23,14 +24,14 @@ import {
 } from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
-import { IMotorValueTransformer } from './i-motor-value-transformer';
 
 export class MotorsFeature implements IMotorsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: IMotorCommandsOutboundMessageFactory,
         private readonly rawPortValueProvider: IRawPortValueProvider,
-        private readonly motorValueTransformer: IMotorValueTransformer,
+        private readonly motorAposValueTransformer: IPortValueTransformer<number>,
+        private readonly motorPosValueTransformer: IPortValueTransformer<number>,
         private readonly config: HubConfig
     ) {
     }
@@ -155,12 +156,7 @@ export class MotorsFeature implements IMotorsFeature {
         portId: number,
         modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.absolutePosition]
     ): Observable<number> {
-        return this.rawPortValueProvider.getRawPortValue(
-            portId,
-            modeId,
-        ).pipe(
-            map((r) => this.motorValueTransformer.fromRawToAbsolutePosition(r))
-        );
+        return this.rawPortValueProvider.getRawPortValue(portId, modeId, this.motorAposValueTransformer);
     }
 
     public rotateByDegree(
@@ -184,12 +180,7 @@ export class MotorsFeature implements IMotorsFeature {
         portId: number,
         modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.position]
     ): Observable<number> {
-        return this.rawPortValueProvider.getRawPortValue(
-            portId,
-            modeId,
-        ).pipe(
-            map((r) => this.motorValueTransformer.fromRawToPosition(r))
-        );
+        return this.rawPortValueProvider.getRawPortValue(portId, modeId, this.motorPosValueTransformer);
     }
 
     public resetEncoder(
