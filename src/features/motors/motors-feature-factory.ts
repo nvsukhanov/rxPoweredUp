@@ -1,15 +1,18 @@
-import { inject, injectable } from 'tsyringe';
+import { InjectionToken, inject, injectable } from 'tsyringe';
 
 import { MotorsFeature } from './motors-feature';
-import { HubConfig, IMotorsFeature, IMotorsFeatureFactory, IOutboundMessenger, IRawPortValueProvider } from '../../hub';
+import { HubConfig, IMotorsFeature, IMotorsFeatureFactory, IOutboundMessenger, IPortValueTransformer, IRawPortValueProvider } from '../../hub';
 import { IMotorCommandsOutboundMessageFactory, PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-motor-commands-outbound-message-factory';
-import { IMotorValueTransformer, MOTOR_VALUE_TRANSFORMER } from './i-motor-value-transformer';
+
+export const MOTOR_APOS_VALUE_TRANSFORMER: InjectionToken<IPortValueTransformer<number>> = Symbol('MOTOR_APOS_VALUE_TRANSFORMER');
+export const MOTOR_POS_VALUE_TRANSFORMER: InjectionToken<IPortValueTransformer<number>> = Symbol('MOTOR_POS_VALUE_TRANSFORMER');
 
 @injectable()
 export class MotorsFeatureFactory implements IMotorsFeatureFactory {
     constructor(
         @inject(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY) private readonly messageFactory: IMotorCommandsOutboundMessageFactory,
-        @inject(MOTOR_VALUE_TRANSFORMER) private readonly motorValueTransformer: IMotorValueTransformer
+        @inject(MOTOR_APOS_VALUE_TRANSFORMER) private readonly motorAposValueTransformer: IPortValueTransformer<number>,
+        @inject(MOTOR_POS_VALUE_TRANSFORMER) private readonly motorPosValueTransformer: IPortValueTransformer<number>,
     ) {
     }
 
@@ -22,7 +25,8 @@ export class MotorsFeatureFactory implements IMotorsFeatureFactory {
             messenger,
             this.messageFactory,
             portValueProvider,
-            this.motorValueTransformer,
+            this.motorAposValueTransformer,
+            this.motorPosValueTransformer,
             config
         );
     }

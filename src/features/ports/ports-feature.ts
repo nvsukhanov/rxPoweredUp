@@ -12,7 +12,7 @@ import {
     PortModeInformationInboundMessage,
     PortValueInboundMessage
 } from '../../types';
-import { IOutboundMessenger, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
+import { IOutboundMessenger, IPortValueTransformer, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
@@ -83,10 +83,11 @@ export class PortsFeature implements IPortsFeature, IDisposable {
         ) as Observable<AttachedIODetachInboundMessage>;
     }
 
-    public getRawPortValue(
+    public getRawPortValue<TTransformer extends IPortValueTransformer<unknown> | void>(
         portId: number,
         modeId: number,
-    ): Observable<number[]> {
+        transformer?: TTransformer
+    ): TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]> {
         const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
             portId,
             modeId,
@@ -107,15 +108,16 @@ export class PortsFeature implements IPortsFeature, IDisposable {
             { message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ },
             { message: portValueRequestMessage, reply: portValuesReplies$ }
         ).pipe(
-            map((r) => r.value)
-        );
+            map((r) => transformer ? transformer.fromRawValue(r.value) : r.value)
+        ) as TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
     }
 
-    public rawPortValueChanges(
+    public rawPortValueChanges<TTransformer extends IPortValueTransformer<unknown> | void>(
         portId: number,
         modeId: number,
-        deltaThreshold?: number
-    ): Observable<number[]> {
+        deltaThreshold: number,
+        transformer?: TTransformer
+    ): TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]> {
         let handShakeMessageSent = false;
         let subscribersCount = 0;
 
@@ -141,7 +143,7 @@ export class PortsFeature implements IPortsFeature, IDisposable {
             sub.unsubscribe();
         };
 
-        return new Observable<number[]>((subscriber) => {
+        return new Observable((subscriber) => {
             subscribersCount++;
             const portValuesReplies$ = this.rawPortValueReplies.pipe(
                 filter((r) => r.portId === portId),
@@ -160,18 +162,18 @@ export class PortsFeature implements IPortsFeature, IDisposable {
                 ).pipe(
                     last(),
                     switchMap(() => portValuesReplies$),
-                    map((r) => r.value)
+                    map(({ value }) => transformer ? transformer.fromRawValue(value) : value)
                 ).subscribe(subscriber);
 
                 handShakeMessageSent = true;
                 return () => teardownLogic(sub);
             } else {
                 const sub = portValuesReplies$.pipe(
-                    map((r) => r.value)
+                    map(({ value }) => transformer ? transformer.fromRawValue(value) : value)
                 ).subscribe(subscriber);
                 return () => teardownLogic(sub);
             }
-        });
+        }) as TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
     }
 
     public getPortModes(
