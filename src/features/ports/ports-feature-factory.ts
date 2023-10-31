@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 
 import { PortsFeature } from './ports-feature';
 import { MessageType } from '../../constants';
-import { RawMessage } from '../../types';
+import { IDisposable, RawMessage } from '../../types';
 import {
     IInboundMessageListenerFactory,
     INBOUND_MESSAGE_LISTENER_FACTORY,
@@ -44,7 +44,7 @@ export class PortsFeatureFactory implements IPortsFeatureFactory {
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger
-    ): IPortsFeature {
+    ): IPortsFeature & IDisposable {
         const portInformationReplies$ = this.messageListenerFactory.create(
             characteristicDataStream,
             this.portInformationRequestReplyParser,
