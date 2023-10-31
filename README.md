@@ -4,7 +4,7 @@
 [![CI Status](https://github.com/nvsukhanov/rxpoweredup/actions/workflows/ci.yml/badge.svg)](https://github.com/nvsukhanov/rxpoweredup/actions)
 [![NPM Version](https://img.shields.io/npm/v/rxpoweredup.svg?style=flat)](https://www.npmjs.com/package/rxpoweredup)
 
-A Typescript RxJS-based library for controlling LEGO Powered hubs & peripherals.
+A Typescript RxJS-based library for controlling LEGO Powered UP hubs & peripherals.
 
 Documentation can be found [here](https://nvsukhanov.github.io/rxPoweredUp)
 
