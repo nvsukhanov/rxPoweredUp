@@ -36,6 +36,7 @@
     "dist",
     "**/*.spec.ts",
     "src/web",
-    "jest"
+    "jest.config.ts",
+    "setup.jest.ts"
   ]
 }
