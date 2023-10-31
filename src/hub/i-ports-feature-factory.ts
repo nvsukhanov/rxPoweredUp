@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from 'tsyringe';
 
-import { RawMessage } from '../types';
+import { IDisposable, RawMessage } from '../types';
 import { MessageType } from '../constants';
 import { IOutboundMessenger } from './i-outbound-messenger';
 import { IPortsFeature } from './i-ports-feature';
@@ -11,7 +11,7 @@ export interface IPortsFeatureFactory {
         characteristicDataStream: Observable<RawMessage<MessageType>>,
         onHubDisconnected: Observable<void>,
         messenger: IOutboundMessenger
-    ): IPortsFeature;
+    ): IPortsFeature & IDisposable;
 }
 
 export const PORTS_FEATURE_FACTORY: InjectionToken<IPortsFeatureFactory> = Symbol('PORTS_FEATURE_FACTORY');

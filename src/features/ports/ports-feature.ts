@@ -6,31 +6,41 @@ import {
     AttachedIODetachInboundMessage,
     AttachedIOInboundMessage,
     AttachedIoAttachInboundMessage,
+    IDisposable,
     PortInputSetupSingleHandshakeInboundMessage,
     PortModeInboundMessage,
     PortModeInformationInboundMessage,
     PortValueInboundMessage
 } from '../../types';
-import { IOutboundMessenger, IPortsFeature, IRawPortValueProvider, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
+import { IOutboundMessenger, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
 import { IVirtualPortSetupMessageFactory } from './i-virtual-port-setup-message-factory';
 
-export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
+export class PortsFeature implements IPortsFeature, IDisposable {
+    private isDisposed = false;
+
     constructor(
-        private readonly portModeReplies$: Observable<PortModeInboundMessage>,
-        private readonly attachedIoReplies$: Observable<AttachedIOInboundMessage>,
-        private readonly attachedIoCachedReplies$: Observable<AttachedIOInboundMessage>,
-        private readonly portModeInformationReplies$: Observable<PortModeInformationInboundMessage>,
-        private readonly portValueSetupSingleHandshakeReplies$: Observable<PortInputSetupSingleHandshakeInboundMessage>,
+        private readonly portModeReplies: Observable<PortModeInboundMessage>,
+        private readonly attachedIoReplies: Observable<AttachedIOInboundMessage>,
+        private readonly attachedIoCachedReplies: Observable<AttachedIOInboundMessage>,
+        private readonly portModeInformationReplies: Observable<PortModeInformationInboundMessage>,
+        private readonly portValueSetupSingleHandshakeReplies: Observable<PortInputSetupSingleHandshakeInboundMessage>,
         private readonly portInformationRequestMessageFactory: IPortInformationRequestMessageFactory,
         private readonly rawPortValueReplies: Observable<PortValueInboundMessage>,
         private readonly portModeInformationMessageFactory: IPortModeInformationRequestMessageFactory,
         private readonly portInputFormatSetupMessageFactory: IPortInputFormatSetupMessageFactory,
         private readonly virtualPortSetupMessageFactory: IVirtualPortSetupMessageFactory,
-        private readonly messenger: IOutboundMessenger,
+        private readonly messenger: IOutboundMessenger
     ) {
+    }
+
+    public dispose(): void {
+        if (this.isDisposed) {
+            throw new Error('PortsFeature already disposed');
+        }
+        this.isDisposed = true;
     }
 
     public onIoAttach(
@@ -53,7 +63,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
             filters.push(filter((message) => ioTypesSet.has((message as AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage).ioTypeId)));
         }
         return filters.reduce((acc, filterOperator) => acc.pipe(filterOperator),
-            this.attachedIoCachedReplies$
+            this.attachedIoCachedReplies
         ) as Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
     }
 
@@ -69,7 +79,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         }
 
         return filters.reduce((acc, filterOperator) => acc.pipe(filterOperator),
-            this.attachedIoCachedReplies$
+            this.attachedIoCachedReplies
         ) as Observable<AttachedIODetachInboundMessage>;
     }
 
@@ -84,7 +94,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         );
         const portValueRequestMessage = this.portInformationRequestMessageFactory.createPortValueRequest(portId);
 
-        const portValueHandshakeReplies$ = this.portValueSetupSingleHandshakeReplies$.pipe(
+        const portValueHandshakeReplies$ = this.portValueSetupSingleHandshakeReplies.pipe(
             filter((r) => r.portId === portId && r.modeId === modeId),
             take(1)
         );
@@ -106,17 +116,17 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         modeId: number,
         deltaThreshold?: number
     ): Observable<number[]> {
-        let notificationsRequestSent = false;
+        let handShakeMessageSent = false;
         let subscribersCount = 0;
 
-        const portValueHandshakeReplies$ = this.portValueSetupSingleHandshakeReplies$.pipe(
+        const portValueHandshakeReplies$ = this.portValueSetupSingleHandshakeReplies.pipe(
             filter((r) => r.portId === portId && r.modeId === modeId),
             take(1)
         );
 
         const teardownLogic = (sub: Subscription): void => {
             subscribersCount--;
-            if (subscribersCount === 0) {
+            if (!this.isDisposed && subscribersCount === 0) {
                 const disableNotificationsMessage = this.portInputFormatSetupMessageFactory.createMessage(
                     portId,
                     modeId,
@@ -137,7 +147,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
                 filter((r) => r.portId === portId),
             );
 
-            if (!notificationsRequestSent) {
+            if (!handShakeMessageSent) {
                 const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
                     portId,
                     modeId,
@@ -152,7 +162,8 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
                     switchMap(() => portValuesReplies$),
                     map((r) => r.value)
                 ).subscribe(subscriber);
-                notificationsRequestSent = true;
+
+                handShakeMessageSent = true;
                 return () => teardownLogic(sub);
             } else {
                 const sub = portValuesReplies$.pipe(
@@ -168,7 +179,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     ): Observable<PortModeInboundMessage> {
         return this.messenger.sendWithResponse({
             message: this.portInformationRequestMessageFactory.createPortModeRequest(portId),
-            reply: this.portModeReplies$.pipe(
+            reply: this.portModeReplies.pipe(
                 filter((r) => r.portId === portId)
             )
         });
@@ -185,7 +196,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
             modeInformationType
         );
 
-        const reply = (this.portModeInformationReplies$ as Observable<PortModeInformationInboundMessage & { modeInformationType: T }>).pipe(
+        const reply = (this.portModeInformationReplies as Observable<PortModeInformationInboundMessage & { modeInformationType: T }>).pipe(
             filter((r) => r.modeInformationType === modeInformationType && r.portId === portId && r.mode === mode),
         );
 
@@ -196,7 +207,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
         portIdA: number,
         portIdB: number
     ): Observable<AttachedIOAttachVirtualInboundMessage> {
-        const replies = this.attachedIoReplies$.pipe(
+        const replies = this.attachedIoReplies.pipe(
             filter((r) => r.event === AttachIoEvent.AttachedVirtual && r.portIdA === portIdA && r.portIdB === portIdB),
         );
         return this.messenger.sendWithResponse({
@@ -208,7 +219,7 @@ export class PortsFeature implements IPortsFeature, IRawPortValueProvider {
     public deleteVirtualPort(
         virtualPortId: number
     ): Observable<AttachedIODetachInboundMessage> {
-        const replies = this.attachedIoReplies$.pipe(
+        const replies = this.attachedIoReplies.pipe(
             filter((r) => r.event === AttachIoEvent.Detached && r.portId === virtualPortId),
         );
         return this.messenger.sendWithResponse({

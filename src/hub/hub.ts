@@ -3,7 +3,7 @@ import { Observable, ReplaySubject, catchError, from, fromEvent, of, share, swit
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
-import { BluetoothDeviceWithGatt, ILogger } from '../types';
+import { BluetoothDeviceWithGatt, IDisposable, ILogger } from '../types';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
@@ -24,7 +24,7 @@ import { ISensorsFeature } from './i-sensors-feature';
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
 
-    private _ports?: IPortsFeature;
+    private _ports?: IPortsFeature & IDisposable;
 
     private _motors?: IMotorsFeature;
 
@@ -124,6 +124,7 @@ export class Hub implements IHub {
                     tap(() => this.logger.debug('GATT server disconnected')),
                 ).subscribe({
                     complete: () => {
+                        this._ports?.dispose();
                         this.outboundMessenger?.dispose();
                         this._isConnected = false;
                         this._disconnected$.next();
