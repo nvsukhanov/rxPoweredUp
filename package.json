@@ -19,7 +19,8 @@
     "clean": "rimraf dist",
     "docs": "typedoc",
     "lint": "eslint src/ --ext .ts",
-    "test": "jest --detectOpenHandles --forceExit --config jest/jest.config.ts",
+    "test": "jest --detectOpenHandles --forceExit --config jest.config.ts",
+    "coverage": "npm run test -- --coverage",
     "start": "webpack-dev-server --mode development",
     "ci": "npm run lint && npm run test && npm run build && npm run docs",
     "prepare": "npm run lint && npm run test && npm run build"
