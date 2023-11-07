@@ -35,7 +35,6 @@
     "node_modules",
     "dist",
     "**/*.spec.ts",
-    "src/web",
     "jest.config.ts",
     "setup.jest.ts"
   ]
