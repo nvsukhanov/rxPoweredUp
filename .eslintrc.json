@@ -146,7 +146,16 @@
           "error"
         ],
         "no-shadow": "off",
-        "@typescript-eslint/no-shadow": "error"
+        "@typescript-eslint/no-shadow": "error",
+        "quotes": "off",
+        "@typescript-eslint/quotes": [
+          "error",
+          "single"
+        ],
+        "arrow-parens": [
+          "error",
+          "always"
+        ]
       }
     }
   ]
