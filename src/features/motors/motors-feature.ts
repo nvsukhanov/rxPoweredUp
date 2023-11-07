@@ -9,7 +9,7 @@ import {
     PortModeName,
     PortOperationCompletionInformation,
     PortOperationStartupInformation,
-    WELL_KNOWN_MOTOR_PORT_MODE_IDS,
+    WELL_KNOWN_PORT_MODE_IDS,
 } from '../../constants';
 import {
     GoToPositionOptions,
@@ -154,7 +154,7 @@ export class MotorsFeature implements IMotorsFeature {
 
     public getAbsolutePosition(
         portId: number,
-        modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.absolutePosition]
+        modeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.absolutePosition]
     ): Observable<number> {
         return this.rawPortValueProvider.getRawPortValue(portId, modeId, this.motorAposValueTransformer);
     }
@@ -178,14 +178,14 @@ export class MotorsFeature implements IMotorsFeature {
 
     public getPosition(
         portId: number,
-        modeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.position]
+        modeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.position]
     ): Observable<number> {
         return this.rawPortValueProvider.getRawPortValue(portId, modeId, this.motorPosValueTransformer);
     }
 
     public resetEncoder(
         portId: number,
-        absolutePositionModeId: number = WELL_KNOWN_MOTOR_PORT_MODE_IDS[PortModeName.absolutePosition]
+        absolutePositionModeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.absolutePosition]
     ): Observable<PortCommandExecutionStatus> {
         return this.getAbsolutePosition(
             portId,

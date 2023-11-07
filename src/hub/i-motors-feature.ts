@@ -165,9 +165,9 @@ export interface IMotorsFeature {
      *
      * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if
      * the next command is issued in quick succession. Use with caution.
-     * @param portId
-     * @param degree
-     * @param options - see RotateByDegreeOptions
+     * @param portId - The port to issue command at
+     * @param degree - Step in degrees
+     * @param options - See RotateByDegreeOptions
      */
     rotateByDegree(
         portId: number,
@@ -180,8 +180,8 @@ export interface IMotorsFeature {
      * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
      *
      * Positive values shift the absolute zero clockwise, negative values shift the absolute zero counter-clockwise.
-     * @param portId
-     * @param position
+     * @param portId - The port to set zero position at.
+     * @param position - Target position in degrees.
      */
     setZeroPositionRelativeToCurrentPosition(
         portId: number,
@@ -193,8 +193,8 @@ export interface IMotorsFeature {
      * Zero position is the position where the motor has been switched on or connected to the hub,
      * if the encoder has not been reset (see resetEncoder) or
      *
-     * @param portId
-     * @param modeId - optional, if not specified, the well-known mode for the servo-motor will be used (unreliable, may depend on the motor type)
+     * @param portId - The port to read value from.
+     * @param modeId - The mode to read from. Optional, defaults to the well-known motor position mode id
      */
     getPosition(portId: number, modeId?: number): Observable<number>;
 
@@ -202,17 +202,16 @@ export interface IMotorsFeature {
      * Return current position of the motor relative to absolute zero position.
      * Absolute zero position is the position that is hard-coded in the motor at the factory.
      *
-     * @param portId
-     * @param modeId - optional, if not specified, the well-known mode for the servo-motor will be used (unreliable, may depend on the motor type)
+     * @param portId - The port to read value from.
+     * @param modeId - The mode to read from. Optional, defaults to the well-known absolute position mode id
      */
     getAbsolutePosition(portId: number, modeId?: number): Observable<number>;
 
     /**
      * Resets the encoder of the motor, setting the zero position (see getPosition) to absolute zero position (see getAbsolutePosition).
      *
-     * @param portId
-     * @param absolutePositionModeId - optional, if not specified, the well-known mode for the servo-motor will be used (unreliable,
-     *                                 may depend on the motor type)
+     * @param portId - The port to reset encoder at.
+     * @param absolutePositionModeId - The mode to read from. Optional, defaults to the well-known absolute position mode id
      */
     resetEncoder(portId: number, absolutePositionModeId?: number): Observable<PortCommandExecutionStatus>;
 }
