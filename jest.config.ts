@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import type { Config } from 'jest';
 
 const CONFIG: Config = {
@@ -8,7 +7,8 @@ const CONFIG: Config = {
         '<rootDir>/src/'
     ],
     setupFiles: [
-        '<rootDir>/setup.jest.ts'
+        // imports 'reflect-metadata';
+        '<rootDir>/src/index.ts'
     ],
     transform: {
         '^.+\\.tsx?$': [
@@ -23,7 +23,6 @@ const CONFIG: Config = {
         '!src/**/index.ts',
         '!src/**/public-api.ts',
         '!src/**/constants.ts',
-        '!src/**/web/*',
         '!src/**/*.d.ts',
         '!src/register.ts',
         '!src/features/register-features-services.ts',
