@@ -55,12 +55,12 @@ export interface IPortsFeature extends IRawPortValueProvider {
      * Stream completes when the response is received from the hub.
      *
      * @param portId
-     * @param mode
+     * @param modeId
      * @param modeInformationType
      */
     getPortModeInformation<T extends PortModeInformationType>(
         portId: number,
-        mode: number,
+        modeId: number,
         modeInformationType: T
     ): Observable<PortModeInformationInboundMessage & { modeInformationType: T }>;
 

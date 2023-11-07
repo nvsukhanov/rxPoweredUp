@@ -250,12 +250,15 @@ export enum LogLevel {
     Error = 3,
 }
 
-export const WELL_KNOWN_MOTOR_PORT_MODE_IDS = {
-    [PortModeName.power]: 0,
-    [PortModeName.speed]: 1,
-    [PortModeName.position]: 2,
-    [PortModeName.absolutePosition]: 3,
-} as const satisfies { [s in PortModeName]?: number };
+export const WELL_KNOWN_PORT_MODE_IDS = {
+    motor: {
+        [PortModeName.position]: 2,
+        [PortModeName.absolutePosition]: 3
+    },
+    voltage: 0,
+    tilt: 0,
+    temperature: 0
+} as const;
 
 export enum VirtualPortSetupCommand {
     Disconnect = 0x00,

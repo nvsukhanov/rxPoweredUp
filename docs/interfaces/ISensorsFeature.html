@@ -40,7 +40,7 @@
 <section class="tsd-panel tsd-member"><a id="getTemperature" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Temperature</span><a href="#getTemperature" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="getTemperature.getTemperature-1"><span class="tsd-kind-call-signature">get<wbr/>Temperature</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#getTemperature.getTemperature-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getTemperature.getTemperature-1"><span class="tsd-kind-call-signature">get<wbr/>Temperature</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#getTemperature.getTemperature-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Read temperature from a sensor port in degrees Celsius.</p>
 </div>
@@ -48,16 +48,20 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The port to read from.</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode to use when reading. Optional, defaults to the well-known tilt mode id (unreliable, may not work with some temperature sensors).</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-sensors-feature.ts#L69">src/hub/i-sensors-feature.ts:69</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getTilt" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Tilt</span><a href="#getTilt" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="getTilt.getTilt-1"><span class="tsd-kind-call-signature">get<wbr/>Tilt</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/TiltData.html" class="tsd-signature-type tsd-kind-type-alias">TiltData</a><span class="tsd-signature-symbol">&gt;</span><a href="#getTilt.getTilt-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getTilt.getTilt-1"><span class="tsd-kind-call-signature">get<wbr/>Tilt</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/TiltData.html" class="tsd-signature-type tsd-kind-type-alias">TiltData</a><span class="tsd-signature-symbol">&gt;</span><a href="#getTilt.getTilt-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Read tilt data from a tilt sensor.<br>Offset resets when the sensor (or hub) is restarted.</p>
 </div>
@@ -69,8 +73,8 @@
 <div class="tsd-comment tsd-typography"><p>The port to read from.</p>
 </div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The mode to use when reading.</p>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode to use when reading. Optional, defaults to the well-known tilt mode id (unreliable, may not work with some tilt sensors).</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/TiltData.html" class="tsd-signature-type tsd-kind-type-alias">TiltData</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
@@ -78,7 +82,7 @@
 <section class="tsd-panel tsd-member"><a id="getVoltage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Voltage</span><a href="#getVoltage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="getVoltage.getVoltage-1"><span class="tsd-kind-call-signature">get<wbr/>Voltage</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">hubType</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#getVoltage.getVoltage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getVoltage.getVoltage-1"><span class="tsd-kind-call-signature">get<wbr/>Voltage</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">hubType</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#getVoltage.getVoltage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Read voltage from a sensor port.</p>
 </div>
@@ -90,8 +94,8 @@
 <div class="tsd-comment tsd-typography"><p>The port to read from.</p>
 </div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The mode to read from.</p>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode to read from. Defaults to the well-known tilt mode id (unreliable, may not work with some voltage sensors).</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">hubType</span>: <a href="../enums/HubType.html" class="tsd-signature-type tsd-kind-enum">HubType</a></h5>
@@ -103,7 +107,7 @@
 <section class="tsd-panel tsd-member"><a id="temperatureChanges" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>temperature<wbr/>Changes</span><a href="#temperatureChanges" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="temperatureChanges.temperatureChanges-1"><span class="tsd-kind-call-signature">temperature<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">threshold</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#temperatureChanges.temperatureChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="temperatureChanges.temperatureChanges-1"><span class="tsd-kind-call-signature">temperature<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">threshold</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#temperatureChanges.temperatureChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Emits when the temperature changes. The temperature is in degrees Celsius.</p>
 </div>
@@ -111,18 +115,24 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The port to read from.</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode to use when reading. Optional, defaults to the well-known tilt mode id (unreliable, may not work with some tilt sensors).</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">threshold</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">threshold</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The minimum change in temperature to trigger an event. Optional, defaults to 1.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/nvsukhanov/rxPoweredUp/blob/main/src/hub/i-sensors-feature.ts#L80">src/hub/i-sensors-feature.ts:80</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="tiltChanges" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>tilt<wbr/>Changes</span><a href="#tiltChanges" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="tiltChanges.tiltChanges-1"><span class="tsd-kind-call-signature">tilt<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">threshold</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/TiltData.html" class="tsd-signature-type tsd-kind-type-alias">TiltData</a><span class="tsd-signature-symbol">&gt;</span><a href="#tiltChanges.tiltChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="tiltChanges.tiltChanges-1"><span class="tsd-kind-call-signature">tilt<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">threshold</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/TiltData.html" class="tsd-signature-type tsd-kind-type-alias">TiltData</a><span class="tsd-signature-symbol">&gt;</span><a href="#tiltChanges.tiltChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Emits when the tilt of a tilt sensor changes.</p>
 </div>
@@ -130,12 +140,16 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The port to read from.</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode to use when reading. Optional, defaults to the well-known tilt mode id (unreliable, may not work with some tilt sensors).</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">threshold</span>: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The minimum change in any axis tilt in degrees to trigger an event.</p>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">threshold</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The minimum change in any axis tilt in degrees to trigger an event. Optional, defaults to 1.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/TiltData.html" class="tsd-signature-type tsd-kind-type-alias">TiltData</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
@@ -143,7 +157,7 @@
 <section class="tsd-panel tsd-member"><a id="voltageChanges" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>voltage<wbr/>Changes</span><a href="#voltageChanges" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="voltageChanges.voltageChanges-1"><span class="tsd-kind-call-signature">voltage<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span>, <span class="tsd-kind-parameter">threshold</span>, <span class="tsd-kind-parameter">hubType</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#voltageChanges.voltageChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="voltageChanges.voltageChanges-1"><span class="tsd-kind-call-signature">voltage<wbr/>Changes</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">portId</span>, <span class="tsd-kind-parameter">modeId</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">threshold</span><span class="tsd-signature-symbol">?</span>, <span class="tsd-kind-parameter">hubType</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#voltageChanges.voltageChanges-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Emits when the voltage changes.</p>
 </div>
@@ -151,16 +165,20 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><span class="tsd-kind-parameter">portId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The port to read from.</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5></li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">modeId</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The mode to read from. Optional, defaults to the well-known tilt mode id (unreliable, may not work with some voltage sensors).</p>
+</div></li>
 <li>
-<h5><span class="tsd-kind-parameter">threshold</span>: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The minimum change in voltage to trigger an event.</p>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">threshold</span>: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The minimum change in voltage to trigger an event. Optional, defaults to 0.01.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">hubType</span>: <a href="../enums/HubType.html" class="tsd-signature-type tsd-kind-enum">HubType</a></h5>
-<div class="tsd-comment tsd-typography"><p>The type of hub to read from. Different hubs has different math for calculating voltage. Defaults to HubType.Unknown.</p>
+<div class="tsd-comment tsd-typography"><p>The type of hub to read from. Different hubs has different math for calculating voltage. Optional, defaults to HubType.Unknown.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
