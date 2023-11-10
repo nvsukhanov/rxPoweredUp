@@ -1,4 +1,4 @@
-import { Observable, distinctUntilChanged, filter, finalize, from, map, of, share, switchMap, takeUntil } from 'rxjs';
+import { Observable, distinctUntilChanged, filter, finalize, map, of, share, switchMap, takeUntil } from 'rxjs';
 
 import { HubProperty, HubType, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
 import {
@@ -135,14 +135,32 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
         if (this.characteristicUnsubscribeHandlers.has(property)) {
             return of(void 0);
         }
-        const message = this.messageFactoryService.createSubscriptionMessage(property);
+        const subscribeMessage = this.messageFactoryService.createSubscriptionMessage(property);
 
         this.characteristicUnsubscribeHandlers.set(property, () => {
-            this.messageFactoryService.createUnsubscriptionMessage(property);
-            return this.messenger.sendWithoutResponse(message);
+            const unsubscribeMessage = this.messageFactoryService.createUnsubscriptionMessage(property);
+            return new Observable((subscriber) => {
+                if (this.characteristicUnsubscribeHandlers.has(property)) {
+                    this.logging.debug(`Sending unsubscribe message for property ${HubProperty[property]}`);
+                    this.characteristicUnsubscribeHandlers.delete(property);
+                    this.messenger.sendWithoutResponse(unsubscribeMessage).subscribe({
+                        complete: () => {
+                            subscriber.next();
+                            subscriber.complete();
+                        },
+                        error: (err) => {
+                            subscriber.error(err);
+                        }
+                    });
+                } else {
+                    subscriber.next();
+                    subscriber.complete();
+                }
+                return () => void 0;
+            });
         });
 
-        return this.messenger.sendWithoutResponse(message);
+        return this.messenger.sendWithoutResponse(subscribeMessage);
     }
 
     private createPropertyStream<T extends SubscribableHubProperties>(
@@ -150,11 +168,13 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
     ): Observable<HubPropertyInboundMessage & { propertyType: T }> {
         return new Observable<HubPropertyInboundMessage & { propertyType: T }>((subscriber) => {
             this.logging.debug('subscribing to property stream', HubProperty[trackedProperty]);
-            const sub = from(this.sendSubscribeMessage(trackedProperty)).pipe(
+            const sub = this.sendSubscribeMessage(trackedProperty).pipe(
                 switchMap(() => this.inboundMessages),
                 filter((reply) => reply.propertyType === trackedProperty),
                 takeUntil(this.onDisconnected$),
-                finalize(() => this.logging.debug(`Stopped listening to hub property '${HubProperty[trackedProperty]}' due to disconnect`))
+                finalize(() => {
+                    this.characteristicUnsubscribeHandlers.get(trackedProperty)?.().subscribe();
+                })
             ).subscribe((message) => {
                 subscriber.next(message as HubPropertyInboundMessage & { propertyType: T });
             });
