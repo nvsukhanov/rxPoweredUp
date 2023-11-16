@@ -14,9 +14,11 @@ export {
     LogLevel,
     MOTOR_LIMITS,
     ButtonGroupButtonId,
-    PortOperationStartupInformation
+    PortOperationStartupInformation,
+    WELL_KNOWN_PORT_MODE_IDS
 } from './constants';
 export * from './types/public-api';
+export * from './port-value-transformers/public-api';
 export { ConnectionError } from './errors';
 export { MessageLoggingMiddleware } from './middleware';
 

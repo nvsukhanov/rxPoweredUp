@@ -1,12 +1,11 @@
 import { injectable } from 'tsyringe';
 
-import { HubType } from '../../constants';
-import { IPortValueTransformer } from '../../hub';
+import { HubType } from '../constants';
+import { IPortValueTransformer } from '../types';
 import { VoltageValueTransformer } from './voltage-value-transformer';
-import { IVoltageValueTransformerFactory } from '../../features';
 
 @injectable()
-export class VoltageValueTransformerFactory implements IVoltageValueTransformerFactory {
+export class VoltageValueTransformerFactory {
     private readonly fallbackRawValueDivisor: number = 400;
 
     // Empirically determined voltage coefficients for different hub types.

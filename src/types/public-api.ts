@@ -20,6 +20,5 @@ export {
     RawMessage,
     CommonMessageHeader
 } from './raw-message';
-export {
-    BluetoothDeviceWithGatt
-} from './web-bluetooth-with-gatt';
+export { BluetoothDeviceWithGatt } from './web-bluetooth-with-gatt';
+export { IPortValueTransformer } from './i-port-value-transformer';

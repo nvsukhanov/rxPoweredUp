@@ -15,6 +15,7 @@ import { HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, registerFeaturesServices } from 
 import { ConnectionErrorFactory } from './errors';
 import { PrefixedConsoleLoggerFactory } from './logger';
 import { registerMessagesServices } from './messages';
+import { registerPortValueTransformers } from './port-value-transformers';
 
 container.register(INBOUND_MESSAGE_LISTENER_FACTORY, InboundMessageListenerFactory);
 container.register(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, ConnectionErrorFactory);
@@ -22,6 +23,7 @@ container.register(HUB_CONNECTION_ERRORS_FACTORY, ConnectionErrorFactory);
 container.register(HUB_SCANNER_ERROR_FACTORY, ConnectionErrorFactory);
 container.register(PREFIXED_CONSOLE_LOGGER_FACTORY, PrefixedConsoleLoggerFactory);
 
+registerPortValueTransformers();
 registerFeaturesServices(container);
 registerMessagesServices(container);
 

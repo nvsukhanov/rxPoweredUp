@@ -18,8 +18,6 @@ import { HubConfig } from './hub-config';
 import { IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
 import { IHubActionsFeature } from './i-hub-actions-feature';
 import { IOutboundMessenger } from './i-outbound-messenger';
-import { ISensorsFeatureFactory } from './i-sensors-feature-factory';
-import { ISensorsFeature } from './i-sensors-feature';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
@@ -36,8 +34,6 @@ export class Hub implements IHub {
 
     private _actionsFeature?: IHubActionsFeature;
 
-    private _sensors?: ISensorsFeature;
-
     private outboundMessenger?: IOutboundMessenger;
 
     constructor(
@@ -53,7 +49,6 @@ export class Hub implements IHub {
         private readonly genericErrorReplyParser: IReplyParser<MessageType.genericError>,
         private readonly messageListenerFactory: IInboundMessageListenerFactory,
         private readonly hubActionsFeatureFactory: IHubActionsFeatureFactory,
-        private readonly sensorsFeatureFactory: ISensorsFeatureFactory
     ) {
     }
 
@@ -97,13 +92,6 @@ export class Hub implements IHub {
             throw new Error('Hub not connected');
         }
         return this._disconnected$;
-    }
-
-    public get sensors(): ISensorsFeature {
-        if (!this._sensors) {
-            throw new Error('Hub not connected');
-        }
-        return this._sensors;
     }
 
     public connect(): Observable<void> {
@@ -212,14 +200,9 @@ export class Hub implements IHub {
             this.logger
         );
 
-        this._motors = this.commandsFeatureFactory.createCommandsFeature(
+        this._motors = this.commandsFeatureFactory.createMotorsFeature(
             this.outboundMessenger,
-            this._ports,
             this.config
-        );
-
-        this._sensors = this.sensorsFeatureFactory.createSensorsFeature(
-            this._ports
         );
 
         await primaryCharacteristic.startNotifications();

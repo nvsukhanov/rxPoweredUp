@@ -104,13 +104,13 @@ describe('PortsFeature', () => {
         });
 
         it('should send handshake message', () => {
-            subscription.add(subject.rawPortValueChanges(portId, modeId, deltaThreshold).subscribe());
+            subscription.add(subject.portValueChanges(portId, modeId, deltaThreshold).subscribe());
 
             verify(messengerMock.sendWithResponse(deepEqual({ message: handshakeMessage, reply: portValueSetupSingleHandshakeReplies }))).once();
         });
 
         it('should send disable notification message when last subscriber unsubscribes', () => {
-            const sub = subject.rawPortValueChanges(portId, modeId, deltaThreshold).subscribe();
+            const sub = subject.portValueChanges(portId, modeId, deltaThreshold).subscribe();
             subscription.add(sub);
             verify(messengerMock.sendWithResponse(deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies }))).never();
             sub.unsubscribe();
@@ -118,7 +118,7 @@ describe('PortsFeature', () => {
         });
 
         it('should not send disable notification message when disposed', () => {
-            const sub = subject.rawPortValueChanges(portId, modeId, deltaThreshold).subscribe();
+            const sub = subject.portValueChanges(portId, modeId, deltaThreshold).subscribe();
             subscription.add(sub);
             subject.dispose();
             sub.unsubscribe();

@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 
-import { IPortValueTransformer } from '../../hub';
-import { convertUint32ToSignedInt, readNumberFromUint8LEArray } from '../../helpers';
+import { IPortValueTransformer } from '../types';
+import { convertUint32ToSignedInt, readNumberFromUint8LEArray } from '../helpers';
 
 @injectable()
 export class MotorPosValueTransformer implements IPortValueTransformer<number> {
