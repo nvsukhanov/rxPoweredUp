@@ -7,12 +7,13 @@ import {
     AttachedIOInboundMessage,
     AttachedIoAttachInboundMessage,
     IDisposable,
+    IPortValueTransformer,
     PortInputSetupSingleHandshakeInboundMessage,
     PortModeInboundMessage,
     PortModeInformationInboundMessage,
     PortValueInboundMessage
 } from '../../types';
-import { IOutboundMessenger, IPortValueTransformer, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
+import { IOutboundMessenger, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
@@ -83,7 +84,7 @@ export class PortsFeature implements IPortsFeature, IDisposable {
         ) as Observable<AttachedIODetachInboundMessage>;
     }
 
-    public getRawPortValue<TTransformer extends IPortValueTransformer<unknown> | void>(
+    public getPortValue<TTransformer extends IPortValueTransformer<unknown> | void>(
         portId: number,
         modeId: number,
         transformer?: TTransformer
@@ -112,7 +113,7 @@ export class PortsFeature implements IPortsFeature, IDisposable {
         ) as TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
     }
 
-    public rawPortValueChanges<TTransformer extends IPortValueTransformer<unknown> | void>(
+    public portValueChanges<TTransformer extends IPortValueTransformer<unknown> | void>(
         portId: number,
         modeId: number,
         deltaThreshold: number,
@@ -154,7 +155,7 @@ export class PortsFeature implements IPortsFeature, IDisposable {
                     portId,
                     modeId,
                     true,
-                    deltaThreshold
+                    transformer ? transformer.toValueThreshold(deltaThreshold) : deltaThreshold
                 );
 
                 const sub = this.messenger.sendWithResponse(

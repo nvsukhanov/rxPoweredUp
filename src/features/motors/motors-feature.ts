@@ -1,4 +1,4 @@
-import { Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import {
     MOTOR_ACC_DEC_DEFAULT_PROFILE_ID,
@@ -6,22 +6,9 @@ import {
     MessageType,
     MotorServoEndState,
     MotorUseProfile,
-    PortModeName,
     PortOperationCompletionInformation,
-    PortOperationStartupInformation,
-    WELL_KNOWN_PORT_MODE_IDS,
 } from '../../constants';
-import {
-    GoToPositionOptions,
-    HubConfig,
-    IMotorsFeature,
-    IOutboundMessenger,
-    IPortValueTransformer,
-    IRawPortValueProvider,
-    PortCommandExecutionStatus,
-    RotateByDegreeOptions,
-    SetSpeedOptions
-} from '../../hub';
+import { HubConfig, IMotorsFeature, IOutboundMessenger, PortCommandExecutionStatus, ServoCommandOptions, SetSpeedOptions } from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
 
@@ -29,9 +16,6 @@ export class MotorsFeature implements IMotorsFeature {
     constructor(
         private readonly messenger: IOutboundMessenger,
         private readonly portOutputCommandOutboundMessageFactoryService: IMotorCommandsOutboundMessageFactory,
-        private readonly rawPortValueProvider: IRawPortValueProvider,
-        private readonly motorAposValueTransformer: IPortValueTransformer<number>,
-        private readonly motorPosValueTransformer: IPortValueTransformer<number>,
         private readonly config: HubConfig
     ) {
     }
@@ -97,7 +81,7 @@ export class MotorsFeature implements IMotorsFeature {
     public goToPosition(
         portId: number,
         absoluteDegree: number,
-        options?: GoToPositionOptions
+        options?: ServoCommandOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.goToAbsolutePosition(
             portId,
@@ -116,7 +100,7 @@ export class MotorsFeature implements IMotorsFeature {
         virtualPortId: number,
         targetDegree1: number,
         targetDegree2: number,
-        options?: GoToPositionOptions
+        options?: ServoCommandOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.goToAbsolutePositionSynchronized(
             virtualPortId,
@@ -152,17 +136,10 @@ export class MotorsFeature implements IMotorsFeature {
         return this.execute(message);
     }
 
-    public getAbsolutePosition(
-        portId: number,
-        modeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.absolutePosition]
-    ): Observable<number> {
-        return this.rawPortValueProvider.getRawPortValue(portId, modeId, this.motorAposValueTransformer);
-    }
-
     public rotateByDegree(
         portId: number,
         degree: number,
-        options?: RotateByDegreeOptions
+        options?: ServoCommandOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.startSpeedForDegrees(
             portId,
@@ -171,28 +148,10 @@ export class MotorsFeature implements IMotorsFeature {
             options?.power ?? MOTOR_LIMITS.maxPower,
             options?.endState ?? MotorServoEndState.brake,
             options?.useProfile ?? MotorUseProfile.dontUseProfiles,
-            PortOperationStartupInformation.bufferIfNecessary,
+            options?.bufferMode ?? this.config.defaultBufferMode,
+            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
         );
         return this.execute(message);
-    }
-
-    public getPosition(
-        portId: number,
-        modeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.position]
-    ): Observable<number> {
-        return this.rawPortValueProvider.getRawPortValue(portId, modeId, this.motorPosValueTransformer);
-    }
-
-    public resetEncoder(
-        portId: number,
-        absolutePositionModeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.absolutePosition]
-    ): Observable<PortCommandExecutionStatus> {
-        return this.getAbsolutePosition(
-            portId,
-            absolutePositionModeId
-        ).pipe(
-            switchMap((offset) => this.setZeroPositionRelativeToCurrentPosition(portId, -offset))
-        );
     }
 
     private execute(

@@ -4,11 +4,11 @@ import {
     AttachedIOAttachVirtualInboundMessage,
     AttachedIODetachInboundMessage,
     AttachedIoAttachInboundMessage,
+    IPortValueTransformer,
     PortModeInboundMessage,
     PortModeInformationInboundMessage
 } from '../types';
 import { AttachIoEvent, IOType, PortModeInformationType } from '../constants';
-import { IRawPortValueProvider } from './i-raw-port-value-provider';
 
 export type OnIoAttachFilter = {
     ports?: ReadonlyArray<number>;
@@ -20,7 +20,7 @@ export type OnIoDetachFilter = {
     ports?: ReadonlyArray<number>;
 }
 
-export interface IPortsFeature extends IRawPortValueProvider {
+export interface IPortsFeature {
     /**
      * Emits when an io device is attached to a port.
      * If portId is not specified, it will emit for all ports.
@@ -63,6 +63,35 @@ export interface IPortsFeature extends IRawPortValueProvider {
         modeId: number,
         modeInformationType: T
     ): Observable<PortModeInformationInboundMessage & { modeInformationType: T }>;
+
+    /**
+     * Reads raw port value for a given port and mode id.
+     * Stream completes when the response is received from the hub.
+     *
+     * @param portId - The port id to read the value for.
+     * @param modeId - The mode id to read the value for.
+     * @param transformer - Optional transformer to convert the raw value into a value that can be used by the application (or read by humans).
+     */
+    getPortValue<TTransformer extends IPortValueTransformer<unknown> | void = void>(
+        portId: number,
+        modeId: number,
+        transformer?: TTransformer
+    ): TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
+
+    /**
+     * Provides port value updates for a given port and mode id.
+     *
+     * @param portId - The port id to read the value for.
+     * @param modeId - The mode id to read the value for.
+     * @param deltaThreshold If the difference between the current value and the previous value is less than this threshold, the value will not be emitted.
+     * @param transformer - Optional transformer to convert the raw value into a value that can be used by the application (or read by humans).
+     */
+    portValueChanges<TTransformer extends IPortValueTransformer<unknown> | void = void>(
+        portId: number,
+        modeId: number,
+        deltaThreshold: number,
+        transformer?: TTransformer
+    ): TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
 
     /**
      * Creates a virtual port that merges two physical ports.

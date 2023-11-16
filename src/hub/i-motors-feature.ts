@@ -41,27 +41,7 @@ export type SetSpeedOptions = {
  *
  * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if the next command is issued in quick succession.
  */
-export type GoToPositionOptions = {
-    speed?: number;
-    power?: number;
-    endState?: MotorServoEndState;
-    useProfile?: MotorUseProfile;
-    noFeedback?: boolean;
-    bufferMode?: PortOperationStartupInformation;
-}
-
-/**
- * Options for the rotateByDegree method.
- * @param speed - speed of the motor, range: [-100, - 100]
- * @param power - power of the motor, range: [0, 100]
- * @param endState - end state of the motor, default is 'hold'
- * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
- * @param noFeedback - do not wait for feedback from the motor, default is false
- * @param bufferMode - startup information for the motor, default is 'executeImmediately' * @param endState - end state of the motor, default is 'hold'
- *
- * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if the next command is issued in quick succession.
- */
-export type RotateByDegreeOptions = {
+export type ServoCommandOptions = {
     speed?: number;
     power?: number;
     endState?: MotorServoEndState;
@@ -137,7 +117,7 @@ export interface IMotorsFeature {
     goToPosition(
         portId: number,
         targetDegree: number,
-        options?: GoToPositionOptions
+        options?: ServoCommandOptions
     ): Observable<PortCommandExecutionStatus>;
 
     /**
@@ -156,7 +136,7 @@ export interface IMotorsFeature {
         virtualPortId: number,
         targetDegree1: number,
         targetDegree2: number,
-        options?: GoToPositionOptions
+        options?: ServoCommandOptions
     ): Observable<PortCommandExecutionStatus>;
 
     /**
@@ -172,7 +152,7 @@ export interface IMotorsFeature {
     rotateByDegree(
         portId: number,
         degree: number,
-        options?: RotateByDegreeOptions
+        options?: ServoCommandOptions
     ): Observable<PortCommandExecutionStatus>;
 
     /**
@@ -187,31 +167,4 @@ export interface IMotorsFeature {
         portId: number,
         position: number,
     ): Observable<PortCommandExecutionStatus>;
-
-    /**
-     * Return current position of the motor relative to zero position.
-     * Zero position is the position where the motor has been switched on or connected to the hub,
-     * if the encoder has not been reset (see resetEncoder) or
-     *
-     * @param portId - The port to read value from.
-     * @param modeId - The mode to read from. Optional, defaults to the well-known motor position mode id
-     */
-    getPosition(portId: number, modeId?: number): Observable<number>;
-
-    /**
-     * Return current position of the motor relative to absolute zero position.
-     * Absolute zero position is the position that is hard-coded in the motor at the factory.
-     *
-     * @param portId - The port to read value from.
-     * @param modeId - The mode to read from. Optional, defaults to the well-known absolute position mode id
-     */
-    getAbsolutePosition(portId: number, modeId?: number): Observable<number>;
-
-    /**
-     * Resets the encoder of the motor, setting the zero position (see getPosition) to absolute zero position (see getAbsolutePosition).
-     *
-     * @param portId - The port to reset encoder at.
-     * @param absolutePositionModeId - The mode to read from. Optional, defaults to the well-known absolute position mode id
-     */
-    resetEncoder(portId: number, absolutePositionModeId?: number): Observable<PortCommandExecutionStatus>;
 }
