@@ -47,12 +47,6 @@ export interface IHub {
     readonly disconnected: Observable<void>;
 
     /**
-     * Connects to the hub.
-     * Must be called before using any hub features.
-     */
-    connect(): Observable<void>
-
-    /**
      * Gracefully disconnects from the hub.
      */
     disconnect(): Observable<void>
