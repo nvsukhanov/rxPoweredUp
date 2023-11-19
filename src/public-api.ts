@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 export {
     MessageType,
     PortModeInformationType,
@@ -21,5 +23,6 @@ export * from './types/public-api';
 export * from './port-value-transformers/public-api';
 export { ConnectionError } from './errors';
 export { MessageLoggingMiddleware } from './middleware';
+export { connectHub } from './connect-hub';
 
 export * from './hub/public-api';

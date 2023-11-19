@@ -1,15 +1,15 @@
 import { Observable, map, switchMap } from 'rxjs';
 import { container } from 'tsyringe';
 
-import { HubConfig } from './hub-config';
-import { IHub } from './i-hub';
-import { HubScannerFactory } from '../hub-scanner';
-import { HubFactory } from './hub-factory';
+import { HubConfig, HubFactory, IHub } from './hub';
+import { HubScannerFactory } from './hub-scanner';
+import { registerServices } from './register-service';
 
 export function connectHub(
     bluetooth: Bluetooth,
     config?: Partial<HubConfig>
 ): Observable<IHub> {
+    registerServices();
     const scannerFactory = container.resolve(HubScannerFactory).create(bluetooth);
     const hubFactory = container.resolve(HubFactory);
     return scannerFactory.discoverHub().pipe(

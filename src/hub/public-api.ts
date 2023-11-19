@@ -11,4 +11,3 @@ export { IMessageMiddleware } from './i-message-middleware';
 export { OutboundMessengerConfig } from './outbound-messenger-config';
 export { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
 export { HubConfig } from './hub-config';
-export { connectHub } from './connect-hub';
