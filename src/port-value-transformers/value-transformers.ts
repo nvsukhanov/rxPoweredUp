@@ -8,6 +8,8 @@ import { MotorPosValueTransformer } from './motor-pos-value-transformer';
 import { TemperatureValueTransformer } from './temperature-value-transformer';
 import { TiltValueTransformer } from './tilt-value-transformer';
 import { TiltData } from './tilt-data';
+import { ColorData } from './color-data';
+import { ColorValueTransformer } from './color-value-transformer';
 
 export class ValueTransformers {
     public static voltage(
@@ -31,5 +33,9 @@ export class ValueTransformers {
 
     public static get tilt(): IPortValueTransformer<TiltData> {
         return container.resolve(TiltValueTransformer);
+    }
+    
+    public static get color(): IPortValueTransformer<ColorData> {
+        return container.resolve(ColorValueTransformer);
     }
 }
