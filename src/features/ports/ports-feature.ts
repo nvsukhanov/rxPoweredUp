@@ -116,7 +116,7 @@ export class PortsFeature implements IPortsFeature, IDisposable {
     public portValueChanges<TTransformer extends IPortValueTransformer<unknown> | void>(
         portId: number,
         modeId: number,
-        deltaThreshold: number,
+        deltaThreshold: TTransformer extends IPortValueTransformer<infer R> ? R : number,
         transformer?: TTransformer
     ): TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]> {
         let handShakeMessageSent = false;
@@ -151,11 +151,12 @@ export class PortsFeature implements IPortsFeature, IDisposable {
             );
 
             if (!handShakeMessageSent) {
+                const numericDeltaThreshold = transformer ? transformer.toValueThreshold(deltaThreshold) : deltaThreshold as number;
                 const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
                     portId,
                     modeId,
                     true,
-                    transformer ? transformer.toValueThreshold(deltaThreshold) : deltaThreshold
+                    numericDeltaThreshold
                 );
 
                 const sub = this.messenger.sendWithResponse(

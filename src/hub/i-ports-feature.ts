@@ -89,7 +89,7 @@ export interface IPortsFeature {
     portValueChanges<TTransformer extends IPortValueTransformer<unknown> | void = void>(
         portId: number,
         modeId: number,
-        deltaThreshold: number,
+        deltaThreshold: TTransformer extends IPortValueTransformer<infer R> ? R : number,
         transformer?: TTransformer
     ): TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
 
