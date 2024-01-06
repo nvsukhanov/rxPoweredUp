@@ -1,6 +1,6 @@
 # rxPoweredUP
 
-[![GitHub license](https://img.shields.io/github/license/nvsukhanov/rxpoweredup)](https://github.com/nvsukhanov/rxpoweredup/blob/main/LICENSE.md)
+[![GitHub license](https://img.shields.io/github/license/nvsukhanov/rxpoweredup)](https://github.com/nvsukhanov/rxpoweredup/blob/main/LICENSE)
 [![CI Status](https://github.com/nvsukhanov/rxpoweredup/actions/workflows/ci.yml/badge.svg)](https://github.com/nvsukhanov/rxpoweredup/actions)
 [![NPM Version](https://img.shields.io/npm/v/rxpoweredup.svg?style=flat)](https://www.npmjs.com/package/rxpoweredup)
 
