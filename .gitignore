@@ -34,3 +34,5 @@ tsconfig.tsbuildinfo
 # System files
 .DS_Store
 Thumbs.db
+
+.nx/cache

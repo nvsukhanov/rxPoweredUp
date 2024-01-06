@@ -3,7 +3,7 @@
   "entryPoints": [
     "./src/public-api.ts"
   ],
-  "out": "docs",
+  "out": "../../docs",
   "readme": "./README.md",
   "markedOptions": {
     "gfm": true,
