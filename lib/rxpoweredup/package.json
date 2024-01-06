@@ -1,0 +1,26 @@
+{
+  "name": "rxpoweredup",
+  "version": "0.3.1",
+  "description": "A Typescript RxJS-based library for controlling LEGO Powered UP hubs & peripherals.",
+  "homepage": "https://github.com/nvsukhanov/rxPoweredUp/",
+  "keywords": [
+    "LEGO",
+    "Powered UP",
+    "BLE",
+    "Bluetooth",
+    "RxJS",
+    "TypeScript"
+  ],
+  "main": "src/index.js",
+  "private": false,
+  "types": "src/index.d.ts",
+  "author": "Nikolai Sukhanov <nvsukhanov@outlook.com>",
+  "license": "MIT",
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
+    "tsyringe": "^4.7.0"
+  },
+  "devDependencies": {
+  }
+}

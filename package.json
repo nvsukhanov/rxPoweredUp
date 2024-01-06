@@ -1,51 +1,40 @@
 {
-  "name": "rxpoweredup",
-  "version": "0.3.1",
-  "description": "A Typescript RxJS-based library for controlling LEGO Powered UP hubs & peripherals.",
-  "homepage": "https://github.com/nvsukhanov/rxPoweredUp/",
-  "keywords": [
-    "LEGO",
-    "Powered UP",
-    "BLE",
-    "Bluetooth",
-    "RxJS",
-    "TypeScript"
-  ],
-  "main": "dist/index.js",
-  "private": false,
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "npm run clean && tsc -p tsconfig.d.json && tsc -p tsconfig.json",
-    "clean": "rimraf dist",
-    "docs": "typedoc",
-    "lint": "eslint src/ --ext .ts",
-    "test": "jest --detectOpenHandles --forceExit --config jest.config.ts",
-    "coverage": "npm run test -- --coverage",
-    "ci": "npm run lint && npm run test && npm run build && npm run docs",
-    "prepublishOnly": "npm run lint && npm run test && npm run build"
-  },
-  "author": "Nikolai Sukhanov <nvsukhanov@outlook.com>",
+  "name": "@rxpoweredup/workspace",
+  "version": "0.0.0",
   "license": "MIT",
-  "dependencies": {
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1",
-    "tsyringe": "^4.7.0"
+  "scripts": {
+    "ci": "nx run-many -t build lint test"
   },
+  "private": true,
   "devDependencies": {
-    "@types/jest": "^29.5.1",
-    "@types/node": "^20.0.0",
+    "@nx/eslint": "17.2.8",
+    "@nx/eslint-plugin": "17.2.8",
+    "@nx/jest": "17.2.8",
+    "@nx/js": "17.2.8",
+    "@nx/workspace": "17.2.8",
+    "@types/jest": "^29.4.0",
+    "@types/node": "18.16.9",
     "@types/web-bluetooth": "^0.0.17",
-    "@typescript-eslint/eslint-plugin": "^5.59.2",
-    "@typescript-eslint/parser": "^5.59.2",
-    "eslint": "^8.39.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "~8.48.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
-    "jest": "^29.5.0",
-    "rimraf": "^5.0.0",
+    "jest": "^29.4.1",
+    "jest-environment-node": "^29.4.1",
+    "nx": "17.2.8",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
     "ts-jest": "^29.1.0",
     "ts-mockito": "^2.6.1",
-    "ts-node": "^10.9.1",
-    "typedoc": "^0.24.7",
-    "typescript": "~4.9.5"
+    "ts-node": "10.9.1",
+    "tslib": "^2.6.2",
+    "tsyringe": "^4.7.0",
+    "typedoc": "^0.25.6",
+    "typescript": "~5.2.2"
+  },
+  "nx": {
+    "includedScripts": []
   }
 }
