@@ -1,0 +1,15 @@
+.modeIdHeader {
+    display: grid;
+    grid-template-columns: 70px 55px 120px;
+    grid-gap: 0 10px;
+}
+
+.modeIdTitle {
+    font-weight: bold;
+}
+
+.modeValuesContainer {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    margin: 0;
+}
