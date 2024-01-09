@@ -1,6 +1,6 @@
 import { IMessageMiddleware } from '../hub';
 import { MessageType } from '../constants';
-import { ILogger, RawMessage } from '../types';
+import type { ILogger, RawMessage } from '../types';
 import { formatMessageForDump } from '../helpers';
 
 export class MessageLoggingMiddleware implements IMessageMiddleware {

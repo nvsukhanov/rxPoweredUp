@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from 'tsyringe';
 
-import { RawMessage } from '../types';
+import type { RawMessage } from '../types';
 import { MessageType } from '../constants';
-import { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
+import type { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
 
 export interface ICharacteristicDataStreamFactory {
     create(

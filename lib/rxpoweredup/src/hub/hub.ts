@@ -3,7 +3,7 @@ import { Observable, ReplaySubject, catchError, from, fromEvent, of, share, swit
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
 import { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
-import { BluetoothDeviceWithGatt, IDisposable, ILogger } from '../types';
+import type { BluetoothDeviceWithGatt, IDisposable, ILogger } from '../types';
 import { IHub } from './i-hub';
 import { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
@@ -129,7 +129,7 @@ export class Hub implements IHub {
             }),
             take(1),
             catchError((e) => {
-                this.logger.error('Hub connection failed');
+                this.logger.error(e);
                 this.device.gatt.disconnect();
                 this._disconnected$.next();
                 this._isConnected = false;

@@ -3,11 +3,14 @@ import { inject, injectable } from 'tsyringe';
 
 import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
-import { ILogger, RawMessage } from '../../types';
-import { IHubPropertiesFeatureFactory, IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY, IOutboundMessenger, IReplyParser } from '../../hub';
+import type { ILogger, RawMessage } from '../../types';
+import { INBOUND_MESSAGE_LISTENER_FACTORY } from '../../hub';
+import type { IHubPropertiesFeatureFactory, IInboundMessageListenerFactory, IOutboundMessenger, IReplyParser } from '../../hub';
 import { HUB_PROPERTIES_REPLIES_PARSER } from './hub-properties-reply-parser';
-import { HUB_PROPERTIES_MESSAGE_FACTORY, IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
-import { HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
+import { HUB_PROPERTIES_MESSAGE_FACTORY } from './i-hub-properties-message-factory';
+import type { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
+import { HUB_PROPERTIES_FEATURE_ERRORS_FACTORY } from './i-hub-properties-feature-errors-factory';
+import type { IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 
 @injectable()
 export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory {

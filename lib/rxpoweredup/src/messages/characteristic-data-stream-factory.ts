@@ -1,5 +1,5 @@
 import { EMPTY, Observable, fromEvent, map, of, share, switchMap } from 'rxjs';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { InboundMessageDissector } from './inbound-message-dissector';
 import { MessageType } from '../constants';
@@ -11,7 +11,7 @@ export class CharacteristicDataStreamFactory implements ICharacteristicDataStrea
     private readonly characteristicValueChangedEventName = 'characteristicvaluechanged';
 
     constructor(
-        private readonly dissector: InboundMessageDissector,
+        @inject(InboundMessageDissector) private readonly dissector: InboundMessageDissector,
     ) {
     }
 

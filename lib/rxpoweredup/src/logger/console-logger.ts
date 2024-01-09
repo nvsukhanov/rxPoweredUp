@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ILogger } from '../types';
+import type { ILogger } from '../types';
 import { LogLevel } from '../constants';
 
 export class ConsoleLogger implements ILogger {

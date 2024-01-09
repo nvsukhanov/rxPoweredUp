@@ -4,7 +4,7 @@ import { anything, instance, mock, verify, when } from 'ts-mockito';
 import { HubPropertiesFeature } from './hub-properties-feature';
 import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
 import { IOutboundMessenger } from '../../hub';
-import { HubPropertyInboundMessage, ILogger, RawMessage } from '../../types';
+import type { HubPropertyInboundMessage, ILogger, RawMessage } from '../../types';
 import { IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feature-errors-factory';
 import { HubProperty, MessageType, SubscribableHubProperties } from '../../constants';
 

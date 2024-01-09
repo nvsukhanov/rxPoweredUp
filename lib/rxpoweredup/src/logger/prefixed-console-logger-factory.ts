@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 
-import { ILogger } from '../types';
+import type { ILogger } from '../types';
 import { PrefixedConsoleLogger } from './prefixed-console-logger';
 import { LogLevel } from '../constants';
 import { IPrefixedConsoleLoggerFactory } from '../hub';

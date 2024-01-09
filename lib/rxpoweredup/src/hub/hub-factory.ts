@@ -2,19 +2,28 @@ import { inject, injectable } from 'tsyringe';
 
 import { Hub } from './hub';
 import { BluetoothDeviceWithGatt } from '../types';
-import { HUB_CONNECTION_ERRORS_FACTORY, IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
-import { CHARACTERISTIC_DATA_STREAM_FACTORY, ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
-import { IOutboundMessengerFactory, OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
-import { HUB_PROPERTY_FEATURE_FACTORY, IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
-import { IMotorsFeatureFactory, MOTORS_FEATURE_FACTORY } from './i-motors-feature-factory';
-import { IPortsFeatureFactory, PORTS_FEATURE_FACTORY } from './i-ports-feature-factory';
-import { IInboundMessageListenerFactory, INBOUND_MESSAGE_LISTENER_FACTORY } from './i-inbound-message-listener-factory';
+import type { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
+import { HUB_CONNECTION_ERRORS_FACTORY } from './i-hub-connection-errors-factory';
+import type { ICharacteristicDataStreamFactory } from './i-characteristic-data-stream-factory';
+import { CHARACTERISTIC_DATA_STREAM_FACTORY } from './i-characteristic-data-stream-factory';
+import type { IOutboundMessengerFactory } from './i-outbound-messenger-factory';
+import { OUTBOUND_MESSAGE_FACTORY } from './i-outbound-messenger-factory';
+import type { IHubPropertiesFeatureFactory } from './i-hub-properties-feature-factory';
+import { HUB_PROPERTY_FEATURE_FACTORY } from './i-hub-properties-feature-factory';
+import type { IMotorsFeatureFactory } from './i-motors-feature-factory';
+import { MOTORS_FEATURE_FACTORY } from './i-motors-feature-factory';
+import type { IPortsFeatureFactory } from './i-ports-feature-factory';
+import { PORTS_FEATURE_FACTORY } from './i-ports-feature-factory';
+import type { IInboundMessageListenerFactory } from './i-inbound-message-listener-factory';
+import { INBOUND_MESSAGE_LISTENER_FACTORY } from './i-inbound-message-listener-factory';
 import { GENERIC_ERRORS_REPLIES_PARSER } from './generic-errors-reply-parser';
 import { MessageType } from '../constants';
-import { IReplyParser } from './i-reply-parser';
-import { IPrefixedConsoleLoggerFactory, PREFIXED_CONSOLE_LOGGER_FACTORY } from './i-prefixed-console-logger-factory';
+import type { IReplyParser } from './i-reply-parser';
+import type { IPrefixedConsoleLoggerFactory } from './i-prefixed-console-logger-factory';
+import { PREFIXED_CONSOLE_LOGGER_FACTORY } from './i-prefixed-console-logger-factory';
 import { HUB_CONFIG_DEFAULTS, HubConfig } from './hub-config';
-import { HUB_ACTIONS_FEATURE_FACTORY, IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
+import type { IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
+import { HUB_ACTIONS_FEATURE_FACTORY } from './i-hub-actions-feature-factory';
 
 @injectable()
 export class HubFactory {

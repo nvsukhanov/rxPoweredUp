@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
-import { ILogger, PortOutputCommandFeedbackInboundMessage } from '../../../types';
+import type { ILogger, PortOutputCommandFeedbackInboundMessage } from '../../../types';
 import { ITaskVisitor } from '../queue';
 import { TaskVisitor } from './task-visitor';
 import { FeedbackHandler } from './feedback-handler';
@@ -9,7 +9,7 @@ import { FeedbackHandler } from './feedback-handler';
 @injectable()
 export class TaskVisitorFactory {
     constructor(
-        private readonly feedbackHandler: FeedbackHandler
+        @inject(FeedbackHandler) private readonly feedbackHandler: FeedbackHandler
     ) {
     }
 

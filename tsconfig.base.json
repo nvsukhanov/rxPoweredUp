@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "isolatedModules": true,
     "target": "es2015",
     "module": "esnext",
     "lib": ["es2020", "dom"],
@@ -15,7 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "rxpoweredup": ["lib/rxpoweredup/src/index.ts"]
+      "rxpoweredup": ["lib/rxpoweredup/src/public-api.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

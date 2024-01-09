@@ -2,7 +2,7 @@ import { Observable, Subscription } from 'rxjs';
 
 import { ITaskVisitor } from '../queue';
 import { TaskPortOutputCommand } from '../queue-tasks';
-import { ILogger, PortOutputCommandFeedbackInboundMessage } from '../../../types';
+import type { ILogger, PortOutputCommandFeedbackInboundMessage } from '../../../types';
 import { FeedbackHandler } from './feedback-handler';
 
 /**

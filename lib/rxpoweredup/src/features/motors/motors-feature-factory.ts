@@ -2,7 +2,8 @@ import { inject, injectable } from 'tsyringe';
 
 import { MotorsFeature } from './motors-feature';
 import { HubConfig, IMotorsFeature, IMotorsFeatureFactory, IOutboundMessenger } from '../../hub';
-import { IMotorCommandsOutboundMessageFactory, PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-motor-commands-outbound-message-factory';
+import type { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
+import { PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-motor-commands-outbound-message-factory';
 
 @injectable()
 export class MotorsFeatureFactory implements IMotorsFeatureFactory {

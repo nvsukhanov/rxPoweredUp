@@ -1,5 +1,5 @@
-export { ILogger } from './i-logger';
-export {
+export type { ILogger } from './i-logger';
+export type {
     AttachedIoAttachInboundMessage,
     AttachedIOAttachVirtualInboundMessage,
     AttachedIODetachInboundMessage,
@@ -16,9 +16,9 @@ export {
     PortModeInformationBase,
     PortModeInboundMessage
 } from './inbound-message';
-export {
+export type {
     RawMessage,
     CommonMessageHeader
 } from './raw-message';
-export { BluetoothDeviceWithGatt } from './web-bluetooth-with-gatt';
-export { IPortValueTransformer } from './i-port-value-transformer';
+export type { BluetoothDeviceWithGatt } from './web-bluetooth-with-gatt';
+export type { IPortValueTransformer } from './i-port-value-transformer';

@@ -2,7 +2,7 @@ import { InjectionToken } from 'tsyringe';
 import { Observable } from 'rxjs';
 
 import { IOutboundMessenger } from './i-outbound-messenger';
-import { GenericErrorInboundMessage, ILogger, RawMessage } from '../types';
+import type { GenericErrorInboundMessage, ILogger, RawMessage } from '../types';
 import { MessageType } from '../constants';
 import { OutboundMessengerConfig } from './outbound-messenger-config';
 

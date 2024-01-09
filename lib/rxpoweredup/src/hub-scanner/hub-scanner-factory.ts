@@ -1,7 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
 import { HubScanner } from './hub-scanner';
-import { HUB_SCANNER_ERROR_FACTORY, IHubScannerErrorFactory } from './i-hub-scanner-error-factory';
+import type { IHubScannerErrorFactory } from './i-hub-scanner-error-factory';
+import { HUB_SCANNER_ERROR_FACTORY } from './i-hub-scanner-error-factory';
 import { IHubScanner } from './i-hub-scanner';
 
 @injectable()

@@ -32,12 +32,21 @@
       ],
       "settings": {
         "import/resolver": {
-          "typescript": true,
-          "node": true
+          "typescript": {
+            "project": [
+              "./tsconfig.base.json"
+            ]
+          },
+          "node": {
+            "project": [
+              "./tsconfig.base.json"
+            ]
+          }
         },
         "import/parsers": {
           "@typescript-eslint/parser": [
-            ".ts"
+            ".ts",
+            ".tsx"
           ]
         },
         "import/extensions": [

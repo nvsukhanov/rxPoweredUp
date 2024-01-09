@@ -1,6 +1,6 @@
 import { InjectionToken } from 'tsyringe';
 
-import { ILogger } from '../types';
+import type { ILogger } from '../types';
 import { LogLevel } from '../constants';
 
 export interface IPrefixedConsoleLoggerFactory {

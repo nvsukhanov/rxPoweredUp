@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from 'tsyringe';
 
-import { ILogger, RawMessage } from '../types';
+import type { ILogger, RawMessage } from '../types';
 import { MessageType } from '../constants';
 import { IOutboundMessenger } from './i-outbound-messenger';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { TaskQueueFactory } from './task-queue-factory';
 import { ITaskVisitor } from './i-task-visitor';
 import { IChannel } from '../i-channel';
-import { GenericErrorInboundMessage, ILogger } from '../../../types';
+import type { GenericErrorInboundMessage, ILogger } from '../../../types';
 
 @injectable()
 export class TaskQueueFactoryFactory {
