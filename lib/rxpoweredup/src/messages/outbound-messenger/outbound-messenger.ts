@@ -1,6 +1,6 @@
 import { Observable, bufferCount, concatWith, map } from 'rxjs';
 
-import { IDisposable, ILogger, LastOfTuple, RawMessage, RawPortOutputCommandMessage } from '../../types';
+import type { IDisposable, ILogger, LastOfTuple, RawMessage, RawPortOutputCommandMessage } from '../../types';
 import { OutboundMessageTypes } from '../../constants';
 import { IOutboundMessenger, PortCommandExecutionStatus, WithResponseSequenceItem } from '../../hub';
 import { IQueueTask, TaskQueue, TaskQueueFactory } from './queue';

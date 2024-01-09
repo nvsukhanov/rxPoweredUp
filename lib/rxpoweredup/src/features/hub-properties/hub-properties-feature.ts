@@ -1,7 +1,7 @@
 import { Observable, distinctUntilChanged, filter, finalize, map, of, share, switchMap, takeUntil } from 'rxjs';
 
 import { HubProperty, HubType, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
-import {
+import type {
     HubPropertyAdvertisingNameInboundMessage,
     HubPropertyBatteryInboundMessage,
     HubPropertyButtonStateInboundMessage,

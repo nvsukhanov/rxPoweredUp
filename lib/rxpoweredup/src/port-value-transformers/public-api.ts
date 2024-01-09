@@ -1,3 +1,3 @@
 export { ValueTransformers } from './value-transformers';
-export { TiltData } from './tilt-data';
-export { ColorData } from './color-data';
+export type { TiltData } from './tilt-data';
+export type { ColorData } from './color-data';

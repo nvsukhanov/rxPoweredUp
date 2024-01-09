@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 import { TaskQueue } from './task-queue';
 import { IChannel } from '../i-channel';
-import { GenericErrorInboundMessage, ILogger } from '../../../types';
+import type { GenericErrorInboundMessage, ILogger } from '../../../types';
 import { ITaskVisitor } from './i-task-visitor';
 
 export class TaskQueueFactory {

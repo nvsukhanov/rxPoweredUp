@@ -4,24 +4,22 @@ import { inject, injectable } from 'tsyringe';
 import { PortsFeature } from './ports-feature';
 import { MessageType } from '../../constants';
 import { IDisposable, RawMessage } from '../../types';
-import {
-    IInboundMessageListenerFactory,
-    INBOUND_MESSAGE_LISTENER_FACTORY,
-    IOutboundMessenger,
-    IPortsFeature,
-    IPortsFeatureFactory,
-    IReplyParser
-} from '../../hub';
+import type { IInboundMessageListenerFactory, IOutboundMessenger, IPortsFeature, IPortsFeatureFactory, IReplyParser } from '../../hub';
+import { INBOUND_MESSAGE_LISTENER_FACTORY } from '../../hub';
 import { PORT_INFORMATION_REPLY_PARSER } from './port-information-reply-parser';
 import { ATTACHED_IO_REPLIES_PARSER } from './attached-io-replies-parser';
 import { PORT_MODE_INFORMATION_REPLY_PARSER } from './port-mode-information-reply-parser';
-import { IPortInformationRequestMessageFactory, PORT_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-information-request-message-factory';
-import { IPortModeInformationRequestMessageFactory, PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-mode-information-request-message-factory';
-import { IPortInputFormatSetupMessageFactory, PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from './i-port-input-format-setup-message-factory';
+import type { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
+import { PORT_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-information-request-message-factory';
+import type { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
+import { PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-mode-information-request-message-factory';
+import type { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
+import { PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from './i-port-input-format-setup-message-factory';
 import { AttachedIoRepliesCache } from './attached-io-replies-cache';
 import { PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER } from './port-input-format-setup-single-handshake-reply-parser';
 import { PORT_RAW_VALUE_REPLY_PARSER } from './port-value-raw-reply-parser';
-import { IVirtualPortSetupMessageFactory, VIRTUAL_PORT_SETUP_MESSAGE_FACTORY } from './i-virtual-port-setup-message-factory';
+import type { IVirtualPortSetupMessageFactory } from './i-virtual-port-setup-message-factory';
+import { VIRTUAL_PORT_SETUP_MESSAGE_FACTORY } from './i-virtual-port-setup-message-factory';
 
 @injectable()
 export class PortsFeatureFactory implements IPortsFeatureFactory {

@@ -1,19 +1,14 @@
 import { inject, injectable } from 'tsyringe';
 import { Observable } from 'rxjs';
 
-import {
-    IHubActionsFeature,
-    IHubActionsFeatureFactory,
-    IInboundMessageListenerFactory,
-    INBOUND_MESSAGE_LISTENER_FACTORY,
-    IOutboundMessenger,
-    IReplyParser
-} from '../../hub';
+import type { IHubActionsFeature, IHubActionsFeatureFactory, IInboundMessageListenerFactory, IOutboundMessenger, IReplyParser } from '../../hub';
+import { INBOUND_MESSAGE_LISTENER_FACTORY } from '../../hub';
 import { HubActionsFeature } from './hub-actions-feature';
 import { HUB_ACTIONS_REPLY_PARSER } from './hub-actions-reply-parser';
 import { MessageType } from '../../constants';
-import { RawMessage } from '../../types';
-import { HUB_ACTIONS_MESSAGE_FACTORY, IHubActionsMessageFactory } from './i-hub-actions-message-factory';
+import type { RawMessage } from '../../types';
+import type { IHubActionsMessageFactory } from './i-hub-actions-message-factory';
+import { HUB_ACTIONS_MESSAGE_FACTORY } from './i-hub-actions-message-factory';
 
 @injectable()
 export class HubActionsFeatureFactory implements IHubActionsFeatureFactory {
