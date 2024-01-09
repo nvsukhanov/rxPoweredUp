@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "ci": "nx run-many -t build lint test"
+    "ci": "nx run-many -t build lint test",
+    "docs": "nx run-many --target=docs --all",
+    "toolbox": "nx serve toolbox"
   },
   "private": true,
   "devDependencies": {

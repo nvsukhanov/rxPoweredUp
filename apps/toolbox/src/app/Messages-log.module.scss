@@ -1,0 +1,21 @@
+.wrapper {
+    border-top: 2px solid #999;
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.messagesHeader {
+    font-weight: bold;
+    border: 1px solid #333;
+}
+
+.messagesHeader, .messagesContainer {
+    display: grid;
+    grid-template-columns: 120px 90px 300px auto;
+}
+
+.messagesContainer {
+    overflow-y: auto;
+}

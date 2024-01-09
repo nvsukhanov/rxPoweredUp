@@ -1,0 +1,13 @@
+.navList {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 15px;
+    background-color: #333;
+    margin: 0;
+    list-style: none;
+}
+
+.activeLinkItem {
+    color: #fff;
+}

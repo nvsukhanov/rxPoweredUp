@@ -6,29 +6,40 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/lib/rxpoweredup",
         "main": "lib/rxpoweredup/src/index.ts",
         "tsConfig": "lib/rxpoweredup/tsconfig.lib.json",
-        "assets": ["*.md"],
+        "assets": [
+          "lib/rxpoweredup/*.md"
+        ],
         "clean": true
       }
     },
     "build-d-ts": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/lib/rxpoweredup",
         "main": "lib/rxpoweredup/src/index.ts",
         "tsConfig": "lib/rxpoweredup/tsconfig.d.json",
         "clean": false
       },
-      "dependsOn": [ "^build-d-ts", "build" ]
+      "dependsOn": [
+        "^build-d-ts",
+        "build"
+      ]
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": [
+        "{options.outputFile}"
+      ]
     },
     "docs": {
       "executor": "nx:run-commands",
@@ -49,11 +60,18 @@
         ],
         "parallel": false
       },
-      "dependsOn": [ "^publish", "lint", "test", "build-d-ts" ]
+      "dependsOn": [
+        "^publish",
+        "lint",
+        "test",
+        "build-d-ts"
+      ]
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "lib/rxpoweredup/jest.config.ts"
       }
