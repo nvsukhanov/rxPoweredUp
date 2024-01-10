@@ -6,6 +6,10 @@
   "targets": {
     "build-sources": {
       "executor": "@nx/js:tsc",
+      "cache": true,
+      "inputs": [
+        "production"
+      ],
       "outputs": [
         "{options.outputPath}"
       ],
@@ -23,6 +27,10 @@
     },
     "rollup-esm": {
       "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "production"
+      ],
       "options": {
         "cwd": "lib/rxpoweredup",
         "commands": [
