@@ -1,13 +1,7 @@
 {
   "extends": "./tsconfig.lib.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "sourceMap": true,
-    "removeComments": false,
-    "types": [
-      "jest",
-      "node"
-    ]
+    "sourceMap": false
   },
   "include": [
     "src/**/*.ts"

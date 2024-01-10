@@ -23,7 +23,7 @@ export function HubPropertiesPage(
     return (
         <>
             <h2>Hub Properties</h2>
-            <section className={`${styles.hubProperties} ${styles.hubSection}`}>
+            <section className={`${styles['hubProperties']} ${styles['hubSection']}`}>
                 <HubSubscribableProperty name={'Battery'}
                                          stateKey={'batteryLevel'}
                                          readValue={(): Observable<number> => props.hub?.properties.getBatteryLevel() ?? EMPTY}
@@ -70,7 +70,7 @@ export function HubPropertiesPage(
                 />
             </section>
             <h2>Set hub advertising name</h2>
-            <section className={styles.hubSection}>
+            <section className={styles['hubSection']}>
                 <HubSetAdvertisingName name={hubPropertiesState.advertisingName ?? ''}
                                        hub={props.hub}
                 ></HubSetAdvertisingName>

@@ -17,12 +17,13 @@ export function OutputPortModeId(
 
     return (
         <section>
-            <section className={styles.modeIdHeader}>
-                <div className={styles.modeIdTitle}>Mode Id:</div>
+            <section className={styles['modeIdHeader']}>
+
+                <div className={styles['modeIdTitle']}>Mode Id:</div>
                 <div>{props.modeId}</div>
             </section>
 
-            <dl className={styles.modeValuesContainer}>
+            <dl className={styles['modeValuesContainer']}>
                 {
                     PORT_MODE_INFORMATION_TYPES_LIST.map((infoType) => {
                         return (

@@ -19,17 +19,17 @@ export function Nav(
                     disabled={props.connectionState !== HubConnectionState.Connected}
             >Disconnect</button>,
             <NavLink to={ROUTES.hubProperties}
-                     className={({ isActive }): string => isActive ? styles.activeLinkItem : ''}
+                     className={({ isActive }): string => isActive ? styles['activeLinkItem'] : ''}
             >
                 Hub properties
             </NavLink>,
             <NavLink to={ROUTES.ports}
-                     className={({ isActive }): string => isActive ? styles.activeLinkItem : ''}
+                     className={({ isActive }): string => isActive ? styles['activeLinkItem'] : ''}
             >
                 Ports
             </NavLink>,
             <NavLink to={ROUTES.motors}
-                     className={({ isActive }): string => isActive ? styles.activeLinkItem : ''}
+                     className={({ isActive }): string => isActive ? styles['activeLinkItem'] : ''}
             >
                 Motors
             </NavLink>,
@@ -44,7 +44,7 @@ export function Nav(
 
     return (
         <nav>
-            <ol className={styles.navList}>
+            <ol className={styles['navList']}>
                 {navItems.map((navItem, index) => <li key={index}>{navItem}</li>)}
             </ol>
         </nav>

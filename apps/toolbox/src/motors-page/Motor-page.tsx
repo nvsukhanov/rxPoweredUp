@@ -23,19 +23,19 @@ export function MotorPage(
         <>
             <section>
                 <h2>Port</h2>
-                <div className={styles.featureSection}>
+                <div className={styles['featureSection']}>
                     <PortIdInput portId={portId} onPortIdChange={setPortId}/>
                 </div>
             </section>
             <section>
                 <h2>Acceleration & deceleration profiles</h2>
-                <div className={styles.featureSection}>
+                <div className={styles['featureSection']}>
                     <MotorAccelerationDecelerationTimings hub={props.hub} port={portId}/>
                 </div>
             </section>
             <section>
                 <h2>Position controls</h2>
-                <div className={styles.featureSection}>
+                <div className={styles['featureSection']}>
                     <MotorPositionControls hub={props.hub}
                                            portId={portId}
                     ></MotorPositionControls>
@@ -43,7 +43,7 @@ export function MotorPage(
             </section>
             <section>
                 <h2>Position read</h2>
-                <div className={styles.featureSection}>
+                <div className={styles['featureSection']}>
                     <MotorPositionInfo hub={props.hub}
                                        portId={portId}
                     ></MotorPositionInfo>
@@ -51,7 +51,8 @@ export function MotorPage(
             </section>
             <section>
                 <h2>Speed controls</h2>
-                <div className={styles.featureSection}>
+                <div className={styles['featureSection']}>
+
                     <MotorSpeedControls hub={props.hub}
                                         portId={portId}
                     ></MotorSpeedControls>
@@ -59,7 +60,7 @@ export function MotorPage(
             </section>
             <section>
                 <h2>Encoder</h2>
-                <div className={styles.featureSection}>
+                <div className={styles['featureSection']}>
                     <MotorEncoderControl hub={props.hub}
                                          portId={portId}
                     ></MotorEncoderControl>
