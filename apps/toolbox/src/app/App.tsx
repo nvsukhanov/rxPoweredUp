@@ -78,7 +78,7 @@ export function App(): ReactElement {
     switch (isBluetoothAvailable) {
         case BluetoothAvailability.Unknown:
             return (
-                <main className={styles.main}>
+                <main className={styles['main']}>
                     Checking Bluetooth availability...
                 </main>
             );
@@ -91,12 +91,12 @@ export function App(): ReactElement {
                              onDisconnect={(): void => disconnect()}
                         />
                     </header>
-                    <main className={styles.main}>
+                    <main className={styles['main']}>
                         <RouterOutlet hub={hub}/>
                     </main>
                     {
                         hub &&
-                        <footer className={styles.messagesFooter}>
+                        <footer className={styles['messagesFooter']}>
                             <MessagesLog/>
                         </footer>
                     }
@@ -104,7 +104,7 @@ export function App(): ReactElement {
             );
         case BluetoothAvailability.Unavailable:
             return (
-                <main className={styles.main}>
+                <main className={styles['main']}>
                     <BluetoothUnavailableNotification/>
                 </main>
             );

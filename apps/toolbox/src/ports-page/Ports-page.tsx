@@ -13,7 +13,7 @@ export function PortsPage(
     const processIoAttach = useHubStore((state) => state.processIoAttachMessage);
     const processIoDetach = useHubStore((state) => state.processIoDetachMessage);
 
-    useEffect(() => {
+    useEffect((): void | (() => void) => {
         if (props.hub) {
             const portAddSub = props.hub.ports.onIoAttach().subscribe((v) => processIoAttach(v));
             const portRemoveSub = props.hub.ports.onIoDetach().subscribe((v) => processIoDetach(v));

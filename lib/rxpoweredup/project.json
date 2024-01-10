@@ -4,35 +4,49 @@
   "sourceRoot": "lib/rxpoweredup/src",
   "projectType": "library",
   "targets": {
+    "build-sources": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/rxpoweredup",
+        "main": "lib/rxpoweredup/src/index.ts",
+        "tsConfig": "lib/rxpoweredup/tsconfig.lib.json",
+        "assets": [
+          "lib/rxpoweredup/*.md",
+          "LICENSE"
+        ],
+        "clean": true,
+        "generateExportsField": true
+      }
+    },
+    "rollup-esm": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "lib/rxpoweredup",
+        "commands": [
+          "npx rollup --config rollup.config.ts --configPlugin typescript"
+        ]
+      }
+    },
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": [
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/lib/rxpoweredup",
-        "main": "lib/rxpoweredup/src/index.ts",
-        "tsConfig": "lib/rxpoweredup/tsconfig.lib.json",
-        "assets": [
-          "lib/rxpoweredup/*.md"
-        ],
-        "clean": true
-      }
-    },
-    "build-d-ts": {
-      "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputPath": "dist/lib/rxpoweredup",
+        "outputPath": "dist/rxpoweredup",
         "main": "lib/rxpoweredup/src/index.ts",
         "tsConfig": "lib/rxpoweredup/tsconfig.d.json",
-        "clean": false
+        "clean": false,
+        "generateExportsField": true,
+        "parallel": false
       },
       "dependsOn": [
-        "^build-d-ts",
-        "build"
+        "^build",
+        "rollup-esm",
+        "build-sources"
       ]
     },
     "lint": {
@@ -50,22 +64,6 @@
         ],
         "parallel": false
       }
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "dist/lib/rxpoweredup",
-        "commands": [
-          "npm publish --dry-run"
-        ],
-        "parallel": false
-      },
-      "dependsOn": [
-        "^publish",
-        "lint",
-        "test",
-        "build-d-ts"
-      ]
     },
     "test": {
       "executor": "@nx/jest:jest",

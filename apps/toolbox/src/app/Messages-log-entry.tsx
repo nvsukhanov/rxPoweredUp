@@ -20,10 +20,10 @@ export function MessagesLogEntry(
     const formattedPayload = props.message.payload.map((n) => numberToHex(n)).join(' ');
     return (
         <>
-            <div className={styles.timestampCell}>{formattedDate}</div>
+            <div className={styles['timestampCell']}>{formattedDate}</div>
             <div>{formattedDirection}</div>
             <div>{MessageType[props.message.messageType]}</div>
-            <div className={styles.rawValueCell}>{formattedPayload}</div>
+            <div className={styles['rawValueCell']}>{formattedPayload}</div>
         </>
     );
 }

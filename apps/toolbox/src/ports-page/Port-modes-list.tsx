@@ -27,19 +27,19 @@ export function PortModesList(
         <section>
             <section>
                 <div>
-                    <span className={styles.valueTitle}>Logical combinable:</span>
+                    <span className={styles['valueTitle']}>Logical combinable:</span>
                     <span> {props.portModeState.capabilities.logicalCombinable ? 'yes' : 'no'}</span>
                 </div>
                 <div>
-                    <span className={styles.valueTitle}>Logical synchronizable:</span>
+                    <span className={styles['valueTitle']}>Logical synchronizable:</span>
                     <span> {props.portModeState.capabilities.logicalSynchronizable ? 'yes' : 'no'}</span>
                 </div>
             </section>
             {
                 props.portModeState.inputModes.length > 0 &&
                 <section>
-                    <div className={styles.valueTitle}>Input modes:</div>
-                    <section className={styles.modesList}>
+                    <div className={styles['valueTitle']}>Input modes:</div>
+                    <section className={styles['modesList']}>
                         {props.portModeState.inputModes.map((modeId, idx) => <Fragment key={idx}>
                             <InputPortModeId hub={props.hub}
                                              portId={props.portId}
@@ -52,9 +52,9 @@ export function PortModesList(
             }
             {
                 props.portModeState.outputModes.length > 0 &&
-                <section className={styles.modesSection}>
-                    <div className={styles.valueTitle}>Output modes:</div>
-                    <section className={styles.modesList}>
+                <section className={styles['modesSection']}>
+                    <div className={styles['valueTitle']}>Output modes:</div>
+                    <section className={styles['modesList']}>
                         {props.portModeState.outputModes.map((modeId, idx) => <Fragment key={idx}>
                             <OutputPortModeId portId={props.portId}
                                               modeId={modeId}

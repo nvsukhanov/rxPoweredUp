@@ -8,7 +8,7 @@ export function FormControl(
     }
 ): ReactElement {
     return (
-        <section className={styles.formControlsContainer}>
+        <section className={styles['formControlsContainer']}>
             {props.children}
         </section>
     );

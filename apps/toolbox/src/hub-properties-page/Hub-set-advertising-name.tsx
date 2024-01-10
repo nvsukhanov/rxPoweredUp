@@ -49,7 +49,7 @@ export function HubSetAdvertisingName(
 
     return (
         <form onSubmit={handleFormSubmit}
-              className={styles.advertisementNameForm}
+              className={styles['advertisementNameForm']}
         >
             <label htmlFor={id}>Advertisement name</label>
             <input id={id}

@@ -14,13 +14,13 @@ export function HubPropertyValue(
 ): ReactElement {
     return (
         <>
-            <div className={styles.hubPropertyName}>
+            <div className={styles['hubPropertyName']}>
                 {props.name}
             </div>
-            <div className={styles.hubPropertyValue}>
+            <div className={styles['hubPropertyValue']}>
                 {props.value}
             </div>
-            <div className={styles.hubPropertyActions}>
+            <div className={styles['hubPropertyActions']}>
                 <button type="button" onClick={props.onRead} disabled={!props.onRead}>Read</button>
                 {props.isSubscribed
                  ? <button type="button" onClick={props.onUnsubscribe}>Unsubscribe</button>

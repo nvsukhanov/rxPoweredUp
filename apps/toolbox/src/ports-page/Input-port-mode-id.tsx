@@ -68,22 +68,23 @@ export function InputPortModeId(
 
     return (
         <section>
-            <section className={styles.modeIdHeader}>
-                <div className={styles.modeIdTitle}>Mode Id:</div>
+            <section className={styles['modeIdHeader']}>
+                <div className={styles['modeIdTitle']}>Mode Id:</div>
                 <div>{props.modeId}</div>
             </section>
 
-            <dl className={styles.modeValuesContainer}>
+            <dl className={styles['modeValuesContainer']}>
                 <dd>Raw value</dd>
-                <dt className={styles.portValuesContainer}>
+                <dt className={styles['portValuesContainer']}>
                     <div>
                         <button onClick={handleReadRawPortValueRequest}>Read</button>
                     </div>
                     <div>
                         {
                             rawValue
-                            && <dl className={styles.rawValueResultsContainer}>
+                            && <dl className={styles['rawValueResultsContainer']}>
                                 <dt>Numeric:</dt>
+
                                 <dd>{rawNumber}</dd>
                                 <dt>Raw:</dt>
                                 <dd>{JSON.stringify(rawValue, null, 2)}</dd>
@@ -95,7 +96,7 @@ export function InputPortModeId(
                 </dt>
 
                 <dd>Value</dd>
-                <dt className={styles.portValuesContainer}>
+                <dt className={styles['portValuesContainer']}>
                     <div>
                         as
                     </div>

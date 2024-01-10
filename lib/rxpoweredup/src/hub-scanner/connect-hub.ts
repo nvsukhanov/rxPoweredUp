@@ -1,8 +1,8 @@
 import { Observable, map, switchMap } from 'rxjs';
 import { container } from 'tsyringe';
 
-import { HubConfig, HubFactory, IHub } from './hub';
-import { HubScannerFactory } from './hub-scanner';
+import { HubConfig, HubFactory, IHub } from '../hub';
+import { HubScannerFactory } from './hub-scanner-factory';
 import { registerServices } from './register-service';
 
 export function connectHub(

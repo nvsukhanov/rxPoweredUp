@@ -17,13 +17,13 @@ export function PhysicalPort(
 
     return (
         <>
-            <section className={styles.portData}>
-                <div className={styles.portName}>Port {props.port.portId}</div>
+            <section className={styles['portData']}>
+                <div className={styles['portName']}>Port {props.port.portId}</div>
                 <div>{IOType[props.port.ioType]}</div>
                 <div>HW rev. {props.port.hardwareRevision}</div>
                 <div>SW rev. {props.port.softwareRevision}</div>
             </section>
-            <section className={styles.portModeData}>
+            <section className={styles['portModeData']}>
                 {
                     portModeState
                     ? <PortModesList hub={props.hub}
