@@ -25,19 +25,27 @@ export interface IPortsFeature {
      * Emits when an io device is attached to a port.
      * If portId is not specified, it will emit for all ports.
      * Events are cached, so if you subscribe after an io device is attached, you will still get the event.
-     * @param filterOptions
+     * @param filterOptions - Optional filter options. If not specified, all events will be emitted. Port id may be specified to filter by port.
      */
     onIoAttach(
         filterOptions?: OnIoAttachFilter
     ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
 
+    onIoAttach(
+        filterOptions?: number
+    ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
+
     /**
      * Emits when an io device is detached from a port.
      * If portId is not specified, it will emit for all ports.
-     * @param filterOptions
+     * @param filterOptions - Optional filter options. If not specified, all events will be emitted. Port id may be specified to filter by port.
      */
     onIoDetach(
         filterOptions?: OnIoDetachFilter
+    ): Observable<AttachedIODetachInboundMessage>;
+
+    onIoDetach(
+        filterOptions?: number
     ): Observable<AttachedIODetachInboundMessage>;
 
     /**
