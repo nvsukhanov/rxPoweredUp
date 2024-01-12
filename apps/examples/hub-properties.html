@@ -1,0 +1,144 @@
+<head>
+    <title>Hub properties</title>
+</head>
+
+<body>
+<main>
+    <button id="connect">Connect</button>
+    <button id="disconnect" disabled>Disconnect</button>
+    <button id="switch-off" disabled>Switch off</button>
+
+    <section>
+        <h1>Properties</h1>
+        <dl>
+            <dt>Advertising name</dt>
+            <dd id="advertising-name">-</dd>
+            <dt>System type id</dt>
+            <dd id="system-type-id">-</dd>
+            <dt>Manufacturer name</dt>
+            <dd id="manufacturer-name">-</dd>
+            <dt>Primary mac address</dt>
+            <dd id="primary-mac-address">-</dd>
+            <dt>Battery level</dt>
+            <dd id="battery-level">-</dd>
+            <dt>RSSI</dt>
+            <dd id="rssi">-</dd>
+            <dt>Button state</dt>
+            <dd id="button-state">-</dd>
+        </dl>
+    </section>
+</main>
+
+<script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
+<script type="module">
+    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.3.2/rxpoweredup.min.js';
+
+    const connectButton = document.querySelector('#connect');
+    const disconnectButton = document.querySelector('#disconnect');
+    const switchOffButton = document.querySelector('#switch-off');
+    const batteryLevelElement = document.querySelector('#battery-level');
+    const rssiElement = document.querySelector('#rssi');
+    const buttonStateElement = document.querySelector('#button-state');
+    const advertisingNameElement = document.querySelector('#advertising-name');
+    const systemTypeIdElement = document.querySelector('#system-type-id');
+    const manufacturerNameElement = document.querySelector('#manufacturer-name');
+    const primaryMacAddressElement = document.querySelector('#primary-mac-address');
+
+    let disconnectedAbortController = new AbortController();
+
+    let subscription = new rxjs.Subscription();
+
+    function trackBatteryLevel(hub) {
+        return hub.properties.batteryLevel.subscribe((level) => batteryLevelElement.textContent = `${level}%`);
+    }
+
+    function trackRSSI(hub) {
+        return hub.properties.rssiLevel.subscribe((rssi) => rssiElement.textContent = `${rssi} dBm`);
+    }
+
+    function trackButtonState(hub) {
+        return hub.properties.buttonState.subscribe((state) => buttonStateElement.textContent = state);
+    }
+
+    function getAdvertisingName(hub) {
+        return hub.properties.getAdvertisingName().subscribe((name) => advertisingNameElement.textContent = name);
+    }
+
+    function getSystemTypeId(hub) {
+        return hub.properties.getSystemTypeId().subscribe((id) => systemTypeIdElement.textContent = id);
+    }
+
+    function getManufacturerName(hub) {
+        return hub.properties.getManufacturerName().subscribe((name) => manufacturerNameElement.textContent = name);
+    }
+
+    function getPrimaryMacAddress(hub) {
+        return hub.properties.getPrimaryMacAddress().subscribe((address) => primaryMacAddressElement.textContent = address);
+    }
+
+    function attachDisconnectClickHandler(hub) {
+        disconnectButton.addEventListener('click', () => {
+            disconnectButton.disabled = true;
+            switchOffButton.disabled = true;
+            hub.disconnect().subscribe({
+                error: () => {
+                    disconnectButton.disabled = false;
+                    switchOffButton.disabled = false;
+                }
+            });
+        }, {signal: disconnectedAbortController.signal});
+    }
+
+    function attachSwitchOffClickHandler(hub) {
+        switchOffButton.addEventListener('click', () => {
+            disconnectButton.disabled = true;
+            switchOffButton.disabled = true;
+            hub.switchOff().subscribe({
+                error: () => {
+                    disconnectButton.disabled = false;
+                    switchOffButton.disabled = false;
+                }
+            });
+        }, {signal: disconnectedAbortController.signal});
+    }
+
+    function handleConnectClick() {
+        if (!navigator.bluetooth) {
+            alert('Web Bluetooth is not available in your browser.');
+            return;
+        }
+
+        connectHub(navigator.bluetooth).subscribe({
+            next: (hub) => {
+                connectButton.disabled = true;
+                disconnectButton.disabled = false;
+                switchOffButton.disabled = false;
+
+                subscription.add(trackBatteryLevel(hub));
+                subscription.add(trackRSSI(hub));
+                subscription.add(trackButtonState(hub));
+                subscription.add(getAdvertisingName(hub));
+                subscription.add(getSystemTypeId(hub));
+                subscription.add(getManufacturerName(hub));
+                subscription.add(getPrimaryMacAddress(hub));
+
+                attachDisconnectClickHandler(hub);
+                attachSwitchOffClickHandler(hub);
+                subscription.add(hub.disconnected.subscribe(() => onDisconnected()));
+            }
+        });
+    }
+
+    function onDisconnected() {
+        subscription.unsubscribe();
+        subscription = new rxjs.Subscription();
+        disconnectedAbortController.abort();
+        disconnectedAbortController = new AbortController();
+        connectButton.disabled = false;
+    }
+
+    connectButton.addEventListener('click', () => handleConnectClick());
+
+</script>
+
+</body>

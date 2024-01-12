@@ -1,0 +1,46 @@
+<head>
+    <title>Motor speed</title>
+</head>
+
+<body>
+<main>
+    <button id="connect">Connect</button>
+</main>
+
+<script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
+<script type="module">
+    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.3.2/rxpoweredup.min.js';
+
+    const connectButton = document.querySelector('#connect');
+
+    connectButton.addEventListener('click', () => {
+        if (!navigator.bluetooth) {
+            alert('Web Bluetooth is not available in your browser.');
+            return;
+        }
+
+        connectHub(navigator.bluetooth).pipe(
+            rxjs.tap(() => connectButton.disabled = true),
+            rxjs.audit((hub) => hub.ports.onIoAttach({ports: 0})),
+            rxjs.switchMap((hub) => rxjs.concat(
+                hub.motors.setSpeed(0, 100),
+                rxjs.timer(1000),
+                hub.motors.setSpeed(0, -100),
+                rxjs.timer(1000),
+                hub.motors.setSpeed(0, 0),
+                hub.disconnect()
+            ))
+        ).subscribe({
+            complete: () => {
+                connectButton.disabled = false;
+            },
+            error: (error) => {
+                alert(error);
+                connectButton.disabled = false;
+            }
+        });
+    });
+
+</script>
+
+</body>
