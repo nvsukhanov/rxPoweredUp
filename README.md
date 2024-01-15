@@ -10,7 +10,7 @@ This is a Nx monorepo for rxPoweredUp packages.
 
 - [rxPoweredUp](https://github.com/nvsukhanov/rxPoweredUp/tree/main/lib/rxpoweredup) - A Typescript RxJS-based library for controlling LEGO Powered UP hubs & peripherals.
 - [toolbox](https://github.com/nvsukhanov/rxPoweredUp/tree/main/apps/toolbox) - A web-based toolbox for probing hub & peripheral capabilities, testing rxPoweredUp library and reverse-engineering LEGO Powered UP protocol.
-- [examples](https://github.com/nvsukhanov/rxPoweredUp/tree/main/apps/examples) - Examples of using rxPoweredUp library.
+- [examples](https://github.com/nvsukhanov/rxPoweredUp/tree/main/apps/examples) - Examples of using rxPoweredUp library in Node.js and browser environments.
 
 ## Installation
 
@@ -24,13 +24,31 @@ npm install
 
 ### Toolbox
 
-To run the toolbox, run the following command in the root folder:
+To run the toolbox app, execute the following command in the root folder:
 
 ```bash
-npm run toolbox
+npm run start:toolbox
 ```
 
-Then open http://localhost:4200 in your browser.
+Then open `http://localhost:4200` in the browser.
+
+### Browser examples
+
+Browser examples can be run by opening the corresponding HTML files in the browser.
+
+### Node.js examples
+
+To compile Node.js examples, execute
+
+```bash
+npm run build:node-examples
+```
+
+Compiled examples will be placed in the `dist/node-examples` folder and can be run using `node` command, e.g.:
+
+```bash
+node dist/node-examples/motor-speed.mjs
+```
 
 ## Disclaimer
 
