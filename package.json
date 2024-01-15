@@ -5,6 +5,7 @@
   "scripts": {
     "ci": "nx run-many -t build lint test docs",
     "start:toolbox": "nx serve toolbox",
+    "build:toolbox": "nx build toolbox",
     "build:node-examples": "nx build node-examples",
     "build:docs": "nx run-many --target=docs --all"
   },
