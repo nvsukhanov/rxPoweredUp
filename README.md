@@ -34,7 +34,7 @@ Then open `http://localhost:4200` in the browser.
 
 ### Browser examples
 
-Browser examples can be run by opening the corresponding HTML files in the browser.
+Browser examples can be run by opening the corresponding HTML files in the browser. Examples are located in the `apps/examples/browser` folder.
 
 ### Node.js examples
 
