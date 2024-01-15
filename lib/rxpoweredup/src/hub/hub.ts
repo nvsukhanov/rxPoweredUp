@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, catchError, from, fromEvent, of, share, switchMap, take, tap, timeout } from 'rxjs';
+import { Observable, ReplaySubject, catchError, from, fromEvent, share, switchMap, take, tap, timeout } from 'rxjs';
 
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
@@ -95,68 +95,82 @@ export class Hub implements IHub {
     }
 
     public connect(): Observable<void> {
-        if (this._isConnected) {
-            throw new Error('Hub already connected');
-        }
-        return of(null).pipe(
-            tap(() => this.logger.debug('Connecting to GATT server')),
-            switchMap(() => from(this.connectGattServer(this.device))),
-            tap(() => this.logger.debug('Connected to GATT server')),
-            switchMap((gatt) => from(gatt.getPrimaryService(HUB_SERVICE_UUID))),
-            tap(() => this.logger.debug('Got primary service')),
-            switchMap((primaryService) => from(primaryService.getCharacteristic(HUB_CHARACTERISTIC_UUID))),
-            tap(() => {
-                this.logger.debug('Got primary characteristic');
-                fromEvent(this.device, this.gattServerDisconnectEventName).pipe(
-                    take(1),
-                    tap(() => this.logger.debug('GATT server disconnected')),
-                ).subscribe({
-                    complete: () => {
-                        this._ports?.dispose();
-                        this.outboundMessenger?.dispose();
-                        this._isConnected = false;
-                        this._disconnected$.next();
-                        this._disconnected$.complete();
-                        this.logger.debug('Disconnected subject completed');
-                    }
-                });
-            }),
-            timeout(this.config.hubConnectionTimeoutMs),
-            switchMap((primaryCharacteristic) => from(this.createFeatures(primaryCharacteristic))),
-            tap(() => {
-                this._isConnected = true;
-                this.logger.debug('Hub connection successful');
-            }),
-            take(1),
-            catchError((e) => {
-                this.logger.error(e);
-                this.device.gatt.disconnect();
-                this._disconnected$.next();
-                this._isConnected = false;
-                throw e;
-            })
-        ) as Observable<void>;
+        return new Observable((subscriber) => {
+            if (this._isConnected) {
+                subscriber.error(new Error('Hub already connected'));
+                return () => void 0;
+            }
+            this.logger.debug('Connecting to GATT server');
+            const sub = from(this.connectGattServer(this.device)).pipe(
+                switchMap((gatt) => from(gatt.getPrimaryService(HUB_SERVICE_UUID))),
+                tap(() => this.logger.debug('Got primary service')),
+                switchMap((primaryService) => from(primaryService.getCharacteristic(HUB_CHARACTERISTIC_UUID))),
+                tap(() => {
+                    this.logger.debug('Got primary characteristic');
+                    fromEvent(this.device, this.gattServerDisconnectEventName).pipe(
+                        take(1),
+                        tap(() => this.logger.debug('GATT server disconnected')),
+                    ).subscribe({
+                        complete: () => {
+                            this._ports?.dispose();
+                            this.outboundMessenger?.dispose();
+                            this._isConnected = false;
+                            this._disconnected$.next();
+                            this._disconnected$.complete();
+                            this.logger.debug('Disconnected subject completed');
+                        }
+                    });
+                }),
+                timeout(this.config.hubConnectionTimeoutMs),
+                switchMap((primaryCharacteristic) => from(this.createFeatures(primaryCharacteristic))),
+                tap(() => {
+                    this._isConnected = true;
+                    this.logger.debug('Hub connection successful');
+                }),
+                take(1),
+                catchError((e) => {
+                    this.logger.error(e);
+                    this.device.gatt.disconnect();
+                    this._disconnected$.next();
+                    this._isConnected = false;
+                    throw e;
+                })
+            ).subscribe(subscriber);
+
+            return () => sub.unsubscribe();
+        });
     }
 
     public disconnect(): Observable<void> {
-        if (!this._actionsFeature) {
-            throw new Error('Hub not connected');
-        }
-        this.logger.debug('Disconnect invoked');
-        return this._actionsFeature.disconnect();
+        return new Observable<void>((subscriber) => {
+            if (!this._actionsFeature) {
+                subscriber.error(new Error('Hub not connected'));
+                return () => void 0;
+            }
+            this.logger.debug('Disconnect invoked');
+            const sub = this._actionsFeature.disconnect().subscribe(subscriber);
+            return () => sub.unsubscribe();
+        });
     }
 
     public switchOff(): Observable<void> {
-        if (!this._actionsFeature) {
-            throw new Error('Hub not connected');
-        }
-        this.logger.debug('Switch off invoked');
-        return this._actionsFeature.switchOff();
+        return new Observable<void>((subscriber) => {
+            if (!this._actionsFeature) {
+                subscriber.error(new Error('Hub not connected'));
+                return () => void 0;
+            }
+            this.logger.debug('Switch off invoked');
+            const sub = this._actionsFeature.switchOff().subscribe(subscriber);
+            return () => sub.unsubscribe();
+        });
     }
 
     private async createFeatures(
         primaryCharacteristic: BluetoothRemoteGATTCharacteristic
     ): Promise<void> {
+        await primaryCharacteristic.startNotifications();
+        this.logger.debug('Started primary characteristic notifications');
+
         const dataStream = this.characteristicsDataStreamFactory.create(
             primaryCharacteristic,
             {
@@ -204,9 +218,6 @@ export class Hub implements IHub {
             this.outboundMessenger,
             this.config
         );
-
-        await primaryCharacteristic.startNotifications();
-        this.logger.debug('Started primary characteristic notifications');
     }
 
     private async connectGattServer(device: BluetoothDeviceWithGatt): Promise<BluetoothRemoteGATTServer> {
