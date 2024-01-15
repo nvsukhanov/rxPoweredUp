@@ -36,3 +36,4 @@ tsconfig.tsbuildinfo
 Thumbs.db
 
 .nx/cache
+tmp

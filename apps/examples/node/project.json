@@ -1,0 +1,70 @@
+{
+  "name": "node-examples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/examples/node/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/node-examples",
+        "format": [
+          "esm"
+        ],
+        "bundle": true,
+        "main": "apps/examples/node/src/motor-speed.ts",
+        "additionalEntryPoints": [
+          "apps/examples/node/src/port-value.ts"
+        ],
+        "tsConfig": "apps/examples/node/tsconfig.app.json"
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".mjs"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "node-examples:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "node-examples:build:development"
+        },
+        "production": {
+          "buildTarget": "node-examples:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/examples/node/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
