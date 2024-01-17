@@ -103,7 +103,6 @@ export function App(): ReactElement {
                         <RouterOutlet hub={hub}/>
                     </main>
                     {
-                        hub &&
                         <footer className={styles['messagesFooter']}>
                             <Footer/>
                         </footer>
