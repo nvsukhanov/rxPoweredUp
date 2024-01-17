@@ -8,6 +8,7 @@ import {
     AttachedIoAttachInboundMessage,
     HubType,
     IOType,
+    LogLevel,
     MessageType,
     PortModeInboundMessage,
     PortModeInformationInboundMessage,
@@ -18,6 +19,7 @@ import {
 import { BluetoothAvailability, HubConnectionState } from '../types';
 
 const MAX_MESSAGE_LOG_SIZE = 100;
+const MAX_CONSOLE_LOG_SIZE = 100;
 
 export function hashPortIdModeId(portId: number, modeId: number): string {
     return `${portId}-${modeId}`;
@@ -83,6 +85,12 @@ export type MessageLogEntry = {
     timestamp: number;
 };
 
+export type ConsoleLogEntry = {
+    logLevel: LogLevel;
+    timestamp: number;
+    message: string;
+};
+
 export type PortValuesState = {
     rawValue?: number[];
     parsedValue?: string;
@@ -91,6 +99,7 @@ export type PortValuesState = {
 export type HubStore = {
     isBluetoothAvailable: BluetoothAvailability;
     messagesLog: MessageLogEntry[];
+    consoleLog: ConsoleLogEntry[];
     hubConnection: HubConnectionState;
     hubProperties: HubPropertiesState;
     ports: {
@@ -121,6 +130,7 @@ export type HubStore = {
     processPortRawValue(portId: number, modeId: number, rawValue: number[]): void;
     processPortValue(portId: number, modeId: number, parsedValue: string): void;
     addMessagesLogEntry(direction: MessageDirection, message: RawMessage<MessageType>, id: string): void;
+    addConsoleLogEntry(logLevel: LogLevel, message: string): void;
     updateSensorVoltage(voltage?: number): void;
     updateSensorTemperature(temperature?: number): void;
     updateSensorTilt(tilt?: TiltData): void;
@@ -131,6 +141,7 @@ export type HubStore = {
 export const useHubStore = create<HubStore>(devtools((set) => ({
     isBluetoothAvailable: BluetoothAvailability.Unknown,
     messagesLog: [],
+    consoleLog: [],
     hubConnection: HubConnectionState.Disconnected,
     hubProperties: {},
     ports: {},
@@ -324,6 +335,23 @@ export const useHubStore = create<HubStore>(devtools((set) => ({
             return {
                 ...state,
                 messagesLog
+            };
+        });
+    },
+    addConsoleLogEntry(logLevel: LogLevel, message: string): void {
+        set((state) => {
+            const consoleLog = [ ...state.consoleLog ];
+            if (consoleLog.length > MAX_CONSOLE_LOG_SIZE) {
+                consoleLog.splice(0, consoleLog.length - MAX_CONSOLE_LOG_SIZE);
+            }
+            consoleLog.push({
+                logLevel,
+                message,
+                timestamp: Date.now()
+            });
+            return {
+                ...state,
+                consoleLog
             };
         });
     },

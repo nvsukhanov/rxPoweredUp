@@ -1,0 +1,13 @@
+.messagesHeader {
+    font-weight: bold;
+    border: 1px solid #333;
+}
+
+.messagesHeader, .messagesContainer {
+    display: grid;
+    grid-template-columns: 120px 90px auto;
+}
+
+.messagesContainer {
+    overflow-y: auto;
+}

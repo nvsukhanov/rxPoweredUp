@@ -1,0 +1,11 @@
+.wrapper {
+    border-top: 2px solid #999;
+}
+
+.messagesContainer {
+    border-top: 1px solid #999;
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
