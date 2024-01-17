@@ -48,7 +48,7 @@ export class HubFactory {
         const combinedConfig = this.mergeConfigs(config);
         return new Hub(
             device,
-            this.loggerFactory.createLogger(device.name ?? device.id, combinedConfig.logLevel),
+            config.logger ?? this.loggerFactory.createLogger(device.name ?? device.id, combinedConfig.logLevel),
             combinedConfig,
             this.connectionErrorFactory,
             this.outboundMessengerFactory,

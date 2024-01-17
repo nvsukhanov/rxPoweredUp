@@ -1,13 +1,12 @@
 import { ReactElement } from 'react';
 
-import { MessageType } from 'rxpoweredup';
-import { MessageDirection, MessageLogEntry } from '../store';
-import { numberToHex } from '../common';
-import styles from './Messages-log-entry.module.scss';
+import { LogLevel } from 'rxpoweredup';
+import { ConsoleLogEntry } from '../../store';
+import styles from './ConsoleLogMessage.module.scss';
 
-export function MessagesLogEntry(
+export function ConsoleLogMessage(
     props: {
-        message: MessageLogEntry;
+        message: ConsoleLogEntry;
     }
 ): ReactElement {
     const dateTimestamp = new Date(props.message.timestamp);
@@ -16,14 +15,11 @@ export function MessagesLogEntry(
     const formattedSeconds = dateTimestamp.getSeconds().toString().padStart(2, '0');
     const formattedMilliseconds = dateTimestamp.getMilliseconds().toString().padStart(3, '0');
     const formattedDate = `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
-    const formattedDirection = props.message.direction === MessageDirection.Inbound ? 'in' : 'out';
-    const formattedPayload = props.message.payload.map((n) => numberToHex(n)).join(' ');
     return (
         <>
             <div className={styles['timestampCell']}>{formattedDate}</div>
-            <div>{formattedDirection}</div>
-            <div>{MessageType[props.message.messageType]}</div>
-            <div className={styles['rawValueCell']}>{formattedPayload}</div>
+            <div>{LogLevel[props.message.logLevel]}</div>
+            <div>{props.message.message}</div>
         </>
     );
 }

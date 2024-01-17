@@ -8,8 +8,9 @@ import { RouterOutlet } from './Router-outlet';
 import { BluetoothUnavailableNotification } from '../common';
 import { MessageDirection, useHubStore } from '../store';
 import { StoreMessageMiddleware } from './store-message-middleware';
-import { MessagesLog } from './Messages-log';
 import { useInject } from '../di';
+import { StoreLogger } from './store-logger.ts';
+import { Footer } from './footer';
 
 export function App(): ReactElement {
     const window = useInject(WINDOW);
@@ -21,8 +22,14 @@ export function App(): ReactElement {
     const setHubConnectionState = useHubStore((state) => state.setHubConnection);
     const onHubDisconnect = useHubStore((state) => state.onHubDisconnect);
     const addMessageLogEntry = useHubStore((state) => state.addMessagesLogEntry);
+    const addConsoleLogEntry = useHubStore((state) => state.addConsoleLogEntry);
     const inboundLoggingMiddleware = useRef(new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Inbound, window));
     const outboundLoggingMiddleware = useRef(new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Outbound, window));
+    const storeLogger = new StoreLogger(addConsoleLogEntry);
+
+    window.onerror = (message): void => {
+        storeLogger.error(message);
+    };
 
     useEffect(() => {
         if (!isBluetoothAvailable) {
@@ -56,7 +63,8 @@ export function App(): ReactElement {
             {
                 incomingMessageMiddleware: [ inboundLoggingMiddleware.current ],
                 outgoingMessageMiddleware: [ outboundLoggingMiddleware.current ],
-                logLevel: LogLevel.Debug
+                logLevel: LogLevel.Debug,
+                logger: storeLogger,
             }
         ).subscribe({
             next: (connectedHub) => {
@@ -97,7 +105,7 @@ export function App(): ReactElement {
                     {
                         hub &&
                         <footer className={styles['messagesFooter']}>
-                            <MessagesLog/>
+                            <Footer/>
                         </footer>
                     }
                 </>

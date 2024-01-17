@@ -1,6 +1,7 @@
 import { LogLevel, PortOperationStartupInformation } from '../constants';
 import { OutboundMessengerConfig } from './outbound-messenger-config';
 import { CharacteristicDataStreamConfig } from './characteristic-data-stream-config';
+import { ILogger } from '../types';
 
 /**
  * Configuration for the hub.
@@ -14,6 +15,7 @@ import { CharacteristicDataStreamConfig } from './characteristic-data-stream-con
 export type HubConfig = {
     readonly maxGattConnectRetries: number;
     readonly logLevel: LogLevel;
+    readonly logger?: ILogger;
     readonly hubConnectionTimeoutMs: number;
     readonly defaultBufferMode: PortOperationStartupInformation;
 } & OutboundMessengerConfig & CharacteristicDataStreamConfig;
