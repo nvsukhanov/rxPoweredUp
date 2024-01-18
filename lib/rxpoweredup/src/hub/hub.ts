@@ -168,9 +168,6 @@ export class Hub implements IHub {
     private async createFeatures(
         primaryCharacteristic: BluetoothRemoteGATTCharacteristic
     ): Promise<void> {
-        await primaryCharacteristic.startNotifications();
-        this.logger.debug('Started primary characteristic notifications');
-
         const dataStream = this.characteristicsDataStreamFactory.create(
             primaryCharacteristic,
             {
@@ -218,6 +215,9 @@ export class Hub implements IHub {
             this.outboundMessenger,
             this.config
         );
+
+        await primaryCharacteristic.startNotifications();
+        this.logger.debug('Started primary characteristic notifications');
     }
 
     private async connectGattServer(device: BluetoothDeviceWithGatt): Promise<BluetoothRemoteGATTServer> {
