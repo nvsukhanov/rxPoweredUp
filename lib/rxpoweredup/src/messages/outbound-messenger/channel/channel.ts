@@ -20,7 +20,8 @@ export class Channel implements IChannel {
         const p = this.queue.then(() => {
             const resultingMessage = this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message);
             const packet = this.packetBuilder.buildPacket(resultingMessage);
-            return this.characteristic.writeValueWithoutResponse(packet);
+            // writeValueWithoutResponse causes Chrome under linux to immediately lose connection to the small technic hub
+            return this.characteristic.writeValueWithResponse(packet);
         });
         this.queue = p.catch(() => void 0);
         return p;
