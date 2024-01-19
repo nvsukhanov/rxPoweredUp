@@ -86,6 +86,7 @@ export type MessageLogEntry = {
 };
 
 export type ConsoleLogEntry = {
+    id: string;
     logLevel: LogLevel;
     timestamp: number;
     message: string;
@@ -130,7 +131,7 @@ export type HubStore = {
     processPortRawValue(portId: number, modeId: number, rawValue: number[]): void;
     processPortValue(portId: number, modeId: number, parsedValue: string): void;
     addMessagesLogEntry(direction: MessageDirection, message: RawMessage<MessageType>, id: string): void;
-    addConsoleLogEntry(logLevel: LogLevel, message: string): void;
+    addConsoleLogEntry(logLevel: LogLevel, message: string, id: string): void;
     updateSensorVoltage(voltage?: number): void;
     updateSensorTemperature(temperature?: number): void;
     updateSensorTilt(tilt?: TiltData): void;
@@ -338,13 +339,14 @@ export const useHubStore = create<HubStore>(devtools((set) => ({
             };
         });
     },
-    addConsoleLogEntry(logLevel: LogLevel, message: string): void {
+    addConsoleLogEntry(logLevel: LogLevel, message: string, id: string): void {
         set((state) => {
             const consoleLog = [ ...state.consoleLog ];
             if (consoleLog.length > MAX_CONSOLE_LOG_SIZE) {
                 consoleLog.splice(0, consoleLog.length - MAX_CONSOLE_LOG_SIZE);
             }
             consoleLog.push({
+                id,
                 logLevel,
                 message,
                 timestamp: Date.now()
@@ -395,8 +397,7 @@ export const useHubStore = create<HubStore>(devtools((set) => ({
                 hubConnection: HubConnectionState.Disconnected,
                 ports: {},
                 portModes: {},
-                portModeInfo: {},
-                messagesLog: []
+                portModeInfo: {}
             };
         });
     }

@@ -21,14 +21,16 @@ export function App(): ReactElement {
     const hubConnection = useHubStore((state) => state.hubConnection);
     const setHubConnectionState = useHubStore((state) => state.setHubConnection);
     const onHubDisconnect = useHubStore((state) => state.onHubDisconnect);
+
     const addMessageLogEntry = useHubStore((state) => state.addMessagesLogEntry);
     const addConsoleLogEntry = useHubStore((state) => state.addConsoleLogEntry);
+
     const inboundLoggingMiddleware = useRef(new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Inbound, window));
     const outboundLoggingMiddleware = useRef(new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Outbound, window));
-    const storeLogger = new StoreLogger(addConsoleLogEntry);
+    const storeLogger = useRef(new StoreLogger(addConsoleLogEntry, window));
 
     window.onerror = (message): void => {
-        storeLogger.error(message);
+        storeLogger.current.error(message);
     };
 
     useEffect(() => {
@@ -64,7 +66,7 @@ export function App(): ReactElement {
                 incomingMessageMiddleware: [ inboundLoggingMiddleware.current ],
                 outgoingMessageMiddleware: [ outboundLoggingMiddleware.current ],
                 logLevel: LogLevel.Debug,
-                logger: storeLogger,
+                logger: storeLogger.current,
             }
         ).subscribe({
             next: (connectedHub) => {
