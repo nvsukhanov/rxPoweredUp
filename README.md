@@ -20,9 +20,7 @@ Clone the repository and run the following command in the root folder:
 npm install
 ```
 
-## Usage
-
-### Toolbox
+## Toolbox
 
 To run the toolbox app, execute the following command in the root folder:
 
@@ -32,11 +30,11 @@ npm run start:toolbox
 
 Then open `http://localhost:4200` in the browser.
 
-### Browser examples
+## Browser examples
 
 Browser examples can be run by opening the corresponding HTML files in the browser. Examples are located in the `apps/examples/browser` folder.
 
-### Node.js examples
+## Node.js examples
 
 To compile Node.js examples, execute
 
