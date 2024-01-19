@@ -16,7 +16,7 @@ export function ConsoleLog(): ReactElement {
             <section className={styles['messagesContainer']}>
                 {
                     [ ...messages ].reverse().map((message) => (
-                        <ConsoleLogMessage key={message.timestamp} message={message}/>
+                        <ConsoleLogMessage key={message.id} message={message}/>
                     ))
                 }
             </section>
