@@ -40,9 +40,12 @@ import {
     PortOutputCommandOutboundMessageFactory,
     VirtualPortSetupOutboundMessageFactory
 } from './outbound-message-factories';
+import { CHANNEL_FACTORY } from './outbound-messenger/i-channel-factory';
+import { ChannelFactory, LinuxChromeChannelFactory } from './outbound-messenger/channel';
 
 export function registerMessagesServices(
-    container: DependencyContainer
+    container: DependencyContainer,
+    useLinuxWorkaround: boolean
 ): void {
     container.register(CHARACTERISTIC_DATA_STREAM_FACTORY, CharacteristicDataStreamFactory);
     container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
@@ -62,4 +65,9 @@ export function registerMessagesServices(
     container.register(HUB_ACTIONS_MESSAGE_FACTORY, HubActionsOutboundMessageFactory);
     container.register(PORT_RAW_VALUE_REPLY_PARSER, PortValueReplyParser);
     container.register(VIRTUAL_PORT_SETUP_MESSAGE_FACTORY, VirtualPortSetupOutboundMessageFactory);
+    if (useLinuxWorkaround) {
+        container.register(CHANNEL_FACTORY, LinuxChromeChannelFactory);
+    } else {
+        container.register(CHANNEL_FACTORY, ChannelFactory);
+    }
 }

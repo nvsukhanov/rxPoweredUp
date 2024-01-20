@@ -9,7 +9,7 @@ export function connectHub(
     bluetooth: Bluetooth,
     config?: Partial<HubConfig>
 ): Observable<IHub> {
-    registerServices();
+    registerServices(config?.useLinuxWorkaround ?? false);
     const scannerFactory = container.resolve(HubScannerFactory).create(bluetooth);
     const hubFactory = container.resolve(HubFactory);
     return scannerFactory.discoverHub().pipe(
