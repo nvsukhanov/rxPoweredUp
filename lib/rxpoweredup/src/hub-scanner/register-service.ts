@@ -10,7 +10,9 @@ import { registerPortValueTransformers } from '../port-value-transformers';
 
 let registered = false;
 
-export function registerServices(): void {
+export function registerServices(
+    useLinuxWorkaround: boolean
+): void {
     if (registered) {
         return;
     }
@@ -22,6 +24,6 @@ export function registerServices(): void {
 
     registerPortValueTransformers();
     registerFeaturesServices(container);
-    registerMessagesServices(container);
+    registerMessagesServices(container, useLinuxWorkaround);
     registered = true;
 }

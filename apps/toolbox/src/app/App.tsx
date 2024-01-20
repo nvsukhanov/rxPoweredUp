@@ -54,7 +54,7 @@ export function App(): ReactElement {
         }
     }, [ hub, setHub, onHubDisconnect ]);
 
-    const connect = useCallback(() => {
+    const connect = useCallback((useLinuxWorkaround: boolean) => {
         if (hubConnection !== HubConnectionState.Disconnected) {
             throw new Error('Cannot connect when already connected or connecting.');
         }
@@ -67,6 +67,7 @@ export function App(): ReactElement {
                 outgoingMessageMiddleware: [ outboundLoggingMiddleware.current ],
                 logLevel: LogLevel.Debug,
                 logger: storeLogger.current,
+                useLinuxWorkaround
             }
         ).subscribe({
             next: (connectedHub) => {
@@ -97,7 +98,7 @@ export function App(): ReactElement {
                 <>
                     <header>
                         <Nav connectionState={hubConnection}
-                             onConnect={(): void => connect()}
+                             onConnect={(useLinuxWorkaround: boolean): void => connect(useLinuxWorkaround)}
                              onDisconnect={(): void => disconnect()}
                         />
                     </header>

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import styles from './Nav.module.scss';
@@ -8,10 +8,12 @@ import { HubConnectionState } from '../types';
 export function Nav(
     props: {
         connectionState: HubConnectionState;
-        onConnect: () => void;
+        onConnect: (useLinuxWorkaround: boolean) => void;
         onDisconnect: () => void;
     }
 ): ReactElement {
+    const [ useLinuxWorkaround, setUseLinuxWorkaround ] = useState(false);
+
     const navItems: ReactElement[] = [];
     if ([ HubConnectionState.Connected, HubConnectionState.Disconnecting ].includes(props.connectionState)) {
         navItems.push(
@@ -36,9 +38,19 @@ export function Nav(
         );
     } else {
         navItems.push(
-            <button onClick={props.onConnect}
+            <button onClick={() => props.onConnect(useLinuxWorkaround)}
                     disabled={props.connectionState === HubConnectionState.Connecting}
             >Connect</button>
+        );
+        navItems.push(
+            <>
+                <input type={'checkbox'}
+                       checked={useLinuxWorkaround}
+                       id={'use-linux-workaround'}
+                       onChange={(event) => setUseLinuxWorkaround(event.target.checked)}
+                />
+                <label htmlFor={'use-linux-workaround'}>Use Linux workaround</label>
+            </>
         );
     }
 

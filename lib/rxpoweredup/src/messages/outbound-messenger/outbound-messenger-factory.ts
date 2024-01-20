@@ -4,25 +4,20 @@ import { inject, injectable } from 'tsyringe';
 import type { GenericErrorInboundMessage, ILogger, RawMessage } from '../../types';
 import { PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER } from '../../features';
 import { MessageType } from '../../constants';
-import type {
-    IInboundMessageListenerFactory,
-    IOutboundMessenger,
-    IOutboundMessengerFactory,
-    IReplyParser,
-    OutboundMessengerConfig
-} from '../../hub';
+import type { IInboundMessageListenerFactory, IOutboundMessenger, IOutboundMessengerFactory, IReplyParser, OutboundMessengerConfig } from '../../hub';
 import { INBOUND_MESSAGE_LISTENER_FACTORY, } from '../../hub';
 import { OutboundMessenger } from './outbound-messenger';
-import { ChannelFactory } from './channel';
 import { TaskVisitorFactory } from './task-visitor';
 import { TaskQueueFactoryFactory } from './queue';
+import type { IChannelFactory } from './i-channel-factory';
+import { CHANNEL_FACTORY } from './i-channel-factory';
 
 @injectable()
 export class OutboundMessengerFactory implements IOutboundMessengerFactory {
     constructor(
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER) private readonly feedbackIReplyParser: IReplyParser<MessageType.portOutputCommandFeedback>,
-        @inject(ChannelFactory) private readonly channelFactory: ChannelFactory,
+        @inject(CHANNEL_FACTORY) private readonly channelFactory: IChannelFactory,
         @inject(TaskQueueFactoryFactory) private readonly taskQueueFactoryFactory: TaskQueueFactoryFactory,
         @inject(TaskVisitorFactory) private readonly feedbackHandlerFactory: TaskVisitorFactory,
     ) {

@@ -106,5 +106,28 @@ describe('TaskPortOutputCommand', () => {
             });
             subject.setExecutionStatus(PortCommandExecutionStatus.inProgress);
         });
+
+        // Sometimes sendMessage resolves AFTER the response is received. This is why we need to start listening to response before sending the message.
+        it('should start listen to response before request is sent and when waitForFeedback is true', (done) => {
+            message.waitForFeedback = true;
+            const channelMock = mock<IChannel>();
+            let resolveFn: () => void = () => void 0;
+            const promise = new Promise<void>((resolve) => {
+                resolveFn = resolve;
+            });
+            when(channelMock.sendMessage(message)).thenReturn(promise);
+
+            const e = subject.execute(instance(channelMock));
+            subject.setExecutionStatus(PortCommandExecutionStatus.inProgress);
+            verify(channelMock.sendMessage(message)).never();
+            e.pipe(
+                take(1)
+            ).subscribe(() => {
+                verify(channelMock.sendMessage(message)).once();
+                done();
+            });
+            expect(subject.state).toBe(PortOutputCommandTaskState.waitingForResponse);
+            resolveFn();
+        });
     });
 });

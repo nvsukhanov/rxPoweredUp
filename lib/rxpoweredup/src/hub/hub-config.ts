@@ -11,6 +11,7 @@ import { ILogger } from '../types';
  * @property {LogLevel} logLevel - The log level to use
  * @property {number} hubConnectionTimeoutMs - The amount of time to wait for a connection to the hub before timing out
  * @property {PortOperationStartupInformation} defaultBufferMode - The default buffer mode to use when sending port output commands
+ * @property {boolean} [useLinuxWorkaround] - Whether to use the workaround for breaking connections on Linux Chrome
  */
 export type HubConfig = {
     readonly maxGattConnectRetries: number;
@@ -18,6 +19,7 @@ export type HubConfig = {
     readonly logger?: ILogger;
     readonly hubConnectionTimeoutMs: number;
     readonly defaultBufferMode: PortOperationStartupInformation;
+    readonly useLinuxWorkaround?: boolean;
 } & OutboundMessengerConfig & CharacteristicDataStreamConfig;
 
 export const HUB_CONFIG_DEFAULTS: HubConfig = {

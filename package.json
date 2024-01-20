@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "ci": "nx run-many -t build lint test docs",
+    "ci": "nx run-many -t build lint test docs --nxBail=true",
     "start:toolbox": "nx serve toolbox",
     "build:toolbox": "nx build toolbox",
     "build:node-examples": "nx build node-examples",
