@@ -1,4 +1,4 @@
-import { Observable, distinctUntilChanged, filter, finalize, map, of, share, switchMap, takeUntil } from 'rxjs';
+import { Observable, distinctUntilChanged, filter, map, of, share, switchMap, take, takeUntil } from 'rxjs';
 
 import { HubProperty, HubType, MAX_NAME_SIZE, SubscribableHubProperties } from '../../constants';
 import type {
@@ -168,20 +168,30 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
     ): Observable<HubPropertyInboundMessage & { propertyType: T }> {
         return new Observable<HubPropertyInboundMessage & { propertyType: T }>((subscriber) => {
             this.logging.debug('subscribing to property stream', HubProperty[trackedProperty]);
-            const sub = this.sendSubscribeMessage(trackedProperty).pipe(
+
+            const dataSub = this.sendSubscribeMessage(trackedProperty).pipe(
                 switchMap(() => this.inboundMessages),
                 filter((reply) => reply.propertyType === trackedProperty),
-                takeUntil(this.onDisconnected$),
-                finalize(() => {
-                    this.characteristicUnsubscribeHandlers.get(trackedProperty)?.().subscribe();
-                })
+                takeUntil(this.onDisconnected$)
             ).subscribe((message) => {
                 subscriber.next(message as HubPropertyInboundMessage & { propertyType: T });
             });
 
+            const handleDisconnectSub = this.onDisconnected$.pipe(
+                take(1)
+            ).subscribe(() => {
+                this.logging.debug('dropping property stream', HubProperty[trackedProperty], 'due to disconnect');
+                this.characteristicUnsubscribeHandlers.delete(trackedProperty);
+            });
+
             return (): void => {
-                this.logging.debug('unsubscribing from property stream', HubProperty[trackedProperty]);
-                sub.unsubscribe();
+                const unsubscribeHandler = this.characteristicUnsubscribeHandlers.get(trackedProperty);
+                if (unsubscribeHandler) {
+                    this.logging.debug('unsubscribing from property stream', HubProperty[trackedProperty]);
+                    unsubscribeHandler().subscribe();
+                }
+                handleDisconnectSub.unsubscribe();
+                dataSub.unsubscribe();
             };
         });
     }
