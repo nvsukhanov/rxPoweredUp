@@ -1,5 +1,5 @@
 import { Observable, Subject, Subscription, of } from 'rxjs';
-import { anything, instance, mock, verify, when } from 'ts-mockito';
+import { anything, instance, mock, resetCalls, verify, when } from 'ts-mockito';
 
 import { HubPropertiesFeature } from './hub-properties-feature';
 import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
@@ -172,6 +172,14 @@ describe('HubPropertiesFeature', () => {
                 verify(messengerMock.sendWithoutResponse(subscribeMessage)).twice();
                 consumerC.unsubscribe();
                 verify(messengerMock.sendWithoutResponse(unsubscribeMessage)).twice();
+            });
+
+            it('should not make attempt to unsubscribe from a property is hub is already disconnected', () => {
+                const consumer = getStream().subscribe();
+                resetCalls(messengerMock);
+                onDisconnected$.next();
+                consumer.unsubscribe();
+                verify(messengerMock.sendWithoutResponse(anything())).never();
             });
         });
     });
