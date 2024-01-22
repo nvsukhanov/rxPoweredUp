@@ -1,6 +1,13 @@
-.wrapper {
-    border-top: 2px solid #999;
+.header {
+    background-color: #444;
 }
+
+@media (prefers-color-scheme: light) {
+    .header {
+        background-color: #DDD;
+    }
+}
+
 
 .messagesContainer {
     border-top: 1px solid #999;

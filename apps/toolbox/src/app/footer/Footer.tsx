@@ -12,8 +12,8 @@ enum DisplayMode {
 export function Footer(): ReactElement {
     const [ displayMode, setDisplayMode ] = useState(DisplayMode.Messages);
     return (
-        <section className={styles['wrapper']}>
-            <section>
+        <section>
+            <section className={styles['header']}>
                 <input type={'radio'}
                        id={'displayMessages'}
                        name={'displayMode'}
