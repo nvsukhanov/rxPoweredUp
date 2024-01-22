@@ -21,17 +21,17 @@ export function Nav(
                     disabled={props.connectionState !== HubConnectionState.Connected}
             >Disconnect</button>,
             <NavLink to={ROUTES.hubProperties}
-                     className={({ isActive }): string => isActive ? styles['activeLinkItem'] : ''}
+                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
             >
                 Hub properties
             </NavLink>,
             <NavLink to={ROUTES.ports}
-                     className={({ isActive }): string => isActive ? styles['activeLinkItem'] : ''}
+                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
             >
                 Ports
             </NavLink>,
             <NavLink to={ROUTES.motors}
-                     className={({ isActive }): string => isActive ? styles['activeLinkItem'] : ''}
+                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
             >
                 Motors
             </NavLink>,
@@ -49,7 +49,8 @@ export function Nav(
                        id={'use-linux-workaround'}
                        onChange={(event) => setUseLinuxWorkaround(event.target.checked)}
                 />
-                <label htmlFor={'use-linux-workaround'}>Use Linux workaround</label>
+                <label className={styles['useLinuxWorkaroundLabel']}
+                       htmlFor={'use-linux-workaround'}>Use Linux workaround</label>
             </>
         );
     }
