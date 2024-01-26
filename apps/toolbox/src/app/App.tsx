@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 
-import { IHub, LogLevel, connectHub } from 'rxpoweredup';
+import { IHub, LogLevel, PortOperationStartupInformation, connectHub } from 'rxpoweredup';
 import styles from './App.module.scss';
 import { Nav } from '../nav';
 import { BluetoothAvailability, HubConnectionState, NAVIGATOR, WINDOW } from '../types';
@@ -67,6 +67,7 @@ export function App(): ReactElement {
                 outgoingMessageMiddleware: [ outboundLoggingMiddleware.current ],
                 logLevel: LogLevel.Debug,
                 logger: storeLogger.current,
+                defaultBufferMode: PortOperationStartupInformation.executeImmediately,
                 useLinuxWorkaround
             }
         ).subscribe({

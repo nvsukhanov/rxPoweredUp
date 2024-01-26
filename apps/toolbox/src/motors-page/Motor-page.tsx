@@ -8,6 +8,7 @@ import { MotorAccelerationDecelerationTimings } from './Motor-acceleration-decel
 import { MotorEncoderControl } from './Motor-encoder-control.tsx';
 import { MotorPositionInfo } from './Motor-position-info.tsx';
 import styles from './Motor-page.module.scss';
+import { MotorServoSequence } from './Motor-servo-sequence.tsx';
 
 export function MotorPage(
     props: {
@@ -64,6 +65,14 @@ export function MotorPage(
                     <MotorEncoderControl hub={props.hub}
                                          portId={portId}
                     ></MotorEncoderControl>
+                </div>
+            </section>
+            <section>
+                <h2>Servo sequence</h2>
+                <div className={styles['featureSection']}>
+                    <MotorServoSequence hub={props.hub}
+                                        portId={portId}
+                    ></MotorServoSequence>
                 </div>
             </section>
         </>

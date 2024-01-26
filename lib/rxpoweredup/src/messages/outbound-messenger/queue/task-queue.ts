@@ -1,4 +1,4 @@
-import { Observable, TimeoutError, filter, merge, of, retry, switchMap, take, throwError, timeout, timer } from 'rxjs';
+import { Observable, TimeoutError, filter, finalize, merge, of, retry, switchMap, take, throwError, timeout, timer } from 'rxjs';
 
 import type { GenericErrorInboundMessage, IDisposable, ILogger } from '../../../types';
 import { IQueueTask } from './i-queue-task';
@@ -35,10 +35,10 @@ export class TaskQueue implements IDisposable {
         if (lastTask) {
             // We should ensure that the next command is sent strictly AFTER the previous one has received ANY feedback.
             // Not doing so will result in a broken queue (we won't be able to map feedback to executed tasks correctly).
-            lastTask.result.subscribe({
-                complete: () => this.executeTask(task),
-                error: () => this.executeTask(task)
-            });
+            lastTask.result.pipe(
+                take(1),
+                finalize(() => this.executeTask(task))
+            ).subscribe();
         } else {
             this.executeTask(task);
         }

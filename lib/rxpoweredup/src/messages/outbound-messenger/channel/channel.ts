@@ -16,10 +16,14 @@ export class Channel implements IChannel {
 
     public sendMessage(
         message: RawMessage<MessageType>,
+        beforeSend?: () => void
     ): Promise<void> {
         const p = this.queue.then(() => {
             const resultingMessage = this.messageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message);
             const packet = this.packetBuilder.buildPacket(resultingMessage);
+            if (beforeSend) {
+                beforeSend();
+            }
             return this.characteristic.writeValueWithoutResponse(packet);
         });
         this.queue = p.catch(() => void 0);
