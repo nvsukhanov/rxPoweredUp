@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subject, filter, from, of, switchMap, take, tap } from 'rxjs';
+import { Observable, ReplaySubject, from, of, switchMap, take, tap } from 'rxjs';
 
 import { IQueueTask, ITaskVisitor } from '../queue';
 import { PortCommandExecutionStatus } from '../../../hub';
@@ -15,11 +15,11 @@ export enum PortOutputCommandTaskState {
  * This class represents a task that is responsible for sending a single port output command to the hub.
  */
 export class TaskPortOutputCommand implements IQueueTask<PortCommandExecutionStatus> {
-    public readonly result = new Subject<PortCommandExecutionStatus>();
+    public readonly result = new ReplaySubject<PortCommandExecutionStatus>();
 
     private _state = PortOutputCommandTaskState.pending;
 
-    private readonly responseReceived = new BehaviorSubject<boolean>(false);
+    private readonly responseReceived = new ReplaySubject<boolean>(1);
 
     private terminalExecutionStates: ReadonlySet<PortCommandExecutionStatus> = new Set([
         PortCommandExecutionStatus.completed,
@@ -95,10 +95,8 @@ export class TaskPortOutputCommand implements IQueueTask<PortCommandExecutionSta
     ): Observable<unknown> {
         if (this.message.waitForFeedback) {
             return of(null).pipe(
-                tap(() => this.state = PortOutputCommandTaskState.waitingForResponse),
-                switchMap(() => from(channel.sendMessage(this.message))),
+                switchMap(() => from(channel.sendMessage(this.message, () => this.state = PortOutputCommandTaskState.waitingForResponse))),
                 switchMap(() => this.responseReceived),
-                filter((v) => !!v),
                 take(1)
             );
         }
