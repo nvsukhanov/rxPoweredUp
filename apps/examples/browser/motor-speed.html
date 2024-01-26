@@ -9,7 +9,7 @@
 
 <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
 <script type="module">
-    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.3.8/rxpoweredup.min.js';
+    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.3.9/rxpoweredup.min.js';
 
     const connectButton = document.querySelector('#connect');
 
@@ -21,7 +21,7 @@
 
         connectHub(navigator.bluetooth).pipe(
             rxjs.tap(() => connectButton.disabled = true),
-            rxjs.audit((hub) => hub.ports.onIoAttach({ports: 0})),
+            rxjs.audit((hub) => hub.ports.onIoAttach({ports: [0]})),
             rxjs.switchMap((hub) => rxjs.concat(
                 hub.motors.setSpeed(0, 100),
                 rxjs.timer(1000),
