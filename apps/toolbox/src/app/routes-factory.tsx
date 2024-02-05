@@ -6,6 +6,7 @@ import { HubPropertiesPage } from '../hub-properties-page';
 import { ROUTES } from '../common';
 import { MotorPage } from '../motors-page';
 import { PortsPage } from '../ports-page';
+import { LatencyPage } from '../latency-page';
 
 export function buildRoutes(
     hub: IHub | undefined
@@ -27,5 +28,9 @@ export function buildRoutes(
                key={ROUTES.motors}
                element={<MotorPage hub={hub}/>}
         />,
+        <Route path={ROUTES.latency}
+               key={ROUTES.latency}
+               element={<LatencyPage hub={hub}/>}
+        />
     ];
 }

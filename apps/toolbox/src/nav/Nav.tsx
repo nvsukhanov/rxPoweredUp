@@ -35,6 +35,11 @@ export function Nav(
             >
                 Motors
             </NavLink>,
+            <NavLink to={ROUTES.latency}
+                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
+            >
+                Latency
+            </NavLink>
         );
     } else {
         navItems.push(

@@ -3,4 +3,5 @@ export const ROUTES = {
     hubProperties: 'hub',
     motors: 'motors',
     ports: 'ports',
+    latency: 'latency',
 } as const satisfies { [k in string]: string };
