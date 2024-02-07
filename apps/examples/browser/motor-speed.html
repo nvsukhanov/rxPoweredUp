@@ -13,6 +13,17 @@
 
     const connectButton = document.querySelector('#connect');
 
+    function runMotorSequence(hub) {
+        return rxjs.concat(
+            hub.motors.setSpeed(0, 100),
+            rxjs.timer(1000),
+            hub.motors.setSpeed(0, -100),
+            rxjs.timer(1000),
+            hub.motors.setSpeed(0, 0),
+            hub.disconnect()
+        )
+    }
+
     connectButton.addEventListener('click', () => {
         if (!navigator.bluetooth) {
             alert('Web Bluetooth is not available in your browser.');
@@ -22,14 +33,7 @@
         connectHub(navigator.bluetooth).pipe(
             rxjs.tap(() => connectButton.disabled = true),
             rxjs.audit((hub) => hub.ports.onIoAttach({ports: [0]})),
-            rxjs.switchMap((hub) => rxjs.concat(
-                hub.motors.startSpeed(0, 100),
-                rxjs.timer(1000),
-                hub.motors.startSpeed(0, -100),
-                rxjs.timer(1000),
-                hub.motors.startSpeed(0, 0),
-                hub.disconnect()
-            ))
+            rxjs.switchMap(runMotorSequence)
         ).subscribe({
             complete: () => {
                 connectButton.disabled = false;

@@ -31,7 +31,7 @@
 
 <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
 <script type="module">
-    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.3.9/rxpoweredup.min.js';
+    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.4.0/rxpoweredup.min.js';
 
     const connectButton = document.querySelector('#connect');
     const disconnectButton = document.querySelector('#disconnect');
@@ -45,36 +45,6 @@
     const primaryMacAddressElement = document.querySelector('#primary-mac-address');
 
     let disconnectedAbortController = new AbortController();
-
-    let subscription = new rxjs.Subscription();
-
-    function trackBatteryLevel(hub) {
-        return hub.properties.batteryLevel.subscribe((level) => batteryLevelElement.textContent = `${level}%`);
-    }
-
-    function trackRSSI(hub) {
-        return hub.properties.rssiLevel.subscribe((rssi) => rssiElement.textContent = `${rssi} dBm`);
-    }
-
-    function trackButtonState(hub) {
-        return hub.properties.buttonState.subscribe((state) => buttonStateElement.textContent = state);
-    }
-
-    function getAdvertisingName(hub) {
-        return hub.properties.getAdvertisingName().subscribe((name) => advertisingNameElement.textContent = name);
-    }
-
-    function getSystemTypeId(hub) {
-        return hub.properties.getSystemTypeId().subscribe((id) => systemTypeIdElement.textContent = id);
-    }
-
-    function getManufacturerName(hub) {
-        return hub.properties.getManufacturerName().subscribe((name) => manufacturerNameElement.textContent = name);
-    }
-
-    function getPrimaryMacAddress(hub) {
-        return hub.properties.getPrimaryMacAddress().subscribe((address) => primaryMacAddressElement.textContent = address);
-    }
 
     function attachDisconnectClickHandler(hub) {
         disconnectButton.addEventListener('click', () => {
@@ -102,36 +72,41 @@
         }, {signal: disconnectedAbortController.signal});
     }
 
+    function trackHubProps(hub) {
+        return rxjs.merge(
+            hub.properties.batteryLevel.pipe(rxjs.tap((level) => batteryLevelElement.textContent = `${level}%`)),
+            hub.properties.rssiLevel.pipe(rxjs.tap((rssi) => rssiElement.textContent = `${rssi} dBm`)),
+            hub.properties.buttonState.pipe(rxjs.tap((state) => buttonStateElement.textContent = state)),
+            hub.properties.getAdvertisingName().pipe(rxjs.tap((name) => advertisingNameElement.textContent = name)),
+            hub.properties.getSystemTypeId().pipe(rxjs.tap((id) => systemTypeIdElement.textContent = id)),
+            hub.properties.getManufacturerName().pipe(rxjs.tap((name) => manufacturerNameElement.textContent = name)),
+            hub.properties.getPrimaryMacAddress().pipe(rxjs.tap((address) => primaryMacAddressElement.textContent = address))
+        ).pipe(
+            rxjs.takeUntil(hub.disconnected)
+        );
+    }
+
     function handleConnectClick() {
         if (!navigator.bluetooth) {
             alert('Web Bluetooth is not available in your browser.');
             return;
         }
 
-        connectHub(navigator.bluetooth).subscribe({
-            next: (hub) => {
+        connectHub(navigator.bluetooth).pipe(
+            rxjs.tap((hub) => {
                 connectButton.disabled = true;
                 disconnectButton.disabled = false;
                 switchOffButton.disabled = false;
-
-                subscription.add(trackBatteryLevel(hub));
-                subscription.add(trackRSSI(hub));
-                subscription.add(trackButtonState(hub));
-                subscription.add(getAdvertisingName(hub));
-                subscription.add(getSystemTypeId(hub));
-                subscription.add(getManufacturerName(hub));
-                subscription.add(getPrimaryMacAddress(hub));
-
                 attachDisconnectClickHandler(hub);
                 attachSwitchOffClickHandler(hub);
-                subscription.add(hub.disconnected.subscribe(() => onDisconnected()));
-            }
+            }),
+            rxjs.switchMap(trackHubProps),
+        ).subscribe({
+            complete: () => onDisconnected()
         });
     }
 
     function onDisconnected() {
-        subscription.unsubscribe();
-        subscription = new rxjs.Subscription();
         disconnectedAbortController.abort();
         disconnectedAbortController = new AbortController();
         connectButton.disabled = false;
