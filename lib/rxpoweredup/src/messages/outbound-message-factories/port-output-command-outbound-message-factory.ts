@@ -9,8 +9,7 @@ import {
     MotorUseProfile,
     OutputSubCommand,
     PortOperationCompletionInformation,
-    PortOperationStartupInformation,
-    WriteDirectModeDataSubCommand
+    PortOperationStartupInformation
 } from '../../constants';
 import { concatUintArraysToUint8Array, numberToUint16LEArray, numberToUint32LEArray } from '../../helpers';
 import { IMotorCommandsOutboundMessageFactory } from '../../features';
@@ -180,6 +179,7 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
     public presetEncoder(
         portId: number,
         absolutePosition: number,
+        positionModeId: number
     ): RawPortOutputCommandMessage {
         this.ensureAbsolutePositionIsWithinLimits(absolutePosition);
 
@@ -192,7 +192,7 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 portId,
                 PortOperationStartupInformation.bufferIfNecessary | PortOperationCompletionInformation.commandFeedback,
                 OutputSubCommand.writeDirectModeData,
-                WriteDirectModeDataSubCommand.presetEncoder,
+                positionModeId,
                 ...numberToUint32LEArray(absolutePosition),
             ]),
             waitForFeedback: true

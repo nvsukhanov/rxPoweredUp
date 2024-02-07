@@ -6,7 +6,9 @@ import {
     MessageType,
     MotorServoEndState,
     MotorUseProfile,
+    PortModeName,
     PortOperationCompletionInformation,
+    WELL_KNOWN_PORT_MODE_IDS,
 } from '../../constants';
 import { HubConfig, IMotorsFeature, IOutboundMessenger, PortCommandExecutionStatus, ServoCommandOptions, SetSpeedOptions } from '../../hub';
 import { RawMessage } from '../../types';
@@ -119,6 +121,7 @@ export class MotorsFeature implements IMotorsFeature {
     public setZeroPositionRelativeToCurrentPosition(
         portId: number,
         offset: number,
+        positionModeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.position]
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.presetEncoder(
             portId,
@@ -131,6 +134,7 @@ export class MotorsFeature implements IMotorsFeature {
             // Also, we invert value here (and not in presetEncoder method) in order to keep message factories as close
             // to original documentation as possible.
             -offset,
+            positionModeId
         );
 
         return this.execute(message);

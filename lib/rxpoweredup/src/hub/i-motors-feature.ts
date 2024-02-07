@@ -162,9 +162,11 @@ export interface IMotorsFeature {
      * Positive values shift the absolute zero clockwise, negative values shift the absolute zero counter-clockwise.
      * @param portId - The port to set zero position at.
      * @param position - Target position in degrees.
+     * @param positionModeId - Position mode ID, defaults to WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.position]
      */
     setZeroPositionRelativeToCurrentPosition(
         portId: number,
         position: number,
+        positionModeId?: number
     ): Observable<PortCommandExecutionStatus>;
 }
