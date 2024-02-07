@@ -18,6 +18,7 @@ import {
     PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER,
     PORT_OUTPUT_COMMAND_MESSAGE_FACTORY,
     PORT_RAW_VALUE_REPLY_PARSER,
+    RGB_LIGHT_COMMANDS_FACTORY,
     VIRTUAL_PORT_SETUP_MESSAGE_FACTORY
 } from '../features';
 import {
@@ -38,6 +39,7 @@ import {
     PortInputFormatSetupSingleOutboundMessageFactory,
     PortModeInformationRequestOutboundMessageFactory,
     PortOutputCommandOutboundMessageFactory,
+    RgbLightCommandOutboundMessageFactory,
     VirtualPortSetupOutboundMessageFactory
 } from './outbound-message-factories';
 import { CHANNEL_FACTORY } from './outbound-messenger/i-channel-factory';
@@ -51,6 +53,7 @@ export function registerMessagesServices(
     container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
     container.register(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER, PortOutputCommandFeedbackReplyParser);
     container.register(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY, PortOutputCommandOutboundMessageFactory);
+    container.register(RGB_LIGHT_COMMANDS_FACTORY, RgbLightCommandOutboundMessageFactory);
     container.register(HUB_PROPERTIES_REPLIES_PARSER, HubPropertiesReplyParser);
     container.register(PORT_INFORMATION_REPLY_PARSER, PortInformationReplyParser);
     container.register(ATTACHED_IO_REPLIES_PARSER, AttachedIoReplyParser);

@@ -16,7 +16,7 @@ import {
 import { IOutboundMessenger, IPortsFeature, OnIoAttachFilter, OnIoDetachFilter } from '../../hub';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
-import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
+import { IPortInputFormatSetupMessageFactory } from '../i-port-input-format-setup-message-factory';
 import { IVirtualPortSetupMessageFactory } from './i-virtual-port-setup-message-factory';
 
 export class PortsFeature implements IPortsFeature, IDisposable {
@@ -78,7 +78,7 @@ export class PortsFeature implements IPortsFeature, IDisposable {
         const filters: Array<MonoTypeOperatorFunction<AttachedIOInboundMessage>> = [
             filter((message) => message.event === AttachIoEvent.Detached)
         ];
-        
+
         if (typeof filterOptions === 'number') {
             filters.push(filter((message) => message.portId === filterOptions));
         } else if (filterOptions?.ports !== undefined) {

@@ -11,3 +11,4 @@ export * from './No-feedback-input';
 export * from './Motor-buffer-mode-select';
 export * from './Servo-options-form';
 export * from './Speed-options-form';
+export * from './Color-input';

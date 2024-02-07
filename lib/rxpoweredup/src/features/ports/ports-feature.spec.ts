@@ -12,7 +12,7 @@ import {
 } from '../../types';
 import { IPortInformationRequestMessageFactory } from './i-port-information-request-message-factory';
 import { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
-import { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
+import { IPortInputFormatSetupMessageFactory } from '../i-port-input-format-setup-message-factory';
 import { IVirtualPortSetupMessageFactory } from './i-virtual-port-setup-message-factory';
 import { IOutboundMessenger } from '../../hub';
 import { MessageType } from '../../constants';

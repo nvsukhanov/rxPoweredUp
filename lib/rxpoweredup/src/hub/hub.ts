@@ -18,6 +18,8 @@ import { HubConfig } from './hub-config';
 import { IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
 import { IHubActionsFeature } from './i-hub-actions-feature';
 import { IOutboundMessenger } from './i-outbound-messenger';
+import { IRgbLightFeatureFactory } from './i-rgb-light-feature-factory';
+import { IRgbLightFeature } from './i-rgb-light-feature';
 
 export class Hub implements IHub {
     private readonly gattServerDisconnectEventName = 'gattserverdisconnected';
@@ -25,6 +27,8 @@ export class Hub implements IHub {
     private _ports?: IPortsFeature & IDisposable;
 
     private _motors?: IMotorsFeature;
+
+    private _led?: IRgbLightFeature;
 
     private _properties?: IHubPropertiesFeature;
 
@@ -49,6 +53,7 @@ export class Hub implements IHub {
         private readonly genericErrorReplyParser: IReplyParser<MessageType.genericError>,
         private readonly messageListenerFactory: IInboundMessageListenerFactory,
         private readonly hubActionsFeatureFactory: IHubActionsFeatureFactory,
+        private readonly ledFeatureFactory: IRgbLightFeatureFactory,
     ) {
     }
 
@@ -78,6 +83,13 @@ export class Hub implements IHub {
             throw new Error('Hub not connected');
         }
         return this._motors;
+    }
+
+    public get rgbLight(): IRgbLightFeature {
+        if (!this._led) {
+            throw new Error('Hub not connected');
+        }
+        return this._led;
     }
 
     public get properties(): IHubPropertiesFeature {
@@ -214,6 +226,10 @@ export class Hub implements IHub {
         this._motors = this.commandsFeatureFactory.createMotorsFeature(
             this.outboundMessenger,
             this.config
+        );
+
+        this._led = this.ledFeatureFactory.createFeature(
+            this.outboundMessenger
         );
 
         await primaryCharacteristic.startNotifications();

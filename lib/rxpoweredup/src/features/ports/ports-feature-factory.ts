@@ -13,8 +13,8 @@ import type { IPortInformationRequestMessageFactory } from './i-port-information
 import { PORT_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-information-request-message-factory';
 import type { IPortModeInformationRequestMessageFactory } from './i-port-mode-information-request-message-factory';
 import { PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY } from './i-port-mode-information-request-message-factory';
-import type { IPortInputFormatSetupMessageFactory } from './i-port-input-format-setup-message-factory';
-import { PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from './i-port-input-format-setup-message-factory';
+import type { IPortInputFormatSetupMessageFactory } from '../i-port-input-format-setup-message-factory';
+import { PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from '../i-port-input-format-setup-message-factory';
 import { AttachedIoRepliesCache } from './attached-io-replies-cache';
 import { PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER } from './port-input-format-setup-single-handshake-reply-parser';
 import { PORT_RAW_VALUE_REPLY_PARSER } from './port-value-raw-reply-parser';

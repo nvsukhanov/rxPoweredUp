@@ -24,6 +24,8 @@ import { PREFIXED_CONSOLE_LOGGER_FACTORY } from './i-prefixed-console-logger-fac
 import { HUB_CONFIG_DEFAULTS, HubConfig } from './hub-config';
 import type { IHubActionsFeatureFactory } from './i-hub-actions-feature-factory';
 import { HUB_ACTIONS_FEATURE_FACTORY } from './i-hub-actions-feature-factory';
+import type { IRgbLightFeatureFactory } from './i-rgb-light-feature-factory';
+import { RGB_LIGHT_FEATURE_FACTORY } from './i-rgb-light-feature-factory';
 
 @injectable()
 export class HubFactory {
@@ -34,6 +36,7 @@ export class HubFactory {
         @inject(PORTS_FEATURE_FACTORY) private readonly ioFeatureFactoryService: IPortsFeatureFactory,
         @inject(CHARACTERISTIC_DATA_STREAM_FACTORY) private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
         @inject(MOTORS_FEATURE_FACTORY) private readonly commandsFeatureFactory: IMotorsFeatureFactory,
+        @inject(RGB_LIGHT_FEATURE_FACTORY) private readonly ledFeatureFactory: IRgbLightFeatureFactory,
         @inject(GENERIC_ERRORS_REPLIES_PARSER) private readonly genericErrorsReplyParser: IReplyParser<MessageType.genericError>,
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PREFIXED_CONSOLE_LOGGER_FACTORY) private readonly loggerFactory: IPrefixedConsoleLoggerFactory,
@@ -59,6 +62,7 @@ export class HubFactory {
             this.genericErrorsReplyParser,
             this.messageListenerFactory,
             this.hubActionsFeatureFactory,
+            this.ledFeatureFactory,
         );
     }
 

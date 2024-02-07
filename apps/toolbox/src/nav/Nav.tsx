@@ -39,6 +39,11 @@ export function Nav(
                      className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
             >
                 Latency
+            </NavLink>,
+            <NavLink to={ROUTES.ledColor}
+                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
+            >
+                Led Color
             </NavLink>
         );
     } else {
