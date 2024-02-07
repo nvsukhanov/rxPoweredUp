@@ -6,3 +6,4 @@ export * from './port-output-command-outbound-message-factory';
 export { HubActionsOutboundMessageFactory } from './hub-actions-outbound-message-factory';
 export { VirtualPortSetupOutboundMessageFactory } from './virtual-port-setup-outbound-message-factory';
 export { RgbLightCommandOutboundMessageFactory } from './rgb-light-command-outbound-message-factory';
+export { WriteDirectModeDataBuilder } from './write-direct-mode-data-builder';

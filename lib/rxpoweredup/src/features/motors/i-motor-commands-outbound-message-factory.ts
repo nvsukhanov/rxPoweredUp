@@ -4,7 +4,15 @@ import { MotorServoEndState, MotorUseProfile, PortOperationCompletionInformation
 import { RawPortOutputCommandMessage } from '../../types';
 
 export interface IMotorCommandsOutboundMessageFactory {
-    startRotation(
+    startPower(
+        portId: number,
+        power: number,
+        powerModeId: number,
+        startupMode?: PortOperationStartupInformation,
+        completionMode?: PortOperationCompletionInformation,
+    ): RawPortOutputCommandMessage;
+
+    startSpeed(
         portId: number,
         speed: number,
         power?: number,

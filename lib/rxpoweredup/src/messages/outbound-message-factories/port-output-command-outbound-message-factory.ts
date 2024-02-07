@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { RawPortOutputCommandMessage } from '../../types';
 import {
@@ -8,15 +8,47 @@ import {
     MotorServoEndState,
     MotorUseProfile,
     OutputSubCommand,
+    PortModeName,
     PortOperationCompletionInformation,
-    PortOperationStartupInformation
+    PortOperationStartupInformation,
+    WELL_KNOWN_PORT_MODE_IDS
 } from '../../constants';
 import { concatUintArraysToUint8Array, numberToUint16LEArray, numberToUint32LEArray } from '../../helpers';
 import { IMotorCommandsOutboundMessageFactory } from '../../features';
+import { WriteDirectModeDataBuilder } from './write-direct-mode-data-builder';
 
 @injectable()
 export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOutboundMessageFactory {
-    public startRotation(
+    constructor(
+        @inject(WriteDirectModeDataBuilder) private readonly writeDirectModeDataBuilder: WriteDirectModeDataBuilder
+    ) {
+    }
+
+    public startPower(
+        portId: number,
+        power: number,
+        powerModeId: number = WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.power],
+        startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
+        completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback,
+    ): RawPortOutputCommandMessage {
+        this.ensurePowerIsWithinLimits(power);
+        return {
+            header: {
+                messageType: MessageType.portOutputCommand,
+            },
+            portId,
+            payload: this.writeDirectModeDataBuilder.buildWriteDirectModeData({
+                portId,
+                startupInformation: startupMode ?? PortOperationStartupInformation.executeImmediately,
+                completionInformation: completionMode ?? PortOperationCompletionInformation.commandFeedback,
+                modeId: powerModeId,
+                payload: [ power ]
+            }),
+            waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback
+        };
+    }
+
+    public startSpeed(
         portId: number,
         speed: number,
         power: number = MOTOR_LIMITS.maxPower,
@@ -188,13 +220,13 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
                 messageType: MessageType.portOutputCommand,
             },
             portId,
-            payload: new Uint8Array([
+            payload: this.writeDirectModeDataBuilder.buildWriteDirectModeData({
                 portId,
-                PortOperationStartupInformation.bufferIfNecessary | PortOperationCompletionInformation.commandFeedback,
-                OutputSubCommand.writeDirectModeData,
-                positionModeId,
-                ...numberToUint32LEArray(absolutePosition),
-            ]),
+                startupInformation: PortOperationStartupInformation.bufferIfNecessary,
+                completionInformation: PortOperationCompletionInformation.commandFeedback,
+                modeId: positionModeId,
+                payload: numberToUint32LEArray(absolutePosition)
+            }),
             waitForFeedback: true
         };
     }

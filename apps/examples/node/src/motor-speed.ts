@@ -13,9 +13,9 @@ const sequence = lastValueFrom(
     }).pipe(
         audit((hub) => hub.ports.onIoAttach({ ports: [ 0 ] })),
         switchMap((hub) => concat(
-            hub.motors.setSpeed(0, 100),
+            hub.motors.startSpeed(0, 100),
             timer(1000),
-            hub.motors.setSpeed(0, 0),
+            hub.motors.startSpeed(0, 0),
             hub.switchOff()
         ))
     )

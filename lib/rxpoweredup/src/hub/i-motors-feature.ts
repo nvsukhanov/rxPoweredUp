@@ -17,15 +17,27 @@ export enum PortCommandExecutionStatus {
 }
 
 /**
- * Options for the setSpeed method.
+ * Options for the startSpeed method.
  * @param power - power of the motor, range: [0, 100]
  * @param useProfile - use profile for the motor, default is 'dontUseProfiles'
  * @param noFeedback - do not wait for feedback from the motor, default is false
  * @param bufferMode - startup information for the motor, default is 'bufferIfNecessary'
  */
-export type SetSpeedOptions = {
+export type StartSpeedOptions = {
     power?: number;
     useProfile?: MotorUseProfile;
+    noFeedback?: boolean;
+    bufferMode?: PortOperationStartupInformation;
+}
+
+/**
+ * Options for the startPower method (uses direct write). It seems like it works for PortModeName.speed also.
+ * @param powerModeId - power mode ID, defaults to WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.power]
+ * @param noFeedback - do not wait for feedback from the motor, default is false
+ * @param bufferMode - startup information for the motor, default is 'bufferIfNecessary'
+ */
+export type StartPowerOptions = {
+    powerModeId?: number;
     noFeedback?: boolean;
     bufferMode?: PortOperationStartupInformation;
 }
@@ -74,6 +86,22 @@ export interface IMotorsFeature {
     ): Observable<PortCommandExecutionStatus>;
 
     /**
+     * Starts motor power at the specified power.
+     * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
+     *
+     * @param portId
+     * @param power - power in range (0 - 100)
+     * @param powerModeId - power mode ID, defaults to WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.power]
+     * @param options
+     */
+    startPower(
+        portId: number,
+        power: number,
+        powerModeId: number,
+        options?: StartPowerOptions
+    ): Observable<PortCommandExecutionStatus>;
+
+    /**
      * Starts motor rotation at the specified speed.
      * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
      *
@@ -81,10 +109,10 @@ export interface IMotorsFeature {
      * @param speed - speed in range (-100 - 100), where positive values rotate the motor clockwise, negative values rotate the motor counter-clockwise.
      * @param options
      */
-    setSpeed(
+    startSpeed(
         portId: number,
         speed: number,
-        options?: SetSpeedOptions
+        options?: StartSpeedOptions
     ): Observable<PortCommandExecutionStatus>;
 
     /**
@@ -100,7 +128,7 @@ export interface IMotorsFeature {
         virtualPortId: number,
         speed1: number,
         speed2: number,
-        options?: SetSpeedOptions
+        options?: StartSpeedOptions
     ): Observable<PortCommandExecutionStatus>;
 
     /**
