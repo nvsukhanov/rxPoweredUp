@@ -248,6 +248,7 @@ export enum LogLevel {
 
 export const WELL_KNOWN_PORT_MODE_IDS = {
     motor: {
+        [PortModeName.power]: 0,
         [PortModeName.position]: 2,
         [PortModeName.absolutePosition]: 3
     },

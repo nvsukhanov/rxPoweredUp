@@ -40,7 +40,8 @@ import {
     PortModeInformationRequestOutboundMessageFactory,
     PortOutputCommandOutboundMessageFactory,
     RgbLightCommandOutboundMessageFactory,
-    VirtualPortSetupOutboundMessageFactory
+    VirtualPortSetupOutboundMessageFactory,
+    WriteDirectModeDataBuilder
 } from './outbound-message-factories';
 import { CHANNEL_FACTORY } from './outbound-messenger/i-channel-factory';
 import { ChannelFactory, LinuxChromeChannelFactory } from './outbound-messenger/channel';
@@ -49,6 +50,8 @@ export function registerMessagesServices(
     container: DependencyContainer,
     useLinuxWorkaround: boolean
 ): void {
+    container.registerSingleton(WriteDirectModeDataBuilder);
+
     container.register(CHARACTERISTIC_DATA_STREAM_FACTORY, CharacteristicDataStreamFactory);
     container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
     container.register(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER, PortOutputCommandFeedbackReplyParser);

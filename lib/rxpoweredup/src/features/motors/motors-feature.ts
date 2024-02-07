@@ -10,7 +10,15 @@ import {
     PortOperationCompletionInformation,
     WELL_KNOWN_PORT_MODE_IDS,
 } from '../../constants';
-import { HubConfig, IMotorsFeature, IOutboundMessenger, PortCommandExecutionStatus, ServoCommandOptions, SetSpeedOptions } from '../../hub';
+import {
+    HubConfig,
+    IMotorsFeature,
+    IOutboundMessenger,
+    PortCommandExecutionStatus,
+    ServoCommandOptions,
+    StartPowerOptions,
+    StartSpeedOptions
+} from '../../hub';
 import { RawMessage } from '../../types';
 import { IMotorCommandsOutboundMessageFactory } from './i-motor-commands-outbound-message-factory';
 
@@ -46,12 +54,28 @@ export class MotorsFeature implements IMotorsFeature {
         return this.execute(message);
     }
 
-    public setSpeed(
+    public startPower(
+        portId: number,
+        power: number,
+        powerModeId: number,
+        options?: StartPowerOptions
+    ): Observable<PortCommandExecutionStatus> {
+        const message = this.portOutputCommandOutboundMessageFactoryService.startPower(
+            portId,
+            power,
+            powerModeId,
+            options?.bufferMode ?? this.config.defaultBufferMode,
+            options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback,
+        );
+        return this.execute(message);
+    }
+
+    public startSpeed(
         portId: number,
         speed: number,
-        options?: SetSpeedOptions
+        options?: StartSpeedOptions
     ): Observable<PortCommandExecutionStatus> {
-        const message = this.portOutputCommandOutboundMessageFactoryService.startRotation(
+        const message = this.portOutputCommandOutboundMessageFactoryService.startSpeed(
             portId,
             speed,
             options?.power ?? MOTOR_LIMITS.maxPower,
@@ -66,7 +90,7 @@ export class MotorsFeature implements IMotorsFeature {
         virtualPortId: number,
         speed1: number,
         speed2: number,
-        options?: SetSpeedOptions
+        options?: StartSpeedOptions
     ): Observable<PortCommandExecutionStatus> {
         const message = this.portOutputCommandOutboundMessageFactoryService.startRotationSynchronized(
             virtualPortId,

@@ -34,7 +34,7 @@ export function BurstTest(
                     subscriber.complete();
                     return;
                 }
-                const sub = props.hub.motors.setSpeed(
+                const sub = props.hub.motors.startSpeed(
                     portId,
                     index,
                     { bufferMode, noFeedback }
@@ -58,7 +58,7 @@ export function BurstTest(
 
         concat(
             ...tasks,
-            props.hub.motors.setSpeed(portId, 0, { bufferMode, noFeedback })
+            props.hub.motors.startSpeed(portId, 0, { bufferMode, noFeedback })
         ).pipe(
             takeUntil(disposeRef$.current),
         ).subscribe();

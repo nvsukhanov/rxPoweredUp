@@ -1,12 +1,18 @@
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { IRgbLightCommandsFactory } from '../../features';
 import { ColorDescriptor } from '../../hub';
 import { RawPortOutputCommandMessage } from '../../types';
-import { MessageType, OutputSubCommand, PortOperationCompletionInformation, PortOperationStartupInformation, } from '../../constants';
+import { MessageType, PortOperationCompletionInformation, PortOperationStartupInformation, } from '../../constants';
+import { WriteDirectModeDataBuilder } from './write-direct-mode-data-builder';
 
 @injectable()
 export class RgbLightCommandOutboundMessageFactory implements IRgbLightCommandsFactory {
+    constructor(
+        @inject(WriteDirectModeDataBuilder) private readonly writeDirectModeDataBuilder: WriteDirectModeDataBuilder
+    ) {
+    }
+
     public createSetRgbColorCommand(
         portId: number,
         modeId: number,
@@ -18,15 +24,13 @@ export class RgbLightCommandOutboundMessageFactory implements IRgbLightCommandsF
                 messageType: MessageType.portOutputCommand
             },
             portId,
-            payload: new Uint8Array([
+            payload: this.writeDirectModeDataBuilder.buildWriteDirectModeData({
                 portId,
-                PortOperationStartupInformation.bufferIfNecessary | PortOperationCompletionInformation.commandFeedback,
-                OutputSubCommand.writeDirectModeData,
+                startupInformation: PortOperationStartupInformation.bufferIfNecessary,
+                completionInformation: PortOperationCompletionInformation.commandFeedback,
                 modeId,
-                color.red,
-                color.green,
-                color.blue
-            ]),
+                payload: [ color.red, color.green, color.blue ]
+            }),
             waitForFeedback: true
         };
     }

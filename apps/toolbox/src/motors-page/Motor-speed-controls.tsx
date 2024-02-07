@@ -34,7 +34,7 @@ export function MotorSpeedControls(
             return;
         }
         nextOperationStart$.next();
-        props.hub.motors.setSpeed(props.portId, v, {
+        props.hub.motors.startSpeed(props.portId, v, {
             ...speedOptions,
             power: power !== undefined ? power : speedOptions.power
         }).pipe(
@@ -48,7 +48,7 @@ export function MotorSpeedControls(
             return;
         }
         nextOperationStart$.next();
-        props.hub.motors.setSpeed(props.portId, speed, speedOptions).pipe(
+        props.hub.motors.startSpeed(props.portId, speed, speedOptions).pipe(
             takeUntil(dispose$),
             takeUntil(nextOperationStart$)
         ).subscribe();
