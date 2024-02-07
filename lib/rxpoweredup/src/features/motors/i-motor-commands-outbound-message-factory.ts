@@ -60,6 +60,7 @@ export interface IMotorCommandsOutboundMessageFactory {
     presetEncoder(
         portId: number,
         absolutePosition: number,
+        positionModeId: number,
     ): RawPortOutputCommandMessage;
 
     setAccelerationTime(

@@ -210,11 +210,6 @@ export enum OutputSubCommand {
     writeDirectModeData = 0x51, // 81
 }
 
-// TODO: remove this, use modeId and WELL_KNOWN_PORT_MODE_IDS instead
-export enum WriteDirectModeDataSubCommand {
-    presetEncoder = 0x02,
-}
-
 export enum PortCommandFeedbackMask {
     bufferEmptyCommandInProgress = 0x01, // 0b000001 // 1
     bufferEmptyCommandCompleted = 0x02,  // 0b000010 // 2
