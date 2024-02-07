@@ -7,6 +7,7 @@ import { ROUTES } from '../common';
 import { MotorPage } from '../motors-page';
 import { PortsPage } from '../ports-page';
 import { LatencyPage } from '../latency-page';
+import { LedColor } from '../led-color';
 
 export function buildRoutes(
     hub: IHub | undefined
@@ -31,6 +32,10 @@ export function buildRoutes(
         <Route path={ROUTES.latency}
                key={ROUTES.latency}
                element={<LatencyPage hub={hub}/>}
+        />,
+        <Route path={ROUTES.ledColor}
+               key={ROUTES.ledColor}
+               element={<LedColor hub={hub}/>}
         />
     ];
 }

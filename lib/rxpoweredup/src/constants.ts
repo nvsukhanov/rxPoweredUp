@@ -210,6 +210,7 @@ export enum OutputSubCommand {
     writeDirectModeData = 0x51, // 81
 }
 
+// TODO: remove this, use modeId and WELL_KNOWN_PORT_MODE_IDS instead
 export enum WriteDirectModeDataSubCommand {
     presetEncoder = 0x02,
 }
@@ -257,7 +258,8 @@ export const WELL_KNOWN_PORT_MODE_IDS = {
     },
     voltage: 0,
     tilt: 0,
-    temperature: 0
+    temperature: 0,
+    rgbLightRgbColor: 1
 } as const;
 
 export enum VirtualPortSetupCommand {

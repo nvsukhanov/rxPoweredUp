@@ -1,7 +1,7 @@
 import { InjectionToken } from 'tsyringe';
 
-import { RawMessage } from '../../types';
-import { MessageType } from '../../constants';
+import { RawMessage } from '../types';
+import { MessageType } from '../constants';
 
 export interface IPortInputFormatSetupMessageFactory {
     createMessage(

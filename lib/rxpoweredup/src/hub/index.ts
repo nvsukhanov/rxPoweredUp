@@ -8,6 +8,8 @@ export * from './i-motors-feature';
 export * from './i-motors-feature-factory';
 export * from './i-ports-feature';
 export * from './i-ports-feature-factory';
+export * from './i-rgb-light-feature-factory';
+export * from './i-rgb-light-feature';
 export * from './i-message-middleware';
 export * from './i-characteristic-data-stream-factory';
 export * from './i-hub-connection-errors-factory';

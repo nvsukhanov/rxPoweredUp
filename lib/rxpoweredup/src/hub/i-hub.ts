@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { IHubPropertiesFeature } from './i-hub-properties-feature';
 import { IMotorsFeature } from './i-motors-feature';
 import { IPortsFeature } from './i-ports-feature';
+import { IRgbLightFeature } from './i-rgb-light-feature';
 
 export interface IHub {
     /**
@@ -38,6 +39,11 @@ export interface IHub {
      * e.g. listen to battery level changes, set hub advertising name, etc.
      */
     readonly properties: IHubPropertiesFeature;
+
+    /**
+     * Provides a way to set color for the RGB light.
+     */
+    readonly rgbLight: IRgbLightFeature;
 
     /**
      * Emits when the hub is disconnected.
