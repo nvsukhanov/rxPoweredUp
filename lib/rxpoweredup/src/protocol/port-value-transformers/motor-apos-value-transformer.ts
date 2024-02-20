@@ -1,14 +1,14 @@
 import { injectable } from 'tsyringe';
 
-import { IPortValueTransformer } from '../types';
-import { convertUint32ToSignedInt, readNumberFromUint8LEArray } from '../helpers';
+import { IPortValueTransformer } from '../../types';
+import { convertUint16ToSignedInt, readNumberFromUint8LEArray } from '../../helpers';
 
 @injectable()
-export class MotorPosValueTransformer implements IPortValueTransformer<number> {
+export class MotorAposValueTransformer implements IPortValueTransformer<number> {
     public fromRawValue(
         value: number[]
     ): number {
-        return convertUint32ToSignedInt(
+        return convertUint16ToSignedInt(
             readNumberFromUint8LEArray(value)
         );
     }

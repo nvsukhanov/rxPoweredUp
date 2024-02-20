@@ -1,4 +1,4 @@
-import { IPortValueTransformer } from '../types';
+import { IPortValueTransformer } from '../../types';
 import { ColorData } from './color-data';
 
 export class ColorValueTransformer implements IPortValueTransformer<ColorData> {

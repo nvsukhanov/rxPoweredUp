@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 
-import { IPortValueTransformer } from '../types';
-import { HubType } from '../constants';
+import { IPortValueTransformer } from '../../types';
+import { HubType } from '../../constants';
 import { VoltageValueTransformerFactory } from './voltage-value-transformer-factory';
 import { MotorAposValueTransformer } from './motor-apos-value-transformer';
 import { MotorPosValueTransformer } from './motor-pos-value-transformer';
@@ -34,7 +34,7 @@ export class ValueTransformers {
     public static get tilt(): IPortValueTransformer<TiltData> {
         return container.resolve(TiltValueTransformer);
     }
-    
+
     public static get color(): IPortValueTransformer<ColorData> {
         return container.resolve(ColorValueTransformer);
     }

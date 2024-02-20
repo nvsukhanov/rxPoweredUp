@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 
-import { HubType } from '../constants';
-import { IPortValueTransformer } from '../types';
+import { HubType } from '../../constants';
+import { IPortValueTransformer } from '../../types';
 import { VoltageValueTransformer } from './voltage-value-transformer';
 
 @injectable()
