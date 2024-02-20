@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 
-import { IPortValueTransformer } from '../types';
-import { convertUint16ToSignedInt, readNumberFromUint8LEArray } from '../helpers';
+import { IPortValueTransformer } from '../../types';
+import { convertUint16ToSignedInt, readNumberFromUint8LEArray } from '../../helpers';
 import { TiltData } from './tilt-data';
 
 @injectable()

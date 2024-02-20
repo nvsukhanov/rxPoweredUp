@@ -1,5 +1,5 @@
-import { readNumberFromUint8LEArray } from '../helpers';
-import { IPortValueTransformer } from '../types';
+import { readNumberFromUint8LEArray } from '../../helpers';
+import { IPortValueTransformer } from '../../types';
 
 export class VoltageValueTransformer implements IPortValueTransformer<number> {
     constructor(

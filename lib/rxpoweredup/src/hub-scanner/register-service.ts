@@ -1,16 +1,17 @@
-import { container } from 'tsyringe';
+import { DependencyContainer } from 'tsyringe';
 
 import { HUB_SCANNER_ERROR_FACTORY } from './i-hub-scanner-error-factory';
 import { HUB_CONNECTION_ERRORS_FACTORY, INBOUND_MESSAGE_LISTENER_FACTORY, InboundMessageListenerFactory, PREFIXED_CONSOLE_LOGGER_FACTORY } from '../hub';
 import { HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, registerFeaturesServices } from '../features';
 import { ConnectionErrorFactory } from '../errors';
 import { PrefixedConsoleLoggerFactory } from '../logger';
-import { registerMessagesServices } from '../messages';
-import { registerPortValueTransformers } from '../port-value-transformers';
+import { registerProtocolServices } from '../protocol';
+import { registerMessengerServices } from '../messenger';
 
 let registered = false;
 
 export function registerServices(
+    container: DependencyContainer,
     useLinuxWorkaround: boolean
 ): void {
     if (registered) {
@@ -22,8 +23,8 @@ export function registerServices(
     container.register(HUB_SCANNER_ERROR_FACTORY, ConnectionErrorFactory);
     container.register(PREFIXED_CONSOLE_LOGGER_FACTORY, PrefixedConsoleLoggerFactory);
 
-    registerPortValueTransformers();
+    registerProtocolServices(container);
     registerFeaturesServices(container);
-    registerMessagesServices(container, useLinuxWorkaround);
+    registerMessengerServices(container, useLinuxWorkaround);
     registered = true;
 }
