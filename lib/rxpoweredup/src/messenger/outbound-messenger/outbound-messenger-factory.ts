@@ -10,14 +10,15 @@ import { OutboundMessenger } from './outbound-messenger';
 import { TaskVisitorFactory } from './task-visitor';
 import { TaskQueueFactoryFactory } from './queue';
 import type { IChannelFactory } from './i-channel-factory';
-import { CHANNEL_FACTORY } from './i-channel-factory';
+import { ChannelFactory, LinuxChromeChannelFactory } from './channel';
 
 @injectable()
 export class OutboundMessengerFactory implements IOutboundMessengerFactory {
     constructor(
         @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
         @inject(PORT_OUTPUT_COMMAND_FEEDBACK_REPLY_PARSER) private readonly feedbackIReplyParser: IReplyParser<MessageType.portOutputCommandFeedback>,
-        @inject(CHANNEL_FACTORY) private readonly channelFactory: IChannelFactory,
+        @inject(ChannelFactory) private readonly channelFactory: IChannelFactory,
+        @inject(LinuxChromeChannelFactory) private readonly linuxChromeChannelFactory: IChannelFactory,
         @inject(TaskQueueFactoryFactory) private readonly taskQueueFactoryFactory: TaskQueueFactoryFactory,
         @inject(TaskVisitorFactory) private readonly feedbackHandlerFactory: TaskVisitorFactory,
     ) {
@@ -31,7 +32,8 @@ export class OutboundMessengerFactory implements IOutboundMessengerFactory {
         logger: ILogger,
         config: OutboundMessengerConfig
     ): IOutboundMessenger {
-        const channel = this.channelFactory.createChannel(
+        const channelFactory = config.useLinuxWorkaround ? this.linuxChromeChannelFactory : this.channelFactory;
+        const channel = channelFactory.createChannel(
             characteristic,
             config.outgoingMessageMiddleware
         );

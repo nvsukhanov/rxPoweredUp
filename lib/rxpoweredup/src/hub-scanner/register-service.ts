@@ -11,8 +11,7 @@ import { registerMessengerServices } from '../messenger';
 let registered = false;
 
 export function registerServices(
-    container: DependencyContainer,
-    useLinuxWorkaround: boolean
+    container: DependencyContainer
 ): void {
     if (registered) {
         return;
@@ -25,6 +24,6 @@ export function registerServices(
 
     registerProtocolServices(container);
     registerFeaturesServices(container);
-    registerMessengerServices(container, useLinuxWorkaround);
+    registerMessengerServices(container);
     registered = true;
 }
