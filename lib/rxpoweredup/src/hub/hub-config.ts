@@ -19,7 +19,6 @@ export type HubConfig = {
     readonly logger?: ILogger;
     readonly hubConnectionTimeoutMs: number;
     readonly defaultBufferMode: PortOperationStartupInformation;
-    readonly useLinuxWorkaround?: boolean;
 } & OutboundMessengerConfig & CharacteristicDataStreamConfig;
 
 export const HUB_CONFIG_DEFAULTS: HubConfig = {
