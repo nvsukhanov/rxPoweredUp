@@ -75,7 +75,10 @@ export function App(): ReactElement {
                 setHub(connectedHub);
                 setHubConnectionState(HubConnectionState.Connected);
             },
-            error: () => setHubConnectionState(HubConnectionState.Disconnected),
+            error: (e) => {
+                setHubConnectionState(HubConnectionState.Disconnected);
+                console.error('Unable to connect to hub', e);
+            },
         });
     }, [ hubConnection, setHubConnectionState, setHub, navigator.bluetooth ]);
 

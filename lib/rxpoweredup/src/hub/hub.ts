@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject, catchError, from, fromEvent, share, switchMap, take, tap, timeout } from 'rxjs';
+import { Observable, ReplaySubject, catchError, delay, from, fromEvent, of, share, switchMap, take, tap, throwError, timeout } from 'rxjs';
 
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
@@ -141,11 +141,21 @@ export class Hub implements IHub {
                 }),
                 take(1),
                 catchError((e) => {
-                    this.logger.error(e);
-                    this.device.gatt.disconnect();
-                    this._disconnected$.next();
-                    this._isConnected = false;
-                    throw e;
+                    if (e instanceof Error) {
+                        this.logger.error(e);
+                        return of(null).pipe(
+                            // Somehow the hub is still connected after the error is thrown. We need to disconnect it manually.
+                            // Disconnecting without delay will cause the hub to not disconnect properly.
+                            delay(1000),
+                            tap(() => {
+                                this.device.gatt.disconnect();
+                                this._disconnected$.next();
+                                this._isConnected = false;
+                            }),
+                            switchMap(() => throwError(() => e))
+                        );
+                    }
+                    return throwError(() => e);
                 })
             ).subscribe(subscriber);
 
