@@ -15,10 +15,10 @@ export type HubPropertyBaseInboundMessage = {
 }
 
 export type VersionInformation = {
-    major: number;
-    minor: number;
-    bugfix: number;
-    build: number;
+    major: string;
+    minor: string;
+    bugfix: string;
+    build: string;
 }
 
 export type HubPropertyBatteryInboundMessage = {
