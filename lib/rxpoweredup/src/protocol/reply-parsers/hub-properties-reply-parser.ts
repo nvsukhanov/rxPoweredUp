@@ -140,10 +140,10 @@ export class HubPropertiesReplyParser implements IReplyParser<MessageType.proper
         const bugfix = payload[2];
         const build = payload[0] + (payload[1] << 8);
         return {
-            major: +major.toString(16),
-            minor: +minor.toString(16),
-            bugfix: +bugfix.toString(16),
-            build: +build.toString(16)
+            major: major.toString(16),
+            minor: minor.toString(16),
+            bugfix: bugfix.toString(16),
+            build: build.toString(16)
         };
     }
 }

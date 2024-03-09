@@ -20,10 +20,10 @@ describe('HubPropertiesReplyParser', () => {
             messageType: MessageType.properties,
             propertyType: HubProperty.firmwareVersion,
             firmwareVersion: {
-                major: 1,
-                minor: 7,
-                bugfix: 37,
-                build: 1510
+                major: '1',
+                minor: '7',
+                bugfix: '37',
+                build: '1510'
             }
         });
     });
@@ -40,10 +40,10 @@ describe('HubPropertiesReplyParser', () => {
             messageType: MessageType.properties,
             propertyType: HubProperty.hardwareVersion,
             hardwareVersion: {
-                major: 1,
-                minor: 2,
-                bugfix: 0,
-                build: 0
+                major: '1',
+                minor: '2',
+                bugfix: '0',
+                build: '0'
             }
         });
     });
