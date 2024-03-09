@@ -14,6 +14,13 @@ export type HubPropertyBaseInboundMessage = {
     messageType: MessageType.properties,
 }
 
+export type VersionInformation = {
+    major: number;
+    minor: number;
+    bugfix: number;
+    build: number;
+}
+
 export type HubPropertyBatteryInboundMessage = {
     propertyType: HubProperty.batteryVoltage;
     level: number;
@@ -49,13 +56,25 @@ export type HubPropertyAdvertisingNameInboundMessage = {
     advertisingName: string;
 } & HubPropertyBaseInboundMessage;
 
+export type HubPropertyFirmwareVersionInboundMessage = {
+    propertyType: HubProperty.firmwareVersion;
+    firmwareVersion: VersionInformation;
+} & HubPropertyBaseInboundMessage;
+
+export type HubPropertyHardwareVersionInboundMessage = {
+    propertyType: HubProperty.hardwareVersion;
+    hardwareVersion: VersionInformation;
+} & HubPropertyBaseInboundMessage;
+
 export type HubPropertyInboundMessage = HubPropertyBatteryInboundMessage
     | HubPropertyRssiInboundMessage
     | HubPropertySystemTypeIdInboundMessage
     | HubPropertyButtonStateInboundMessage
     | HubPropertyPrimaryMacAddressInboundMessage
     | HubPropertyAdvertisingNameInboundMessage
-    | HubPropertyManufacturerNameInboundMessage;
+    | HubPropertyManufacturerNameInboundMessage
+    | HubPropertyFirmwareVersionInboundMessage
+    | HubPropertyHardwareVersionInboundMessage;
 
 export type AttachedIoAttachInboundMessage = {
     messageType: MessageType.attachedIO,

@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { HubType } from '../constants';
+import type { VersionInformation } from '../types';
 
 export interface IHubPropertiesFeature {
     /**
@@ -76,4 +77,16 @@ export interface IHubPropertiesFeature {
     setHubAdvertisingName(
         advertisingName: string
     ): Observable<void>;
+
+    /**
+     * Reads the firmware version of the hub.
+     * Stream completes when the response is received from the hub.
+     */
+    getFirmwareVersion(): Observable<VersionInformation>;
+
+    /**
+     * Reads the hardware version of the hub.
+     * Stream completes when the response is received from the hub.
+     */
+    getHardwareVersion(): Observable<VersionInformation>;
 }
