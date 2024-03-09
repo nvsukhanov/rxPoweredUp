@@ -14,7 +14,8 @@ export type {
     PortModeInformationCapabilityBits,
     PortModeInformationValueFormat,
     PortModeInformationBase,
-    PortModeInboundMessage
+    PortModeInboundMessage,
+    VersionInformation
 } from './inbound-message';
 export type {
     RawMessage,

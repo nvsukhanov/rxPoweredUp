@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { EMPTY, Observable } from 'rxjs';
 
-import { HubType, IHub } from 'rxpoweredup';
+import { HubType, IHub, VersionInformation } from 'rxpoweredup';
 import { HubNotConnectedNotification } from '../common';
 import styles from './Hub-properties-page.module.scss';
 import { HubSubscribableProperty } from './Hub-subscribable-property';
@@ -67,6 +67,20 @@ export function HubPropertiesPage(
                                      stateKey={'primaryMacAddress'}
                                      readValue={(): Observable<string> => props.hub?.properties.getPrimaryMacAddress() ?? EMPTY}
                                      formatValue={(v?: string): string => v !== undefined ? v : 'Unknown'}
+                />
+                <HubReadableProperty name={'Firmware version'}
+                                     stateKey={'firmwareVersion'}
+                                     readValue={(): Observable<VersionInformation> => props.hub?.properties.getFirmwareVersion() ?? EMPTY}
+                                     formatValue={(v?: VersionInformation): string => v !== undefined
+                                                                                      ? `${v.major}.${v.minor}.${v.bugfix}.${v.build}`
+                                                                                      : 'Unknown'}
+                />
+                <HubReadableProperty name={'Hardware version'}
+                                     stateKey={'hardwareVersion'}
+                                     readValue={(): Observable<VersionInformation> => props.hub?.properties.getHardwareVersion() ?? EMPTY}
+                                     formatValue={(v?: VersionInformation): string => v !== undefined
+                                                                                      ? `${v.major}.${v.minor}.${v.bugfix}.${v.build}`
+                                                                                      : 'Unknown'}
                 />
             </section>
             <h2>Set hub advertising name</h2>

@@ -6,13 +6,16 @@ import {
     HubPropertyAdvertisingNameInboundMessage,
     HubPropertyBatteryInboundMessage,
     HubPropertyButtonStateInboundMessage,
+    HubPropertyFirmwareVersionInboundMessage,
+    HubPropertyHardwareVersionInboundMessage,
     HubPropertyInboundMessage,
     HubPropertyManufacturerNameInboundMessage,
     HubPropertyPrimaryMacAddressInboundMessage,
     HubPropertyRssiInboundMessage,
     HubPropertySystemTypeIdInboundMessage,
     InboundMessage,
-    RawMessage
+    RawMessage,
+    VersionInformation
 } from '../../types';
 import { convertUint8ToSignedInt } from '../../helpers';
 
@@ -31,7 +34,9 @@ export class HubPropertiesReplyParser implements IReplyParser<MessageType.proper
         [HubProperty.button]: (v): HubPropertyButtonStateInboundMessage => this.parseButtonState(v),
         [HubProperty.primaryMacAddress]: (v): HubPropertyPrimaryMacAddressInboundMessage => this.parsePrimaryMacAddress(v),
         [HubProperty.advertisingName]: (v): HubPropertyAdvertisingNameInboundMessage => this.parseAdvertisingName(v),
-        [HubProperty.manufacturerName]: (v): HubPropertyManufacturerNameInboundMessage => this.parseManufacturerName(v)
+        [HubProperty.manufacturerName]: (v): HubPropertyManufacturerNameInboundMessage => this.parseManufacturerName(v),
+        [HubProperty.firmwareVersion]: (v): HubPropertyFirmwareVersionInboundMessage => this.parseFirmwareVersion(v),
+        [HubProperty.hardwareVersion]: (v): HubPropertyHardwareVersionInboundMessage => this.parseHardwareVersion(v)
     } satisfies { [k in HubProperty]: (payload: Uint8Array) => HubPropertyInboundMessage };
 
     public parseMessage(
@@ -105,6 +110,40 @@ export class HubPropertiesReplyParser implements IReplyParser<MessageType.proper
             messageType: MessageType.properties,
             propertyType: HubProperty.advertisingName,
             advertisingName: [ ...payload ].map((v) => String.fromCharCode(v)).join('')
+        };
+    }
+
+    private parseFirmwareVersion(payload: Uint8Array): HubPropertyFirmwareVersionInboundMessage {
+        return {
+            messageType: MessageType.properties,
+            propertyType: HubProperty.firmwareVersion,
+            firmwareVersion: this.decodeVersion(payload)
+        };
+    }
+
+    private parseHardwareVersion(payload: Uint8Array): HubPropertyHardwareVersionInboundMessage {
+        return {
+            messageType: MessageType.properties,
+            propertyType: HubProperty.hardwareVersion,
+            hardwareVersion: this.decodeVersion(payload)
+        };
+    }
+
+    /**
+     * Decodes the version information from the payload. See https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#ver-no
+     * @param payload
+     * @private
+     */
+    private decodeVersion(payload: Uint8Array): VersionInformation {
+        const major = (payload[3] & 0b01110000) >>> 4;
+        const minor = payload[3] & 0b00001111;
+        const bugfix = payload[2];
+        const build = payload[0] + (payload[1] << 8);
+        return {
+            major: +major.toString(16),
+            minor: +minor.toString(16),
+            bugfix: +bugfix.toString(16),
+            build: +build.toString(16)
         };
     }
 }

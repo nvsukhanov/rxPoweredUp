@@ -102,6 +102,8 @@ export const MAX_NAME_SIZE = 14;
 export enum HubProperty {
     advertisingName = 0x01,
     button = 0x02,
+    firmwareVersion = 0x03,
+    hardwareVersion = 0x04,
     RSSI = 0x05,
     batteryVoltage = 0x06,
     manufacturerName = 0x08,

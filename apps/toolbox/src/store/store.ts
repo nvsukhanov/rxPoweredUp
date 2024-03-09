@@ -14,7 +14,8 @@ import {
     PortModeInformationInboundMessage,
     PortModeInformationType,
     RawMessage,
-    TiltData
+    TiltData,
+    VersionInformation
 } from 'rxpoweredup';
 import { BluetoothAvailability, HubConnectionState } from '../types';
 
@@ -70,6 +71,8 @@ export type HubPropertiesState = {
     systemTypeId?: HubType;
     manufacturerName?: string;
     primaryMacAddress?: string;
+    hardwareVersion?: VersionInformation;
+    firmwareVersion?: VersionInformation;
 };
 
 export enum MessageDirection {

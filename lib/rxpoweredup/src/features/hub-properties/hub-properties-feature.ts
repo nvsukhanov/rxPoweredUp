@@ -5,12 +5,15 @@ import type {
     HubPropertyAdvertisingNameInboundMessage,
     HubPropertyBatteryInboundMessage,
     HubPropertyButtonStateInboundMessage,
+    HubPropertyFirmwareVersionInboundMessage,
+    HubPropertyHardwareVersionInboundMessage,
     HubPropertyInboundMessage,
     HubPropertyManufacturerNameInboundMessage,
     HubPropertyPrimaryMacAddressInboundMessage,
     HubPropertyRssiInboundMessage,
     HubPropertySystemTypeIdInboundMessage,
-    ILogger
+    ILogger,
+    VersionInformation
 } from '../../types';
 import { IHubPropertiesFeature, IOutboundMessenger } from '../../hub';
 import { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
@@ -126,6 +129,26 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
         ) as Observable<HubPropertyManufacturerNameInboundMessage>;
         return this.messenger.sendWithResponse({ message, reply }).pipe(
             map((r) => r.manufacturerName),
+        );
+    }
+
+    public getFirmwareVersion(): Observable<VersionInformation> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.firmwareVersion);
+        const reply = this.inboundMessages.pipe(
+            filter((r) => r.propertyType === HubProperty.firmwareVersion)
+        ) as Observable<HubPropertyFirmwareVersionInboundMessage>;
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
+            map((r) => r.firmwareVersion),
+        );
+    }
+
+    public getHardwareVersion(): Observable<VersionInformation> {
+        const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.hardwareVersion);
+        const reply = this.inboundMessages.pipe(
+            filter((r) => r.propertyType === HubProperty.hardwareVersion)
+        ) as Observable<HubPropertyHardwareVersionInboundMessage>;
+        return this.messenger.sendWithResponse({ message, reply }).pipe(
+            map((r) => r.hardwareVersion),
         );
     }
 
