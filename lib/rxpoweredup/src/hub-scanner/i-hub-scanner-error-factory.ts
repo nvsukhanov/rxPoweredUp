@@ -1,8 +1,6 @@
 import { InjectionToken } from 'tsyringe';
 
 export interface IHubScannerErrorFactory {
-    createConnectionCancelledByUserError(): Error;
-
     createGattUnavailableError(): Error;
 }
 
