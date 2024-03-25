@@ -28,7 +28,7 @@ export type StartSpeedOptions = {
     useProfile?: MotorUseProfile;
     noFeedback?: boolean;
     bufferMode?: PortOperationStartupInformation;
-}
+};
 
 /**
  * Options for the startPower method (uses direct write). It seems like it works for PortModeName.speed also.
@@ -40,7 +40,7 @@ export type StartPowerOptions = {
     powerModeId?: number;
     noFeedback?: boolean;
     bufferMode?: PortOperationStartupInformation;
-}
+};
 
 /**
  * Options for the goToPosition method.
@@ -60,7 +60,7 @@ export type ServoCommandOptions = {
     useProfile?: MotorUseProfile;
     noFeedback?: boolean;
     bufferMode?: PortOperationStartupInformation;
-}
+};
 
 export interface IMotorsFeature {
     /**

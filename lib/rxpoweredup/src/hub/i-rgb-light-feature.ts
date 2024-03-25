@@ -5,8 +5,8 @@ import { PortCommandExecutionStatus } from './i-motors-feature';
 export type ColorDescriptor = {
     readonly red: number;
     readonly green: number;
-    readonly blue: number
-}
+    readonly blue: number;
+};
 
 export interface IRgbLightFeature {
     /**

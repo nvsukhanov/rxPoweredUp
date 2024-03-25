@@ -1,6 +1,6 @@
 import { Fragment, ReactElement } from 'react';
-
 import { IHub } from 'rxpoweredup';
+
 import styles from './Port-mode.module.scss';
 import { PortModeState, useHubStore } from '../store';
 import { InputPortModeId } from './Input-port-mode-id';
@@ -36,8 +36,8 @@ export function PortModesList(
                 </div>
             </section>
             {
-                props.portModeState.inputModes.length > 0 &&
-                <section>
+                props.portModeState.inputModes.length > 0
+                && <section>
                     <div className={styles['valueTitle']}>Input modes:</div>
                     <section className={styles['modesList']}>
                         {props.portModeState.inputModes.map((modeId, idx) => <Fragment key={idx}>
@@ -51,8 +51,8 @@ export function PortModesList(
                 </section>
             }
             {
-                props.portModeState.outputModes.length > 0 &&
-                <section className={styles['modesSection']}>
+                props.portModeState.outputModes.length > 0
+                && <section className={styles['modesSection']}>
                     <div className={styles['valueTitle']}>Output modes:</div>
                     <section className={styles['modesList']}>
                         {props.portModeState.outputModes.map((modeId, idx) => <Fragment key={idx}>

@@ -24,7 +24,6 @@ export class ConsoleLogger implements ILogger {
         if (this.canWrite(LogLevel.Info)) {
             console.info(...info);
         }
-
     }
 
     public warn(...warning: unknown[]): void {

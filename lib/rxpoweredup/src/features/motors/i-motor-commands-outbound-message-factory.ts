@@ -63,7 +63,7 @@ export interface IMotorCommandsOutboundMessageFactory {
         useProfile?: MotorUseProfile,
         startupMode?: PortOperationStartupInformation,
         completionMode?: PortOperationCompletionInformation,
-    ): RawPortOutputCommandMessage
+    ): RawPortOutputCommandMessage;
 
     presetEncoder(
         portId: number,

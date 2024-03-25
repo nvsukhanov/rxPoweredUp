@@ -20,5 +20,4 @@ export class HubActionsOutboundMessageFactory implements IHubActionsMessageFacto
             payload: Uint8Array.from([ HubActionType.switchOff ])
         };
     }
-
 }

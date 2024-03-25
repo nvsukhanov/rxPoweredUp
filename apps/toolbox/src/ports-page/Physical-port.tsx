@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-
 import { IHub, IOType } from 'rxpoweredup';
+
 import styles from './Physical-port.module.scss';
 import { PhysicalPortState, PortModeState, useHubStore } from '../store';
 import { PortModesList } from './Port-modes-list';

@@ -21,7 +21,7 @@ export class CharacteristicDataStreamFactory implements ICharacteristicDataStrea
     ): Observable<RawMessage<MessageType>> {
         return fromEvent(characteristic, this.characteristicValueChangedEventName).pipe(
             map((e) => this.getValueFromEvent(e)),
-            switchMap((value) => value ? of(value) : EMPTY),
+            switchMap((value) => (value ? of(value) : EMPTY)),
             map((uint8Message) => this.dissector.dissect(uint8Message)),
             map((message) => config.incomingMessageMiddleware.reduce((acc, middleware) => middleware.handle(acc), message)),
             share()

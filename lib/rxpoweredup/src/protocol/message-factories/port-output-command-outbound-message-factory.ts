@@ -306,5 +306,4 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
             throw new Error(`Absolute position must be between ${MOTOR_LIMITS.minRawAngle} and ${MOTOR_LIMITS.maxRawAngle}. Got ${absolutePosition}`);
         }
     }
-
 }

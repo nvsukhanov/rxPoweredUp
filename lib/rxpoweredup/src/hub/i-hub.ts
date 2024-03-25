@@ -55,7 +55,7 @@ export interface IHub {
     /**
      * Gracefully disconnects from the hub.
      */
-    disconnect(): Observable<void>
+    disconnect(): Observable<void>;
 
     /**
      * Gracefully powers off the hub.

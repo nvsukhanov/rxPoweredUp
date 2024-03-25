@@ -1,6 +1,5 @@
 import { devtools } from 'zustand/middleware';
 import { StateCreator, create } from 'zustand';
-
 import {
     AttachIoEvent,
     AttachedIOAttachVirtualInboundMessage,
@@ -17,6 +16,7 @@ import {
     TiltData,
     VersionInformation
 } from 'rxpoweredup';
+
 import { BluetoothAvailability, HubConnectionState } from '../types';
 
 const MAX_MESSAGE_LOG_SIZE = 100;

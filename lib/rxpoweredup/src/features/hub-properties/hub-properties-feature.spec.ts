@@ -44,9 +44,9 @@ describe('HubPropertiesFeature', () => {
 
     const SUBSCRIBABLE_TEST_DATA: Array<{
         propertyType: SubscribableHubProperties;
-        getStream: () => Observable<unknown>,
-        messageSample: HubPropertyInboundMessage,
-        isMessageValueValid: (value: unknown) => boolean
+        getStream: () => Observable<unknown>;
+        messageSample: HubPropertyInboundMessage;
+        isMessageValueValid: (value: unknown) => boolean;
     }> = [
         {
             propertyType: HubProperty.button,

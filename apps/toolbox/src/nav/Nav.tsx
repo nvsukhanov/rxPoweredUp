@@ -21,27 +21,27 @@ export function Nav(
                     disabled={props.connectionState !== HubConnectionState.Connected}
             >Disconnect</button>,
             <NavLink to={ROUTES.hubProperties}
-                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
+                     className={({ isActive }): string => (isActive ? styles['linkItem_active'] : styles['linkItem'])}
             >
                 Hub properties
             </NavLink>,
             <NavLink to={ROUTES.ports}
-                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
+                     className={({ isActive }): string => (isActive ? styles['linkItem_active'] : styles['linkItem'])}
             >
                 Ports
             </NavLink>,
             <NavLink to={ROUTES.motors}
-                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
+                     className={({ isActive }): string => (isActive ? styles['linkItem_active'] : styles['linkItem'])}
             >
                 Motors
             </NavLink>,
             <NavLink to={ROUTES.latency}
-                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
+                     className={({ isActive }): string => (isActive ? styles['linkItem_active'] : styles['linkItem'])}
             >
                 Latency
             </NavLink>,
             <NavLink to={ROUTES.ledColor}
-                     className={({ isActive }): string => isActive ? styles['linkItem_active'] : styles['linkItem']}
+                     className={({ isActive }): string => (isActive ? styles['linkItem_active'] : styles['linkItem'])}
             >
                 Led Color
             </NavLink>

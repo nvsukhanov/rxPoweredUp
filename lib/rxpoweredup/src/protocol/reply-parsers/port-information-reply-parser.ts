@@ -59,5 +59,4 @@ export class PortInformationReplyParser implements IReplyParser<MessageType.port
             outputModes,
         };
     }
-
 }

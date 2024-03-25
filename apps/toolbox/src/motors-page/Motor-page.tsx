@@ -1,6 +1,6 @@
 import { ReactElement, useState } from 'react';
-
 import { IHub } from 'rxpoweredup';
+
 import { HubNotConnectedNotification, PortIdInput } from '../common';
 import { MotorPositionControls } from './Motor-position-controls.tsx';
 import { MotorSpeedControls } from './Motor-speed-controls.tsx';

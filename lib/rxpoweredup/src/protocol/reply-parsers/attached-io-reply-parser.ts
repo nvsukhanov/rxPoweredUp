@@ -90,5 +90,4 @@ export class AttachedIoReplyParser implements IReplyParser<MessageType.attachedI
         const buildNumber = readNumberFromUint8LEArray(data.slice(2, 4));
         return `${majorVersion}.${minorVersion}.${bugFixingNumber}.${buildNumber}`;
     }
-
 }

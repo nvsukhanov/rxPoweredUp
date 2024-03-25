@@ -6,8 +6,8 @@ import { PortCommandExecutionStatus } from './i-motors-feature';
 
 export type WithResponseSequenceItem<TResponse> = {
     readonly message: RawMessage<OutboundMessageTypes>;
-    readonly reply: Observable<TResponse>
-}
+    readonly reply: Observable<TResponse>;
+};
 
 export interface IOutboundMessenger extends IDisposable {
     sendWithResponse<
@@ -15,11 +15,11 @@ export interface IOutboundMessenger extends IDisposable {
         TResult extends LastOfTuple<TSequenceItems> extends WithResponseSequenceItem<infer R> ? R : never
     >(
         ...sequenceItems: TSequenceItems
-    ): Observable<TResult>
+    ): Observable<TResult>;
 
     sendWithoutResponse(
         message: RawMessage<OutboundMessageTypes>,
-    ): Observable<void>
+    ): Observable<void>;
 
     sendPortOutputCommand(
         message: RawMessage<MessageType.portOutputCommand>,

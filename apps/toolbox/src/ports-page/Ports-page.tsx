@@ -1,6 +1,6 @@
 import { ReactElement, useEffect } from 'react';
-
 import { IHub } from 'rxpoweredup';
+
 import { HubNotConnectedNotification } from '../common';
 import { useHubStore } from '../store';
 import { PortsList } from './Ports-list';

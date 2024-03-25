@@ -1,7 +1,7 @@
 import { ReactElement, useCallback } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-
 import { IHub } from 'rxpoweredup';
+
 import { PhysicalPortState, useHubStore } from '../store';
 import { PhysicalPort } from './Physical-port';
 import { HubNotConnectedNotification } from '../common';
