@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { Observable, Subject, concat, take, takeUntil } from 'rxjs';
-
 import { IHub, PortOperationStartupInformation } from 'rxpoweredup';
+
 import { MotorBufferModeSelect, NoFeedbackInput, PortIdInput } from '../common';
 
 export function BurstTest(

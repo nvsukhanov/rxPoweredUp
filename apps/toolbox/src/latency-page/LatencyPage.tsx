@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react';
+import { IHub } from 'rxpoweredup';
 
 import { BurstTest } from './BurstTest.tsx';
-import { IHub } from 'rxpoweredup';
 import { SequenceDuration } from './SequenceDuration.tsx';
 
 export function LatencyPage(

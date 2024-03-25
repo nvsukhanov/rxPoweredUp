@@ -14,11 +14,11 @@ export type OnIoAttachFilter = {
     ports?: ReadonlyArray<number>;
     ioTypes?: ReadonlyArray<IOType>;
     eventTypes?: ReadonlyArray<AttachIoEvent.Attached | AttachIoEvent.AttachedVirtual>;
-}
+};
 
 export type OnIoDetachFilter = {
     ports?: ReadonlyArray<number>;
-}
+};
 
 export interface IPortsFeature {
     /**

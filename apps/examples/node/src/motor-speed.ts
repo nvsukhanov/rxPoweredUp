@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { audit, concat, lastValueFrom, switchMap, timer } from 'rxjs';
 import { bluetooth } from 'webbluetooth';
-
 import { LogLevel, connectHub } from 'rxpoweredup';
+
 import { waitForPromise } from './wait-for-promise';
 
 console.log('Waiting for Hub...');

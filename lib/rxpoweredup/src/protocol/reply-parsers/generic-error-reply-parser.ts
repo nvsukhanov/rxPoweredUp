@@ -17,5 +17,4 @@ export class GenericErrorReplyParser implements IReplyParser<MessageType> {
             code: message.payload[1]
         };
     }
-
 }

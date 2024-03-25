@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
-
 import { MessageType } from 'rxpoweredup';
+
 import { MessageDirection, MessageLogEntry } from '../../store';
 import { numberToHex } from '../../common';
 import styles from './Messages-log-entry.module.scss';

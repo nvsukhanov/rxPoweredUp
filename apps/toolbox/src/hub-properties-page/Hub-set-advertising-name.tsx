@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, ReactElement, useId, useRef, useState } from 'react';
 import { Subject, finalize, takeUntil } from 'rxjs';
-
 import { IHub } from 'rxpoweredup';
+
 import styles from './Hub-set-advertising-name.module.scss';
 import { useHubStore } from '../store';
 

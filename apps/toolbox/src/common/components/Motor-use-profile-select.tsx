@@ -1,5 +1,4 @@
 import { ChangeEvent, ReactElement, useId } from 'react';
-
 import { MotorUseProfile } from 'rxpoweredup';
 
 export function MotorUseProfileSelect(

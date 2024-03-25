@@ -1,6 +1,6 @@
 import { DependencyContainer, InjectionToken, RegistrationOptions } from 'tsyringe';
 
-type constructor<T> = {
+type Constructor<T> = {
     new(...args: unknown[]): T;
 };
 
@@ -22,7 +22,7 @@ export type TokenProviderWithToken<T> = {
 
 export type ClassProviderWithToken<T> = {
     provide: InjectionToken<T>;
-    useClass: constructor<T>;
+    useClass: Constructor<T>;
     options?: RegistrationOptions;
 };
 

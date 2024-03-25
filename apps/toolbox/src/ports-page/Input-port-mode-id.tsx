@@ -1,7 +1,7 @@
 import { ChangeEvent, Fragment, ReactElement, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-
 import { IHub, IPortValueTransformer, PortModeInformationType, ValueTransformers } from 'rxpoweredup';
+
 import { PortModeInfoState, PortValuesState, hashPortIdModeId, useHubStore } from '../store';
 import { numberFromLeArray, numberToHex } from '../common';
 import styles from './Input-port-mode-id.module.scss';

@@ -214,11 +214,11 @@ export enum OutputSubCommand {
 
 export enum PortCommandFeedbackMask {
     bufferEmptyCommandInProgress = 0x01, // 0b000001 // 1
-    bufferEmptyCommandCompleted = 0x02,  // 0b000010 // 2
-    currentCommandDiscarded = 0x04,      // 0b000100 // 4
-    idle = 0x08,                         // 0b001000 // 8
-    busyOrFull = 0x10,                   // 0b010000 // 16
-    executionError = 0x20,               // 0b100000 // 32 // missing in docs but present in responses (i.g. servo unable to reach position)
+    bufferEmptyCommandCompleted = 0x02, // 0b000010 // 2
+    currentCommandDiscarded = 0x04, // 0b000100 // 4
+    idle = 0x08, // 0b001000 // 8
+    busyOrFull = 0x10, // 0b010000 // 16
+    executionError = 0x20, // 0b100000 // 32 // missing in docs but present in responses (i.g. servo unable to reach position)
 }
 
 export enum GenericErrorCode {

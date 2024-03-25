@@ -64,5 +64,4 @@ describe('TaskWithoutResponse', () => {
         subscription.add(subject.execute(instance(channelMock)).subscribe());
         subscription.add(subject.execute(instance(channelMock)).subscribe());
     });
-
 });

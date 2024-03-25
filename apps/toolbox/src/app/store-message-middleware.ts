@@ -1,4 +1,5 @@
 import { IMessageMiddleware, MessageType, RawMessage } from 'rxpoweredup';
+
 import { MessageDirection } from '../store';
 
 export class StoreMessageMiddleware implements IMessageMiddleware {

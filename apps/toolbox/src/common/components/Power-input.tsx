@@ -1,5 +1,4 @@
 import { ChangeEvent, ReactElement, useId, useState } from 'react';
-
 import { MOTOR_LIMITS } from 'rxpoweredup';
 
 export function PowerInput(

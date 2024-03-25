@@ -1,10 +1,20 @@
 {
   "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nx"],
+  "ignorePatterns": [
+    "**/*"
+  ],
+  "plugins": [
+    "@nx",
+    "@stylistic"
+  ],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": [
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.jsx"
+      ],
       "rules": {
         "@nx/enforce-module-boundaries": [
           "error",
@@ -14,7 +24,9 @@
             "depConstraints": [
               {
                 "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
+                "onlyDependOnLibsWithTags": [
+                  "*"
+                ]
               }
             ]
           }
@@ -22,13 +34,18 @@
       }
     },
     {
-      "files": ["*.ts", "*.tsx"],
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
       "extends": [
         "plugin:@nx/typescript",
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
-        "plugin:import/typescript"
+        "plugin:import/typescript",
+        "plugin:import/errors",
+        "plugin:import/warnings"
       ],
       "settings": {
         "import/resolver": {
@@ -54,14 +71,6 @@
         ]
       },
       "rules": {
-        "@typescript-eslint/explicit-function-return-type": [
-          "error"
-        ],
-        "semi": "error",
-        "lines-between-class-members": "off",
-        "@typescript-eslint/lines-between-class-members": [
-          "error"
-        ],
         "no-console": [
           "error",
           {
@@ -71,6 +80,75 @@
             ]
           }
         ],
+        "@stylistic/arrow-spacing": "error",
+        "@stylistic/arrow-parens": "error",
+        "@stylistic/brace-style": "error",
+        "@stylistic/computed-property-spacing": "error",
+        "@stylistic/key-spacing": [
+          "error",
+          {
+            "beforeColon": false,
+            "afterColon": true
+          }
+        ],
+        "@stylistic/keyword-spacing": "error",
+        "@stylistic/lines-between-class-members": "error",
+        "@stylistic/max-len": [
+          "error",
+          {
+            "code": 160,
+            "ignoreComments": true
+          }
+        ],
+        "@stylistic/max-statements-per-line": [
+          "error",
+          {
+            "max": 1
+          }
+        ],
+        "@stylistic/member-delimiter-style": "error",
+        "@stylistic/new-parens": "error",
+        "@stylistic/no-confusing-arrow": "error",
+        "@stylistic/no-floating-decimal": "error",
+        "@stylistic/no-multi-spaces": "error",
+        "@stylistic/no-multiple-empty-lines": "error",
+        "@stylistic/no-whitespace-before-property": "error",
+        "@stylistic/one-var-declaration-per-line": "error",
+        "@stylistic/operator-linebreak": [
+          "error",
+          "before"
+        ],
+        "@stylistic/padded-blocks": [
+          "error",
+          "never"
+        ],
+        "@stylistic/semi": "error",
+        "@stylistic/quotes": [
+          "error",
+          "single"
+        ],
+        "@stylistic/quote-props": [
+          "error",
+          "as-needed"
+        ],
+        "@stylistic/space-before-blocks": "error",
+        "@stylistic/space-before-function-paren": [
+          "error",
+          {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+          }
+        ],
+        "@stylistic/space-in-parens": "error",
+        "@stylistic/space-infix-ops": "error",
+        "@stylistic/spaced-comment": "error",
+        "@stylistic/switch-colon-spacing": "error",
+        "@stylistic/template-curly-spacing": "error",
+        "@stylistic/type-annotation-spacing": "error",
+        "@stylistic/type-generic-spacing": "error",
+        "@stylistic/type-named-tuple-spacing": "error",
+        "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/member-ordering": [
           "error",
           {
@@ -99,12 +177,6 @@
             ]
           }
         ],
-        "max-len": [
-          "error",
-          {
-            "code": 160
-          }
-        ],
         "@typescript-eslint/no-inferrable-types": [
           "error",
           {
@@ -122,8 +194,33 @@
             "format": [
               "UPPER_CASE"
             ]
+          },
+          {
+            "selector": "parameter",
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "allow"
+          },
+          {
+            "selector": "typeLike",
+            "format": [
+              "PascalCase"
+            ]
+          },
+          {
+            "selector": "interface",
+            "format": [
+              "PascalCase"
+            ],
+            "custom": {
+              "regex": "^I[A-Z]",
+              "match": true
+            }
           }
         ],
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
         "import/no-cycle": [
           "error",
           {
@@ -134,9 +231,20 @@
           "error",
           {
             "groups": [
-              "external"
+              [
+                "external",
+                "internal"
+              ]
             ],
-            "newlines-between": "always"
+            "pathGroups": [
+              {
+                "pattern": "@app/**",
+                "group": "external",
+                "position": "after"
+              }
+            ],
+            "newlines-between": "always",
+            "distinctGroup": false
           }
         ],
         "sort-imports": [
@@ -161,9 +269,6 @@
         "import/no-duplicates": [
           "error"
         ],
-        "import/no-unresolved": [
-          "error"
-        ],
         "import/first": [
           "error"
         ],
@@ -172,17 +277,6 @@
         ],
         "import/no-mutable-exports": [
           "error"
-        ],
-        "no-shadow": "off",
-        "@typescript-eslint/no-shadow": "error",
-        "quotes": "off",
-        "@typescript-eslint/quotes": [
-          "error",
-          "single"
-        ],
-        "arrow-parens": [
-          "error",
-          "always"
         ]
       }
     }

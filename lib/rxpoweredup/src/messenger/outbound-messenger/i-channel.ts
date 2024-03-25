@@ -5,5 +5,5 @@ export interface IChannel {
     sendMessage(
         message: RawMessage<MessageType>,
         beforeSend?: () => void
-    ): Promise<void>
+    ): Promise<void>;
 }

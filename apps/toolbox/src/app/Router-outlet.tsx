@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { Routes } from 'react-router-dom';
-
 import { IHub } from 'rxpoweredup';
+
 import { buildRoutes } from './routes-factory';
 
 export function RouterOutlet(

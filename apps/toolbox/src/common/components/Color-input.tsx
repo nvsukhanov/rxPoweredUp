@@ -1,5 +1,4 @@
 import { ReactElement, useState } from 'react';
-
 import { ColorDescriptor } from 'rxpoweredup';
 
 export function ColorInput(

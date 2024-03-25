@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
-
 import { LogLevel } from 'rxpoweredup';
+
 import { ConsoleLogEntry } from '../../store';
 import styles from './ConsoleLogMessage.module.scss';
 

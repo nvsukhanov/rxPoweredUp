@@ -1,7 +1,7 @@
 import { Fragment, ReactElement } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-
 import { PortModeInformationType } from 'rxpoweredup';
+
 import { PortModeInfoState, hashPortIdModeId, useHubStore } from '../store';
 import styles from './Output-port-mode-id.module.scss';
 import { PORT_MODE_INFORMATION_TYPES_LIST } from './port-mode-information-types-list';

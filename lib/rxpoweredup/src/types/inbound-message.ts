@@ -11,15 +11,15 @@ import {
 } from '../constants';
 
 export type HubPropertyBaseInboundMessage = {
-    messageType: MessageType.properties,
-}
+    messageType: MessageType.properties;
+};
 
 export type VersionInformation = {
     major: string;
     minor: string;
     bugfix: string;
     build: string;
-}
+};
 
 export type HubPropertyBatteryInboundMessage = {
     propertyType: HubProperty.batteryVoltage;
@@ -77,28 +77,28 @@ export type HubPropertyInboundMessage = HubPropertyBatteryInboundMessage
     | HubPropertyHardwareVersionInboundMessage;
 
 export type AttachedIoAttachInboundMessage = {
-    messageType: MessageType.attachedIO,
+    messageType: MessageType.attachedIO;
     portId: number;
     event: AttachIoEvent.Attached;
     ioTypeId: IOType;
     hardwareRevision: string;
     softwareRevision: string;
-}
+};
 
 export type AttachedIOAttachVirtualInboundMessage = {
-    messageType: MessageType.attachedIO,
+    messageType: MessageType.attachedIO;
     portId: number;
     event: AttachIoEvent.AttachedVirtual;
     ioTypeId: IOType;
     portIdA: number;
     portIdB: number;
-}
+};
 
 export type AttachedIODetachInboundMessage = {
-    messageType: MessageType.attachedIO,
+    messageType: MessageType.attachedIO;
     portId: number;
     event: AttachIoEvent.Detached;
-}
+};
 
 export type AttachedIOInboundMessage = AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage | AttachedIODetachInboundMessage;
 
@@ -106,12 +106,12 @@ export type PortValueInboundMessage = {
     messageType: MessageType.portValueSingle;
     portId: number;
     value: number[];
-}
+};
 
 export type PortModeInboundMessage = {
-    messageType: MessageType.portInformation,
+    messageType: MessageType.portInformation;
     portId: number;
-    informationType: PortInformationReplyType.modeInfo,
+    informationType: PortInformationReplyType.modeInfo;
     capabilities: {
         output: boolean;
         input: boolean;
@@ -122,13 +122,13 @@ export type PortModeInboundMessage = {
     totalModeCount: number;
     inputModes: number[];
     outputModes: number[];
-}
+};
 
 export type PortModeInformationBase = {
     messageType: MessageType.portModeInformation;
     portId: number;
     mode: number;
-}
+};
 
 export type PortModeInformationName = {
     modeInformationType: PortModeInformationType.name;
@@ -139,24 +139,24 @@ export type PortModeInformationRawRange = {
     modeInformationType: PortModeInformationType.rawRange;
     rawMin: number;
     rawMax: number;
-} & PortModeInformationBase
+} & PortModeInformationBase;
 
 export type PortModeInformationPctRange = {
     modeInformationType: PortModeInformationType.pctRange;
     pctMin: number;
     pctMax: number;
-} & PortModeInformationBase
+} & PortModeInformationBase;
 
 export type PortModeInformationSiRange = {
     modeInformationType: PortModeInformationType.siRange;
     siMin: number;
     siMax: number;
-} & PortModeInformationBase
+} & PortModeInformationBase;
 
 export type PortModeInformationSymbol = {
     modeInformationType: PortModeInformationType.symbol;
     symbol: string;
-} & PortModeInformationBase
+} & PortModeInformationBase;
 
 export type PortModeInformationMapping = {
     modeInformationType: PortModeInformationType.mapping;
@@ -166,14 +166,14 @@ export type PortModeInformationMapping = {
         abs: boolean;
         rel: boolean;
         dis: boolean;
-    },
+    };
     outputSide: {
         supportsNull: boolean;
         supportsFunctionalMapping: boolean;
         abs: boolean;
         rel: boolean;
         dis: boolean;
-    }
+    };
 } & PortModeInformationBase;
 
 export type PortModeInformationMotorBias = {
@@ -209,19 +209,19 @@ export type PortOutputCommandFeedback = {
     idle: boolean;
     busyOrFull: boolean;
     executionError: boolean;
-}
+};
 
 export type PortOutputCommandFeedbackInboundMessage = {
     messageType: MessageType.portOutputCommandFeedback;
     portId: number;
     feedback: PortOutputCommandFeedback;
-}
+};
 
 export type GenericErrorInboundMessage = {
     messageType: MessageType.genericError;
     commandType: MessageType;
     code: GenericErrorCode;
-}
+};
 
 export type PortInputSetupSingleHandshakeInboundMessage = {
     messageType: MessageType.portInputFormatSetupSingleHandshake;
@@ -229,12 +229,12 @@ export type PortInputSetupSingleHandshakeInboundMessage = {
     modeId: number;
     deltaInterval: number;
     notificationEnabled: boolean;
-}
+};
 
 export type HubActionInboundMessage = {
     messageType: MessageType.action;
     actionType: HubActionType;
-}
+};
 
 export type InboundMessage =
     HubPropertyInboundMessage

@@ -116,7 +116,7 @@ export class PortsFeature implements IPortsFeature, IDisposable {
             { message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ },
             { message: portValueRequestMessage, reply: portValuesReplies$ }
         ).pipe(
-            map((r) => transformer ? transformer.fromRawValue(r.value) : r.value)
+            map((r) => (transformer ? transformer.fromRawValue(r.value) : r.value))
         ) as TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
     }
 
@@ -171,14 +171,14 @@ export class PortsFeature implements IPortsFeature, IDisposable {
                 ).pipe(
                     last(),
                     switchMap(() => portValuesReplies$),
-                    map(({ value }) => transformer ? transformer.fromRawValue(value) : value)
+                    map(({ value }) => (transformer ? transformer.fromRawValue(value) : value))
                 ).subscribe(subscriber);
 
                 handShakeMessageSent = true;
                 return () => teardownLogic(sub);
             } else {
                 const sub = portValuesReplies$.pipe(
-                    map(({ value }) => transformer ? transformer.fromRawValue(value) : value)
+                    map(({ value }) => (transformer ? transformer.fromRawValue(value) : value))
                 ).subscribe(subscriber);
                 return () => teardownLogic(sub);
             }

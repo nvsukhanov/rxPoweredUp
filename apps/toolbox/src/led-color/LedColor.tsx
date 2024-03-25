@@ -1,12 +1,12 @@
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { Subject, takeUntil } from 'rxjs';
-
 import { ColorDescriptor, IHub, WELL_KNOWN_PORT_MODE_IDS } from 'rxpoweredup';
+
 import { ColorInput, ModeIdInput, PortIdInput } from '../common';
 
 export function LedColor(
     props: {
-        hub?: IHub
+        hub?: IHub;
     }
 ): ReactElement {
     const [ portId, setPortId ] = useState<number | undefined>(0);

@@ -8,4 +8,4 @@ import { IMessageMiddleware } from './i-message-middleware';
  */
 export type CharacteristicDataStreamConfig = {
     readonly incomingMessageMiddleware: IMessageMiddleware[];
-}
+};

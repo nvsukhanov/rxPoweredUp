@@ -1,7 +1,7 @@
 import { Route } from 'react-router-dom';
 import { ReactElement } from 'react';
-
 import { IHub } from 'rxpoweredup';
+
 import { HubPropertiesPage } from '../hub-properties-page';
 import { ROUTES } from '../common';
 import { MotorPage } from '../motors-page';

@@ -1,13 +1,13 @@
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { Subject, takeUntil } from 'rxjs';
-
 import { IHub, PortModeName, WELL_KNOWN_PORT_MODE_IDS } from 'rxpoweredup';
+
 import { ModeIdInput, PowerInput } from '../common';
 
 export function MotorPowerControls(
     props: {
         hub: IHub;
-        portId: number | undefined
+        portId: number | undefined;
     }
 ): ReactElement {
     const [ modeId, setModeId ] = useState<number | undefined>(WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.power]);
@@ -28,7 +28,7 @@ export function MotorPowerControls(
             dispose$.current.next();
             dispose$.current.complete();
         };
-    }, [ dispose$ ]);
+    }, [ dispose$.current ]);
 
     return (
         <>

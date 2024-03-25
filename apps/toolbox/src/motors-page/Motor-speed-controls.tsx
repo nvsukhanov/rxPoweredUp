@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { Subject, takeUntil } from 'rxjs';
-
 import { IHub, MOTOR_LIMITS, MotorUseProfile, PortOperationStartupInformation } from 'rxpoweredup';
+
 import { SpeedInput, SpeedOptionsForm, SpeedOptionsFormResult } from '../common';
 
 export function MotorSpeedControls(

@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { Subject, finalize, takeUntil } from 'rxjs';
-
 import { IHub, PortModeName, ValueTransformers, WELL_KNOWN_PORT_MODE_IDS } from 'rxpoweredup';
+
 import { MotorPositionInfoItem } from './Motor-position-info-item.tsx';
 
 export function MotorPositionInfo(
