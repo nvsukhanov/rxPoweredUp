@@ -19,9 +19,7 @@ export class HubScanner implements IHubScanner {
             ]
         })).pipe(
             map((device) => {
-                if (!device) {
-                    throw this.hubScannerErrorFactory.createConnectionCancelledByUserError();
-                } else if (this.isDeviceWithGatt(device)) {
+                if (this.isDeviceWithGatt(device)) {
                     return device;
                 } else {
                     throw this.hubScannerErrorFactory.createGattUnavailableError();
