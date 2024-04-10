@@ -3,9 +3,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
-import { App } from './app';
+import { App } from './App';
 import './index.css';
-import { DiContainer, ERROR_HANDLER, ErrorHandler, InjectionProviderWithToken, NAVIGATOR, WINDOW } from './common';
+import { DiContainer, ERROR_HANDLER, ErrorHandler, InjectionProviderWithToken, NAVIGATOR, WINDOW } from './Common';
 
 const ROOT_PROVIDERS: Array<InjectionProviderWithToken> = [
     { provide: WINDOW, useValue: window },

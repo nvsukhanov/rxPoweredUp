@@ -1,4 +1,4 @@
-import { IErrorHandler } from './types';
+import { IErrorHandler } from './Types';
 
 export class ErrorHandler implements IErrorHandler {
     public handleError(error: Error): void {

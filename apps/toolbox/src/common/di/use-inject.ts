@@ -1,7 +1,7 @@
 import { InjectionToken } from 'tsyringe';
 import { useContext } from 'react';
 
-import { DiContext } from './di-context.ts';
+import { DiContext } from './DiContext';
 
 export function useInject<T>(
     token: InjectionToken<T>

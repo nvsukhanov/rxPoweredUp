@@ -1,5 +1,5 @@
-export { HubPropertiesPage } from './hub-properties-page';
-export { LatencyPage } from './latency-page';
-export { LedColor } from './led-color';
-export { MotorPage } from './motors-page';
-export { PortsPage } from './ports-page';
+export { HubPropertiesPage } from './HubPropertiesPage';
+export { LatencyPage } from './LatencyPage';
+export { LedColorPage } from './LedColorPage';
+export { MotorPage } from './MotorPage';
+export { PortsPage } from './PortsPage';

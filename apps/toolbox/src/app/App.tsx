@@ -1,14 +1,14 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { IHub, LogLevel, PortOperationStartupInformation, connectHub } from 'rxpoweredup';
 
+import { BluetoothIsUnavailableNotification, Nav } from '../Components';
 import styles from './App.module.scss';
-import { BluetoothAvailability, HubConnectionState, NAVIGATOR, WINDOW, useInject } from '../common';
-import { RouterOutlet } from './Router-outlet';
-import { MessageDirection, useHubStore } from '../store';
+import { BluetoothAvailability, HubConnectionState, NAVIGATOR, WINDOW, useInject } from '../Common';
+import { RouterOutlet } from './RouterOutlet';
+import { MessageDirection, useHubStore } from '../Store';
 import { StoreMessageMiddleware } from './store-message-middleware';
-import { StoreLogger } from './store-logger.ts';
-import { Footer } from './footer';
-import { BluetoothUnavailableNotification, Nav } from '../components';
+import { StoreLogger } from './store-logger';
+import { Footer } from './Footer';
 
 export function App(): ReactElement {
     const window = useInject(WINDOW);
@@ -117,7 +117,7 @@ export function App(): ReactElement {
         case BluetoothAvailability.Unavailable:
             return (
                 <main className={styles['main']}>
-                    <BluetoothUnavailableNotification/>
+                    <BluetoothIsUnavailableNotification/>
                 </main>
             );
     }

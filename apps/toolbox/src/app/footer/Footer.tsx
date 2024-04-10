@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react';
 
-import { MessagesLog } from '../messages-log';
-import { ConsoleLog } from '../console-log';
+import { MessagesLog } from '../MessageLog';
+import { ConsoleLog } from '../ConsoleLog';
 import styles from './Footer.module.scss';
 
 enum DisplayMode {

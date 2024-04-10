@@ -17,7 +17,7 @@ import {
     VersionInformation
 } from 'rxpoweredup';
 
-import { BluetoothAvailability, HubConnectionState } from '../common';
+import { BluetoothAvailability, HubConnectionState } from '../Common';
 
 const MAX_MESSAGE_LOG_SIZE = 100;
 const MAX_CONSOLE_LOG_SIZE = 100;

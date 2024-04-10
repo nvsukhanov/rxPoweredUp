@@ -1,3 +1,3 @@
-export * from './use-inject.ts';
-export * from './di-container.tsx';
-export * from './injection-provider-with-token.ts';
+export * from './use-inject';
+export * from './DiContainer';
+export * from './injection-provider-with-token';
