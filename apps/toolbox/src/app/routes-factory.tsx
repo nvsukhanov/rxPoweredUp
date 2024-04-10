@@ -2,12 +2,8 @@ import { Route } from 'react-router-dom';
 import { ReactElement } from 'react';
 import { IHub } from 'rxpoweredup';
 
-import { HubPropertiesPage } from '../hub-properties-page';
 import { ROUTES } from '../common';
-import { MotorPage } from '../motors-page';
-import { PortsPage } from '../ports-page';
-import { LatencyPage } from '../latency-page';
-import { LedColor } from '../led-color';
+import { HubPropertiesPage, LatencyPage, LedColor, MotorPage, PortsPage } from '../pages';
 
 export function buildRoutes(
     hub: IHub | undefined

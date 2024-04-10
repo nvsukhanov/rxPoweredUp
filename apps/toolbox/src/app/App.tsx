@@ -2,15 +2,13 @@ import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { IHub, LogLevel, PortOperationStartupInformation, connectHub } from 'rxpoweredup';
 
 import styles from './App.module.scss';
-import { Nav } from '../nav';
-import { BluetoothAvailability, HubConnectionState, NAVIGATOR, WINDOW } from '../types';
+import { BluetoothAvailability, HubConnectionState, NAVIGATOR, WINDOW, useInject } from '../common';
 import { RouterOutlet } from './Router-outlet';
-import { BluetoothUnavailableNotification } from '../common';
 import { MessageDirection, useHubStore } from '../store';
 import { StoreMessageMiddleware } from './store-message-middleware';
-import { useInject } from '../di';
 import { StoreLogger } from './store-logger.ts';
 import { Footer } from './footer';
+import { BluetoothUnavailableNotification, Nav } from '../components';
 
 export function App(): ReactElement {
     const window = useInject(WINDOW);
