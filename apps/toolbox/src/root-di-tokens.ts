@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
 
-import { ERROR_HANDLER, ErrorHandler, NAVIGATOR, WINDOW } from './common';
+import { ERROR_HANDLER, ErrorHandler, NAVIGATOR, WINDOW } from './Common';
 
 export function provideRootDiTokens(): void {
     container.register(WINDOW, { useValue: window });
