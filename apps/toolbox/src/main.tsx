@@ -5,9 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { App } from './app';
 import './index.css';
-import { DiContainer, InjectionProviderWithToken } from './di';
-import { ERROR_HANDLER, NAVIGATOR, WINDOW } from './types';
-import { ErrorHandler } from './common';
+import { DiContainer, ERROR_HANDLER, ErrorHandler, InjectionProviderWithToken, NAVIGATOR, WINDOW } from './common';
 
 const ROOT_PROVIDERS: Array<InjectionProviderWithToken> = [
     { provide: WINDOW, useValue: window },
