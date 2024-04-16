@@ -11,7 +11,7 @@
   },
   "private": true,
   "devDependencies": {
-    "@nvsukhanov/eslint-config-common": "^0.0.1",
+    "@nvsukhanov/eslint-config-common": "^0.0.3",
     "@nx/esbuild": "17.2.8",
     "@nx/eslint": "17.2.8",
     "@nx/eslint-plugin": "17.2.8",
@@ -39,7 +39,7 @@
     "@vitejs/plugin-react": "^4.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "esbuild": "^0.19.2",
-    "eslint": "~8.48.0",
+    "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
