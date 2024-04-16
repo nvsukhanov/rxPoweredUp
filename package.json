@@ -11,6 +11,7 @@
   },
   "private": true,
   "devDependencies": {
+    "@nvsukhanov/eslint-config-common": "^0.0.1",
     "@nx/esbuild": "17.2.8",
     "@nx/eslint": "17.2.8",
     "@nx/eslint-plugin": "17.2.8",
