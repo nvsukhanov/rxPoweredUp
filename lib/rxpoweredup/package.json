@@ -1,6 +1,6 @@
 {
   "name": "rxpoweredup",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "A Typescript RxJS-based library for controlling LEGO Powered UP hubs & peripherals.",
   "homepage": "https://github.com/nvsukhanov/rxPoweredUp/",
   "keywords": [
