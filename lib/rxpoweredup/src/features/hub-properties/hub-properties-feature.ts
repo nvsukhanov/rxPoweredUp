@@ -179,7 +179,7 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
                     subscriber.next();
                     subscriber.complete();
                 }
-                return () => void 0;
+                return (): void => void 0;
             });
         });
 

@@ -19,7 +19,7 @@ export function BurstTest(
     const dispose$ = disposeRef$.current;
 
     useEffect(() => {
-        return () => dispose$.next();
+        return (): void => dispose$.next();
     }, [ dispose$ ]);
 
     const execute = useCallback((): void => {
@@ -48,7 +48,7 @@ export function BurstTest(
                         subscriber.complete();
                     }
                 });
-                return () => {
+                return (): void => {
                     sub.unsubscribe();
                 };
             });

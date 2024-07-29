@@ -18,7 +18,7 @@ export function HubReadableProperty<TStateKey extends keyof HubPropertiesState>(
     const setHubProperty = useHubStore((state) => state.setHubProperty);
 
     useEffect(() => {
-        return () => dispose$.next();
+        return (): void => dispose$.next();
     }, [ dispose$ ]);
 
     const readValue = useCallback(() => {

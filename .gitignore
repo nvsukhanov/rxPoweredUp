@@ -35,5 +35,5 @@ tsconfig.tsbuildinfo
 .DS_Store
 Thumbs.db
 
-.nx/cache
+.nx
 tmp
