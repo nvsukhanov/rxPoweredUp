@@ -22,7 +22,7 @@ export function HubSubscribableProperty<TStateKey extends keyof HubPropertiesSta
     const [ isSubscribed, setIsSubscribed ] = useState<boolean>(false);
 
     useEffect(() => {
-        return () => dispose$.next();
+        return (): void => dispose$.next();
     }, [ dispose$ ]);
 
     const readValue = useCallback(() => {
