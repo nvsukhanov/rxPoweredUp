@@ -19,7 +19,7 @@ export class CharacteristicDataStreamFactory implements ICharacteristicDataStrea
         characteristic: BluetoothRemoteGATTCharacteristic,
         config: CharacteristicDataStreamConfig
     ): Observable<RawMessage<MessageType>> {
-        return fromEvent(characteristic, this.characteristicValueChangedEventName).pipe(
+        return fromEvent<Event>(characteristic, this.characteristicValueChangedEventName).pipe(
             map((e) => this.getValueFromEvent(e)),
             switchMap((value) => (value ? of(value) : EMPTY)),
             map((uint8Message) => this.dissector.dissect(uint8Message)),

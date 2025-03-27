@@ -42,7 +42,7 @@ export function BurstTest(
                     take(1),
                     takeUntil(disposeRef$.current)
                 ).subscribe({
-                    next: () => subscriber.next(),
+                    next: (v) => subscriber.next(v),
                     complete: () => {
                         props.updateSequenceDuration(index, Date.now() - start);
                         subscriber.complete();
