@@ -262,7 +262,6 @@ export const useHubStore = create<HubStore>(devtools((set) => ({
     },
     processPortModeInformationMessage(message: PortModeInformationInboundMessage): void {
         const hash = hashPortIdModeId(message.portId, message.mode);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { portId, mode, modeInformationType, messageType, ...data } = message;
 
         set((state) => {

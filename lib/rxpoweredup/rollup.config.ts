@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { defineConfig } from 'rollup';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';

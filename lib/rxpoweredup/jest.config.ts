@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'rxpoweredup',
     preset: '../../jest.preset.js',
