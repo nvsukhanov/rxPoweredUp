@@ -1,5 +1,5 @@
 export type TiltData = {
-    roll: number;
-    pitch: number;
-    yaw: number;
+  roll: number;
+  pitch: number;
+  yaw: number;
 };

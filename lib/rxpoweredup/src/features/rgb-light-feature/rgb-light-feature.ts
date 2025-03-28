@@ -6,23 +6,18 @@ import { WELL_KNOWN_PORT_MODE_IDS } from '../../constants';
 import { IPortInputFormatSetupMessageFactory } from '../i-port-input-format-setup-message-factory';
 
 export class RgbLightFeature implements IRgbLightFeature {
-    constructor(
-        private readonly messenger: IOutboundMessenger,
-        private readonly ledCommandsFactory: IRgbLightCommandsFactory,
-        private readonly portInputSetupMessageFactory: IPortInputFormatSetupMessageFactory
-    ) {
-    }
+  constructor(
+    private readonly messenger: IOutboundMessenger,
+    private readonly ledCommandsFactory: IRgbLightCommandsFactory,
+    private readonly portInputSetupMessageFactory: IPortInputFormatSetupMessageFactory
+  ) {}
 
-    setRgbColor(
-        portId: number,
-        color: ColorDescriptor,
-        modeId: number = WELL_KNOWN_PORT_MODE_IDS.rgbLightRgbColor
-    ): Observable<PortCommandExecutionStatus> {
-        const setPortModeMessage = this.portInputSetupMessageFactory.createMessage(portId, modeId, false);
-        const message = this.ledCommandsFactory.createSetRgbColorCommand(portId, modeId, color);
-        return this.messenger.sendWithoutResponse(setPortModeMessage).pipe(
-            last(),
-            switchMap(() => this.messenger.sendPortOutputCommand(message))
-        );
-    }
+  setRgbColor(portId: number, color: ColorDescriptor, modeId: number = WELL_KNOWN_PORT_MODE_IDS.rgbLightRgbColor): Observable<PortCommandExecutionStatus> {
+    const setPortModeMessage = this.portInputSetupMessageFactory.createMessage(portId, modeId, false);
+    const message = this.ledCommandsFactory.createSetRgbColorCommand(portId, modeId, color);
+    return this.messenger.sendWithoutResponse(setPortModeMessage).pipe(
+      last(),
+      switchMap(() => this.messenger.sendPortOutputCommand(message))
+    );
+  }
 }

@@ -36,10 +36,10 @@ export default defineConfig({
     esbuildOptions: {
       tsconfigRaw: {
         compilerOptions: {
-          experimentalDecorators: true
-        }
-      }
-    }
+          experimentalDecorators: true,
+        },
+      },
+    },
   },
 
   test: {

@@ -6,21 +6,15 @@ import { ITaskVisitor } from './i-task-visitor';
 import { MessageType } from '../../../constants';
 
 export interface IQueueTask<TResult> extends IDisposable {
-    readonly result: Observable<TResult>;
+  readonly result: Observable<TResult>;
 
-    readonly message: RawMessage<MessageType>;
+  readonly message: RawMessage<MessageType>;
 
-    discard(): void;
+  discard(): void;
 
-    emitError(
-        error: Error
-    ): void;
+  emitError(error: Error): void;
 
-    accept(
-        visitor: ITaskVisitor
-    ): void;
+  accept(visitor: ITaskVisitor): void;
 
-    execute(
-        channel: IChannel
-    ): Observable<unknown>;
+  execute(channel: IChannel): Observable<unknown>;
 }

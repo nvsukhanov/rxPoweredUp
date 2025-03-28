@@ -1,108 +1,106 @@
 <head>
-    <title>Port capabilities</title>
+  <title>Port capabilities</title>
 </head>
 
 <body>
-<main>
+  <main>
     <button id="connect">Connect</button>
     <pre id="data"></pre>
-</main>
+  </main>
 
-<script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
-<script type="module">
-    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.4.8/rxpoweredup.min.js';
+  <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
+  <script type="module">
+    import { connectHub } from 'https://www.unpkg.com/rxpoweredup@0.4.8/rxpoweredup.min.js';
 
     const connectButton = document.querySelector('#connect');
     const dataElement = document.querySelector('#data');
     const portModeInformationTypeIds = {
-        0x00: 'name',
-        0x01: 'rawRange',
-        0x02: 'pctRange',
-        0x03: 'siRange',
-        0x04: 'symbol',
-        0x05: 'mapping',
-        0x07: 'motorBias',
-        0x08: 'capabilityBits',
-        0x09: 'valueFormat'
-    }
+      0x00: 'name',
+      0x01: 'rawRange',
+      0x02: 'pctRange',
+      0x03: 'siRange',
+      0x04: 'symbol',
+      0x05: 'mapping',
+      0x07: 'motorBias',
+      0x08: 'capabilityBits',
+      0x09: 'valueFormat',
+    };
     let capabilitiesMap = {};
 
     function onIoAttached(hub, attachedMessage) {
-        capabilitiesMap[attachedMessage.portId] = {
-            ...attachedMessage,
-            modes: {},
-            inputPortModeInformation: {},
-            outputPortModeInformation: {},
-        };
-        getPortModes(hub, attachedMessage.portId);
-        updateView();
+      capabilitiesMap[attachedMessage.portId] = {
+        ...attachedMessage,
+        modes: {},
+        inputPortModeInformation: {},
+        outputPortModeInformation: {},
+      };
+      getPortModes(hub, attachedMessage.portId);
+      updateView();
     }
 
     function getPortModes(hub, portId) {
-        hub.ports.getPortModes(portId).subscribe((modes) => {
-            capabilitiesMap[portId].modes = modes;
-            modes.inputModes.forEach((modeId) => {
-                Object.keys(portModeInformationTypeIds).forEach((informationTypeId) => {
-                    getPortModeInformation(hub, portId, modeId, +informationTypeId);
-                });
-            });
-            modes.outputModes.forEach((modeId) => {
-                Object.keys(portModeInformationTypeIds).forEach((informationTypeId) => {
-                    getPortModeInformation(hub, portId, modeId, +informationTypeId, false);
-                });
-            });
-            updateView();
+      hub.ports.getPortModes(portId).subscribe((modes) => {
+        capabilitiesMap[portId].modes = modes;
+        modes.inputModes.forEach((modeId) => {
+          Object.keys(portModeInformationTypeIds).forEach((informationTypeId) => {
+            getPortModeInformation(hub, portId, modeId, +informationTypeId);
+          });
         });
+        modes.outputModes.forEach((modeId) => {
+          Object.keys(portModeInformationTypeIds).forEach((informationTypeId) => {
+            getPortModeInformation(hub, portId, modeId, +informationTypeId, false);
+          });
+        });
+        updateView();
+      });
     }
 
     function getPortModeInformation(hub, portId, modeId, informationTypeId, input = true) {
-        hub.ports.getPortModeInformation(portId, modeId, informationTypeId).subscribe((information) => {
-            if (input) {
-                capabilitiesMap[portId].inputPortModeInformation[modeId] = {
-                    ...capabilitiesMap[portId].inputPortModeInformation[modeId],
-                    [portModeInformationTypeIds[informationTypeId]]: information,
-                };
-            } else {
-                capabilitiesMap[portId].outputPortModeInformation[modeId] = {
-                    ...capabilitiesMap[portId].outputPortModeInformation[modeId],
-                    [portModeInformationTypeIds[informationTypeId]]: information,
-                };
-            }
-            updateView();
-        });
+      hub.ports.getPortModeInformation(portId, modeId, informationTypeId).subscribe((information) => {
+        if (input) {
+          capabilitiesMap[portId].inputPortModeInformation[modeId] = {
+            ...capabilitiesMap[portId].inputPortModeInformation[modeId],
+            [portModeInformationTypeIds[informationTypeId]]: information,
+          };
+        } else {
+          capabilitiesMap[portId].outputPortModeInformation[modeId] = {
+            ...capabilitiesMap[portId].outputPortModeInformation[modeId],
+            [portModeInformationTypeIds[informationTypeId]]: information,
+          };
+        }
+        updateView();
+      });
     }
 
     function getPortInformation(hub, portId) {
-        hub.ports.getPortModeInformation(portId).subscribe((information) => {
-            capabilitiesMap[portId].information = information;
-            updateView();
-        });
+      hub.ports.getPortModeInformation(portId).subscribe((information) => {
+        capabilitiesMap[portId].information = information;
+        updateView();
+      });
     }
 
     function updateView() {
-        dataElement.textContent = JSON.stringify(capabilitiesMap, null, 2);
+      dataElement.textContent = JSON.stringify(capabilitiesMap, null, 2);
     }
 
     connectButton.addEventListener('click', () => {
-        if (!navigator.bluetooth) {
-            alert('Web Bluetooth is not available in your browser.');
-            return;
-        }
+      if (!navigator.bluetooth) {
+        alert('Web Bluetooth is not available in your browser.');
+        return;
+      }
 
-        connectHub(navigator.bluetooth).pipe(
-            rxjs.tap(() => connectButton.disabled = true),
-            rxjs.switchMap((hub) => hub.ports.onIoAttach().pipe(
-                rxjs.map((attachedMessage) => [hub, attachedMessage])
-            ))
-        ).subscribe({
-            next: ([hub, attachedMessage]) => onIoAttached(hub, attachedMessage),
-            error: (error) => {
-                console.error(error);
-                connectButton.disabled = false;
-            },
+      connectHub(navigator.bluetooth)
+        .pipe(
+          rxjs.tap(() => (connectButton.disabled = true)),
+          rxjs.switchMap((hub) => hub.ports.onIoAttach().pipe(rxjs.map((attachedMessage) => [hub, attachedMessage])))
+        )
+        .subscribe({
+          next: ([hub, attachedMessage]) => onIoAttached(hub, attachedMessage),
+          error: (error) => {
+            console.error(error);
+            connectButton.disabled = false;
+          },
         });
     });
-
-</script>
-
+  </script>
 </body>

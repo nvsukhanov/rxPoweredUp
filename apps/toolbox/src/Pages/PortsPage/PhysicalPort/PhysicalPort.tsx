@@ -6,33 +6,24 @@ import styles from './PhysicalPort.module.scss';
 import { PhysicalPortState, PortModeState, useHubStore } from '../../../Store';
 import { PortModesList } from '../PortModesList';
 
-export function PhysicalPort(
-    props: {
-        hub: IHub;
-        port: PhysicalPortState;
-        onHandlePortModesRequest: () => void;
-    }
-): ReactElement {
-    const portModeState: PortModeState | undefined = useHubStore(useShallow((state) => state.portModes[props.port.portId]));
+export function PhysicalPort(props: { hub: IHub; port: PhysicalPortState; onHandlePortModesRequest: () => void }): ReactElement {
+  const portModeState: PortModeState | undefined = useHubStore(useShallow((state) => state.portModes[props.port.portId]));
 
-    return (
-        <>
-            <section className={styles['portData']}>
-                <div className={styles['portName']}>Port {props.port.portId}</div>
-                <div>{IOType[props.port.ioType]}</div>
-                <div>HW rev. {props.port.hardwareRevision}</div>
-                <div>SW rev. {props.port.softwareRevision}</div>
-            </section>
-            <section className={styles['portModeData']}>
-                {
-                    portModeState
-                    ? <PortModesList hub={props.hub}
-                                     portId={props.port.portId}
-                                     portModeState={portModeState}
-                    ></PortModesList>
-                    : <button onClick={props.onHandlePortModesRequest}>Get port modes info</button>
-                }
-            </section>
-        </>
-    );
+  return (
+    <>
+      <section className={styles['portData']}>
+        <div className={styles['portName']}>Port {props.port.portId}</div>
+        <div>{IOType[props.port.ioType]}</div>
+        <div>HW rev. {props.port.hardwareRevision}</div>
+        <div>SW rev. {props.port.softwareRevision}</div>
+      </section>
+      <section className={styles['portModeData']}>
+        {portModeState ? (
+          <PortModesList hub={props.hub} portId={props.port.portId} portModeState={portModeState}></PortModesList>
+        ) : (
+          <button onClick={props.onHandlePortModesRequest}>Get port modes info</button>
+        )}
+      </section>
+    </>
+  );
 }

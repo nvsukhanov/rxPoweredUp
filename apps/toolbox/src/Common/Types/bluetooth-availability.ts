@@ -1,5 +1,5 @@
 export enum BluetoothAvailability {
-    Unknown,
-    Unavailable,
-    Available,
+  Unknown,
+  Unavailable,
+  Available,
 }

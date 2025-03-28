@@ -1,50 +1,50 @@
 <head>
-    <title>Motor speed</title>
+  <title>Motor speed</title>
 </head>
 
 <body>
-<main>
+  <main>
     <button id="connect">Connect</button>
-</main>
+  </main>
 
-<script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
-<script type="module">
-    import {connectHub} from 'https://www.unpkg.com/rxpoweredup@0.4.8/rxpoweredup.min.js';
+  <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
+  <script type="module">
+    import { connectHub } from 'https://www.unpkg.com/rxpoweredup@0.4.8/rxpoweredup.min.js';
 
     const connectButton = document.querySelector('#connect');
 
     function runMotorSequence(hub) {
-        return rxjs.concat(
-            hub.motors.setSpeed(0, 100),
-            rxjs.timer(1000),
-            hub.motors.setSpeed(0, -100),
-            rxjs.timer(1000),
-            hub.motors.setSpeed(0, 0),
-            hub.disconnect()
-        )
+      return rxjs.concat(
+        hub.motors.setSpeed(0, 100),
+        rxjs.timer(1000),
+        hub.motors.setSpeed(0, -100),
+        rxjs.timer(1000),
+        hub.motors.setSpeed(0, 0),
+        hub.disconnect()
+      );
     }
 
     connectButton.addEventListener('click', () => {
-        if (!navigator.bluetooth) {
-            alert('Web Bluetooth is not available in your browser.');
-            return;
-        }
+      if (!navigator.bluetooth) {
+        alert('Web Bluetooth is not available in your browser.');
+        return;
+      }
 
-        connectHub(navigator.bluetooth).pipe(
-            rxjs.tap(() => connectButton.disabled = true),
-            rxjs.audit((hub) => hub.ports.onIoAttach({ports: [0]})),
-            rxjs.switchMap(runMotorSequence)
-        ).subscribe({
-            complete: () => {
-                connectButton.disabled = false;
-            },
-            error: (error) => {
-                alert(error);
-                connectButton.disabled = false;
-            }
+      connectHub(navigator.bluetooth)
+        .pipe(
+          rxjs.tap(() => (connectButton.disabled = true)),
+          rxjs.audit((hub) => hub.ports.onIoAttach({ ports: [0] })),
+          rxjs.switchMap(runMotorSequence)
+        )
+        .subscribe({
+          complete: () => {
+            connectButton.disabled = false;
+          },
+          error: (error) => {
+            alert(error);
+            connectButton.disabled = false;
+          },
         });
     });
-
-</script>
-
+  </script>
 </body>

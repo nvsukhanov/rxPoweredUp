@@ -1,3 +1,3 @@
 export type BluetoothDeviceWithGatt = Omit<BluetoothDevice, 'gatt'> & {
-    readonly gatt: BluetoothRemoteGATTServer;
+  readonly gatt: BluetoothRemoteGATTServer;
 };

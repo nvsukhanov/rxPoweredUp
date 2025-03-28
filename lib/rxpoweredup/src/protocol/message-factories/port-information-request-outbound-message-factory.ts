@@ -6,31 +6,21 @@ import { IPortInformationRequestMessageFactory } from '../../features';
 
 @injectable()
 export class PortInformationRequestOutboundMessageFactory implements IPortInformationRequestMessageFactory {
-    public createPortValueRequest(
-        portId: number
-    ): RawMessage<MessageType.portInformationRequest> {
-        return {
-            header: {
-                messageType: MessageType.portInformationRequest,
-            },
-            payload: Uint8Array.from([
-                portId,
-                PortInformationRequestType.portValue
-            ])
-        };
-    }
+  public createPortValueRequest(portId: number): RawMessage<MessageType.portInformationRequest> {
+    return {
+      header: {
+        messageType: MessageType.portInformationRequest,
+      },
+      payload: Uint8Array.from([portId, PortInformationRequestType.portValue]),
+    };
+  }
 
-    public createPortModeRequest(
-        portId: number
-    ): RawMessage<MessageType.portInformationRequest> {
-        return {
-            header: {
-                messageType: MessageType.portInformationRequest,
-            },
-            payload: Uint8Array.from([
-                portId,
-                PortInformationRequestType.modeInfo
-            ])
-        };
-    }
+  public createPortModeRequest(portId: number): RawMessage<MessageType.portInformationRequest> {
+    return {
+      header: {
+        messageType: MessageType.portInformationRequest,
+      },
+      payload: Uint8Array.from([portId, PortInformationRequestType.modeInfo]),
+    };
+  }
 }

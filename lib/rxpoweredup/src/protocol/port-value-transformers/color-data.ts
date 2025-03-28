@@ -1,5 +1,5 @@
 export type ColorData = {
-    red: number;
-    green: number;
-    blue: number;
+  red: number;
+  green: number;
+  blue: number;
 };

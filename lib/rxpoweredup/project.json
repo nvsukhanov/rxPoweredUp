@@ -7,20 +7,13 @@
     "build-sources": {
       "executor": "@nx/js:tsc",
       "cache": true,
-      "inputs": [
-        "production"
-      ],
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "inputs": ["production"],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/rxpoweredup",
         "main": "lib/rxpoweredup/src/index.ts",
         "tsConfig": "lib/rxpoweredup/tsconfig.lib.json",
-        "assets": [
-          "lib/rxpoweredup/*.md",
-          "LICENSE"
-        ],
+        "assets": ["lib/rxpoweredup/*.md", "LICENSE"],
         "clean": true,
         "generateExportsField": true
       }
@@ -28,21 +21,15 @@
     "rollup-esm": {
       "executor": "nx:run-commands",
       "cache": true,
-      "inputs": [
-        "production"
-      ],
+      "inputs": ["production"],
       "options": {
         "cwd": "lib/rxpoweredup",
-        "commands": [
-          "npx rollup --config rollup.config.ts --configPlugin typescript"
-        ]
+        "commands": ["npx rollup --config rollup.config.ts --configPlugin typescript"]
       }
     },
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/rxpoweredup",
         "main": "lib/rxpoweredup/src/index.ts",
@@ -51,33 +38,23 @@
         "generateExportsField": true,
         "parallel": false
       },
-      "dependsOn": [
-        "^build",
-        "rollup-esm",
-        "build-sources"
-      ]
+      "dependsOn": ["^build", "rollup-esm", "build-sources"]
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": [
-        "{options.outputFile}"
-      ]
+      "outputs": ["{options.outputFile}"]
     },
     "docs": {
       "executor": "nx:run-commands",
       "options": {
         "cwd": "lib/rxpoweredup",
-        "commands": [
-          "typedoc"
-        ],
+        "commands": ["typedoc"],
         "parallel": false
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "lib/rxpoweredup/jest.config.ts"
       }

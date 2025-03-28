@@ -21,15 +21,20 @@ Web Bluetooth API is not available in Node.js, however, it may be possible to us
 ### Reactive
 
 ```typescript
-connectHub(navigator.bluetooth).pipe( // connect to the first available hub
+connectHub(navigator.bluetooth)
+  .pipe(
+    // connect to the first available hub
     audit((hub) => hub.ports.onIoAttach(0)), // wait for the first device to be attached to port 0
-    switchMap((hub) => concat(
+    switchMap((hub) =>
+      concat(
         hub.motors.setSpeed(0, 100), // set motor speed to 100
         timer(1000), // wait for 1 second
         hub.motors.setSpeed(0, 0), // stop motor
         hub.disconnect() // disconnect from the hub
-    ))
-).subscribe();
+      )
+    )
+  )
+  .subscribe();
 ```
 
 ### Async

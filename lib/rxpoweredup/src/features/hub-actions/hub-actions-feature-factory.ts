@@ -12,27 +12,18 @@ import { HUB_ACTIONS_MESSAGE_FACTORY } from './i-hub-actions-message-factory';
 
 @injectable()
 export class HubActionsFeatureFactory implements IHubActionsFeatureFactory {
-    constructor(
-        @inject(HUB_ACTIONS_REPLY_PARSER) private readonly hubActionsReplyParser: IReplyParser<MessageType.action>,
-        @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
-        @inject(HUB_ACTIONS_MESSAGE_FACTORY) private readonly hubActionsMessageFactory: IHubActionsMessageFactory,
-    ) {
-    }
+  constructor(
+    @inject(HUB_ACTIONS_REPLY_PARSER) private readonly hubActionsReplyParser: IReplyParser<MessageType.action>,
+    @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
+    @inject(HUB_ACTIONS_MESSAGE_FACTORY) private readonly hubActionsMessageFactory: IHubActionsMessageFactory
+  ) {}
 
-    public create(
-        characteristicDataStream: Observable<RawMessage<MessageType>>,
-        messenger: IOutboundMessenger,
-        onDisconnected$: Observable<void>,
-    ): IHubActionsFeature {
-        const inboundMessages = this.messageListenerFactory.create(
-            characteristicDataStream,
-            this.hubActionsReplyParser,
-            onDisconnected$
-        );
-        return new HubActionsFeature(
-            this.hubActionsMessageFactory,
-            messenger,
-            inboundMessages
-        );
-    }
+  public create(
+    characteristicDataStream: Observable<RawMessage<MessageType>>,
+    messenger: IOutboundMessenger,
+    onDisconnected$: Observable<void>
+  ): IHubActionsFeature {
+    const inboundMessages = this.messageListenerFactory.create(characteristicDataStream, this.hubActionsReplyParser, onDisconnected$);
+    return new HubActionsFeature(this.hubActionsMessageFactory, messenger, inboundMessages);
+  }
 }

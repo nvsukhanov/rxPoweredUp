@@ -8,18 +8,18 @@ import './index.css';
 import { DiContainer, ERROR_HANDLER, ErrorHandler, InjectionProviderWithToken, NAVIGATOR, WINDOW } from './Common';
 
 const ROOT_PROVIDERS: Array<InjectionProviderWithToken> = [
-    { provide: WINDOW, useValue: window },
-    { provide: NAVIGATOR, useValue: navigator },
-    { provide: ERROR_HANDLER, useClass: ErrorHandler }
+  { provide: WINDOW, useValue: window },
+  { provide: NAVIGATOR, useValue: navigator },
+  { provide: ERROR_HANDLER, useClass: ErrorHandler },
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <BrowserRouter>
-            <DiContainer providers={ROOT_PROVIDERS}>
-                <App/>
-            </DiContainer>
-        </BrowserRouter>
-    </StrictMode>,
+  <StrictMode>
+    <BrowserRouter>
+      <DiContainer providers={ROOT_PROVIDERS}>
+        <App />
+      </DiContainer>
+    </BrowserRouter>
+  </StrictMode>
 );

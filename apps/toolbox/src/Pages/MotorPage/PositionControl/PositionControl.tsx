@@ -4,78 +4,59 @@ import { IHub, MotorServoEndState, MotorUseProfile, PortOperationStartupInformat
 
 import { ServoOptionsForm, ServoOptionsFormResult } from '../../../Components';
 
-export function PositionControl(
-    props: {
-        hub: IHub;
-        portId: number | undefined;
+export function PositionControl(props: { hub: IHub; portId: number | undefined }): ReactElement {
+  const disposeRef = useRef(new Subject<void>());
+  const dispose$ = disposeRef.current;
+  const nextOperationStartRef = useRef(new Subject<void>());
+  const nextOperationStart$ = nextOperationStartRef.current;
+  const [servoOptions, setServoOptions] = useState<ServoOptionsFormResult | undefined>({
+    speed: 100,
+    power: 100,
+    useProfile: MotorUseProfile.dontUseProfiles,
+    endState: MotorServoEndState.brake,
+    noFeedback: false,
+    bufferMode: PortOperationStartupInformation.bufferIfNecessary,
+  });
+
+  useEffect(() => {
+    return (): void => {
+      dispose$.next();
+      dispose$.complete();
+    };
+  }, [dispose$]);
+
+  const handleStep = (step: number): void => {
+    if (!servoOptions || props.portId === undefined) {
+      return;
     }
-): ReactElement {
-    const disposeRef = useRef(new Subject<void>());
-    const dispose$ = disposeRef.current;
-    const nextOperationStartRef = useRef(new Subject<void>());
-    const nextOperationStart$ = nextOperationStartRef.current;
-    const [ servoOptions, setServoOptions ] = useState<ServoOptionsFormResult | undefined>({
-        speed: 100,
-        power: 100,
-        useProfile: MotorUseProfile.dontUseProfiles,
-        endState: MotorServoEndState.brake,
-        noFeedback: false,
-        bufferMode: PortOperationStartupInformation.bufferIfNecessary
-    });
+    nextOperationStart$.next();
+    props.hub.motors.rotateByDegree(props.portId, step, servoOptions).pipe(takeUntil(dispose$), takeUntil(nextOperationStart$)).subscribe();
+  };
 
-    useEffect(() => {
-        return (): void => {
-            dispose$.next();
-            dispose$.complete();
-        };
-    }, [ dispose$ ]);
+  const handleGoTo = (position: number): void => {
+    if (!servoOptions || props.portId === undefined) {
+      return;
+    }
+    nextOperationStart$.next();
+    props.hub.motors.goToPosition(props.portId, position, servoOptions).pipe(takeUntil(dispose$), takeUntil(nextOperationStart$)).subscribe();
+  };
 
-    const handleStep = (step: number): void => {
-        if (!servoOptions || props.portId === undefined) {
-            return;
-        }
-        nextOperationStart$.next();
-        props.hub.motors.rotateByDegree(props.portId, step, servoOptions).pipe(
-            takeUntil(dispose$),
-            takeUntil(nextOperationStart$)
-        ).subscribe();
-    };
+  const canExecute = servoOptions && props.portId !== undefined;
 
-    const handleGoTo = (position: number): void => {
-        if (!servoOptions || props.portId === undefined) {
-            return;
-        }
-        nextOperationStart$.next();
-        props.hub.motors.goToPosition(props.portId, position, servoOptions).pipe(
-            takeUntil(dispose$),
-            takeUntil(nextOperationStart$)
-        ).subscribe();
-    };
-
-    const canExecute = servoOptions && props.portId !== undefined;
-
-    return (
-        <>
-            <div>
-                <ServoOptionsForm initialState={servoOptions}
-                                  onChanges={setServoOptions}
-                />
-            </div>
-            <button disabled={!canExecute}
-                    onClick={(): void => handleStep(-90)}
-            >
-                Step -90
-            </button>
-            <button disabled={!canExecute}
-                    onClick={(): void => handleStep(90)}
-            >
-                Step 90
-            </button>
-            <button disabled={!canExecute}
-                    onClick={(): void => handleGoTo(0)}
-            >
-                Go to 0
-            </button>
-        </>
-    );
+  return (
+    <>
+      <div>
+        <ServoOptionsForm initialState={servoOptions} onChanges={setServoOptions} />
+      </div>
+      <button disabled={!canExecute} onClick={(): void => handleStep(-90)}>
+        Step -90
+      </button>
+      <button disabled={!canExecute} onClick={(): void => handleStep(90)}>
+        Step 90
+      </button>
+      <button disabled={!canExecute} onClick={(): void => handleGoTo(0)}>
+        Go to 0
+      </button>
+    </>
+  );
 }
