@@ -5,17 +5,11 @@ import { convertUint16ToSignedInt, readNumberFromUint8LEArray } from '../../help
 
 @injectable()
 export class MotorAposValueTransformer implements IPortValueTransformer<number> {
-    public fromRawValue(
-        value: number[]
-    ): number {
-        return convertUint16ToSignedInt(
-            readNumberFromUint8LEArray(value)
-        );
-    }
+  public fromRawValue(value: number[]): number {
+    return convertUint16ToSignedInt(readNumberFromUint8LEArray(value));
+  }
 
-    public toValueThreshold(
-        value: number
-    ): number {
-        return value;
-    }
+  public toValueThreshold(value: number): number {
+    return value;
+  }
 }

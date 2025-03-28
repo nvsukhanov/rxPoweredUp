@@ -3,11 +3,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -22,11 +18,7 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "types": [
-      "vite/client",
-      "vitest",
-      "web-bluetooth"
-    ]
+    "types": ["vite/client", "vitest", "web-bluetooth"]
   },
   "files": [],
   "include": [],

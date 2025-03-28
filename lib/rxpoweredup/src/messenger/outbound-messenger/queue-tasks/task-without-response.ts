@@ -10,43 +10,35 @@ import { IChannel } from '../i-channel';
  * e.g. setting a hub name
  */
 export class TaskWithoutResponse implements IQueueTask<void> {
-    public readonly result: Subject<void>;
+  public readonly result: Subject<void>;
 
-    constructor(
-        public readonly message: RawMessage<OutboundMessageTypes>
-    ) {
-        this.result = new Subject<void>();
-    }
+  constructor(public readonly message: RawMessage<OutboundMessageTypes>) {
+    this.result = new Subject<void>();
+  }
 
-    public discard(): void {
+  public discard(): void {
+    this.result.complete();
+  }
+
+  public dispose(): void {
+    return void 0;
+  }
+
+  public accept(visitor: ITaskVisitor): void {
+    visitor.visitTaskWithoutResponse(this);
+  }
+
+  public emitError(error: Error): void {
+    this.result.error(error);
+  }
+
+  public execute(channel: IChannel): Observable<unknown> {
+    return of(null).pipe(
+      switchMap(() => from(channel.sendMessage(this.message))),
+      tap(() => {
+        this.result.next();
         this.result.complete();
-    }
-
-    public dispose(): void {
-        return void 0;
-    }
-
-    public accept(
-        visitor: ITaskVisitor
-    ): void {
-        visitor.visitTaskWithoutResponse(this);
-    }
-
-    public emitError(
-        error: Error
-    ): void {
-        this.result.error(error);
-    }
-
-    public execute(
-        channel: IChannel
-    ): Observable<unknown> {
-        return of(null).pipe(
-            switchMap(() => from(channel.sendMessage(this.message))),
-            tap(() => {
-                this.result.next();
-                this.result.complete();
-            })
-        );
-    }
+      })
+    );
+  }
 }

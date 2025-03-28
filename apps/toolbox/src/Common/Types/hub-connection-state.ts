@@ -1,6 +1,6 @@
 export enum HubConnectionState {
-    Disconnected,
-    Connecting,
-    Connected,
-    Disconnecting,
+  Disconnected,
+  Connecting,
+  Connected,
+  Disconnecting,
 }

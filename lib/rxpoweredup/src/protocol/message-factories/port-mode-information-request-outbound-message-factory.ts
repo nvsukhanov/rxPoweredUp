@@ -6,20 +6,16 @@ import { IPortModeInformationRequestMessageFactory } from '../../features';
 
 @injectable()
 export class PortModeInformationRequestOutboundMessageFactory implements IPortModeInformationRequestMessageFactory {
-    public createPortModeInformationRequest(
-        portId: number,
-        mode: number,
-        modeInformationType: PortModeInformationType
-    ): RawMessage<MessageType.portModeInformationRequest> {
-        return {
-            header: {
-                messageType: MessageType.portModeInformationRequest,
-            },
-            payload: Uint8Array.from([
-                portId,
-                mode,
-                modeInformationType
-            ])
-        };
-    }
+  public createPortModeInformationRequest(
+    portId: number,
+    mode: number,
+    modeInformationType: PortModeInformationType
+  ): RawMessage<MessageType.portModeInformationRequest> {
+    return {
+      header: {
+        messageType: MessageType.portModeInformationRequest,
+      },
+      payload: Uint8Array.from([portId, mode, modeInformationType]),
+    };
+  }
 }

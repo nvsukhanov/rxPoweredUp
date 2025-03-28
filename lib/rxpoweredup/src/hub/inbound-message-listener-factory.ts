@@ -8,16 +8,16 @@ import { IInboundMessageListenerFactory } from './i-inbound-message-listener-fac
 
 @injectable()
 export class InboundMessageListenerFactory implements IInboundMessageListenerFactory {
-    public create<TMessageType extends MessageType>(
-        characteristicDataStream: Observable<RawMessage<MessageType>>,
-        replyParserService: IReplyParser<TMessageType>,
-        onDisconnected$: Observable<void>,
-    ): Observable<InboundMessage & { messageType: TMessageType }> {
-        return characteristicDataStream.pipe(
-            filter((message) => message.header.messageType === replyParserService.messageType),
-            map((message) => replyParserService.parseMessage(message as RawMessage<TMessageType>)),
-            takeUntil(onDisconnected$),
-            share()
-        );
-    }
+  public create<TMessageType extends MessageType>(
+    characteristicDataStream: Observable<RawMessage<MessageType>>,
+    replyParserService: IReplyParser<TMessageType>,
+    onDisconnected$: Observable<void>
+  ): Observable<InboundMessage & { messageType: TMessageType }> {
+    return characteristicDataStream.pipe(
+      filter((message) => message.header.messageType === replyParserService.messageType),
+      map((message) => replyParserService.parseMessage(message as RawMessage<TMessageType>)),
+      takeUntil(onDisconnected$),
+      share()
+    );
+  }
 }

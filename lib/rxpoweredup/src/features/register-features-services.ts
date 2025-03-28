@@ -7,12 +7,10 @@ import { PortsFeatureFactory } from './ports';
 import { HubActionsFeatureFactory } from './hub-actions';
 import { RgbLightFeatureFactory } from './rgb-light-feature';
 
-export function registerFeaturesServices(
-    container: DependencyContainer
-): void {
-    container.register(HUB_PROPERTY_FEATURE_FACTORY, HubPropertiesFeatureFactory);
-    container.register(MOTORS_FEATURE_FACTORY, MotorsFeatureFactory);
-    container.register(PORTS_FEATURE_FACTORY, PortsFeatureFactory);
-    container.register(HUB_ACTIONS_FEATURE_FACTORY, HubActionsFeatureFactory);
-    container.register(RGB_LIGHT_FEATURE_FACTORY, RgbLightFeatureFactory);
+export function registerFeaturesServices(container: DependencyContainer): void {
+  container.register(HUB_PROPERTY_FEATURE_FACTORY, HubPropertiesFeatureFactory);
+  container.register(MOTORS_FEATURE_FACTORY, MotorsFeatureFactory);
+  container.register(PORTS_FEATURE_FACTORY, PortsFeatureFactory);
+  container.register(HUB_ACTIONS_FEATURE_FACTORY, HubActionsFeatureFactory);
+  container.register(RGB_LIGHT_FEATURE_FACTORY, RgbLightFeatureFactory);
 }

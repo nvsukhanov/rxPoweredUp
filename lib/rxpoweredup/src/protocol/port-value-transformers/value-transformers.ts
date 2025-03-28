@@ -12,30 +12,28 @@ import { ColorData } from './color-data';
 import { ColorValueTransformer } from './color-value-transformer';
 
 export class ValueTransformers {
-    public static voltage(
-        hubType: HubType
-    ): IPortValueTransformer<number> {
-        const factory = container.resolve(VoltageValueTransformerFactory);
-        return factory.createForHubType(hubType);
-    }
+  public static voltage(hubType: HubType): IPortValueTransformer<number> {
+    const factory = container.resolve(VoltageValueTransformerFactory);
+    return factory.createForHubType(hubType);
+  }
 
-    public static get absolutePosition(): IPortValueTransformer<number> {
-        return container.resolve(MotorAposValueTransformer);
-    }
+  public static get absolutePosition(): IPortValueTransformer<number> {
+    return container.resolve(MotorAposValueTransformer);
+  }
 
-    public static get position(): IPortValueTransformer<number> {
-        return container.resolve(MotorPosValueTransformer);
-    }
+  public static get position(): IPortValueTransformer<number> {
+    return container.resolve(MotorPosValueTransformer);
+  }
 
-    public static get temperature(): IPortValueTransformer<number> {
-        return container.resolve(TemperatureValueTransformer);
-    }
+  public static get temperature(): IPortValueTransformer<number> {
+    return container.resolve(TemperatureValueTransformer);
+  }
 
-    public static get tilt(): IPortValueTransformer<TiltData> {
-        return container.resolve(TiltValueTransformer);
-    }
+  public static get tilt(): IPortValueTransformer<TiltData> {
+    return container.resolve(TiltValueTransformer);
+  }
 
-    public static get color(): IPortValueTransformer<ColorData> {
-        return container.resolve(ColorValueTransformer);
-    }
+  public static get color(): IPortValueTransformer<ColorData> {
+    return container.resolve(ColorValueTransformer);
+  }
 }

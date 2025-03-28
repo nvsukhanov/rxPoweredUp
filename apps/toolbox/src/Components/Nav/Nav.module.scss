@@ -1,22 +1,22 @@
 .navList {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    padding: 15px;
-    background-color: #222;
-    margin: 0;
-    list-style: none;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  padding: 15px;
+  background-color: #222;
+  margin: 0;
+  list-style: none;
+  align-items: center;
 }
 
 .linkItem {
-    color: #999;
+  color: #999;
 
-    &_active {
-        color: #fff;
-    }
+  &_active {
+    color: #fff;
+  }
 }
 
 .useLinuxWorkaroundLabel {
-    color: #fff;
+  color: #fff;
 }

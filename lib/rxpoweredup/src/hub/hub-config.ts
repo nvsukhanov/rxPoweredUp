@@ -14,21 +14,22 @@ import { ILogger } from '../types';
  * @property {boolean} [useLinuxWorkaround] - Whether to use the workaround for breaking connections on Linux Chrome
  */
 export type HubConfig = {
-    readonly maxGattConnectRetries: number;
-    readonly logLevel: LogLevel;
-    readonly logger?: ILogger;
-    readonly hubConnectionTimeoutMs: number;
-    readonly defaultBufferMode: PortOperationStartupInformation;
-} & OutboundMessengerConfig & CharacteristicDataStreamConfig;
+  readonly maxGattConnectRetries: number;
+  readonly logLevel: LogLevel;
+  readonly logger?: ILogger;
+  readonly hubConnectionTimeoutMs: number;
+  readonly defaultBufferMode: PortOperationStartupInformation;
+} & OutboundMessengerConfig &
+  CharacteristicDataStreamConfig;
 
 export const HUB_CONFIG_DEFAULTS: HubConfig = {
-    defaultBufferMode: PortOperationStartupInformation.bufferIfNecessary,
-    maxGattConnectRetries: 5,
-    incomingMessageMiddleware: [],
-    outgoingMessageMiddleware: [],
-    logLevel: LogLevel.Warning,
-    messageSendTimeout: 300,
-    maxMessageSendAttempts: 5,
-    initialMessageSendRetryDelayMs: 50,
-    hubConnectionTimeoutMs: 5000,
+  defaultBufferMode: PortOperationStartupInformation.bufferIfNecessary,
+  maxGattConnectRetries: 5,
+  incomingMessageMiddleware: [],
+  outgoingMessageMiddleware: [],
+  logLevel: LogLevel.Warning,
+  messageSendTimeout: 300,
+  maxMessageSendAttempts: 5,
+  initialMessageSendRetryDelayMs: 50,
+  hubConnectionTimeoutMs: 5000,
 };

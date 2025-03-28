@@ -7,19 +7,9 @@ import { PORT_OUTPUT_COMMAND_MESSAGE_FACTORY } from './i-motor-commands-outbound
 
 @injectable()
 export class MotorsFeatureFactory implements IMotorsFeatureFactory {
-    constructor(
-        @inject(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY) private readonly messageFactory: IMotorCommandsOutboundMessageFactory,
-    ) {
-    }
+  constructor(@inject(PORT_OUTPUT_COMMAND_MESSAGE_FACTORY) private readonly messageFactory: IMotorCommandsOutboundMessageFactory) {}
 
-    public createMotorsFeature(
-        messenger: IOutboundMessenger,
-        config: HubConfig
-    ): IMotorsFeature {
-        return new MotorsFeature(
-            messenger,
-            this.messageFactory,
-            config
-        );
-    }
+  public createMotorsFeature(messenger: IOutboundMessenger, config: HubConfig): IMotorsFeature {
+    return new MotorsFeature(messenger, this.messageFactory, config);
+  }
 }

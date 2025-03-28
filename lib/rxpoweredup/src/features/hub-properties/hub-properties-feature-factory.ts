@@ -14,32 +14,20 @@ import type { IHubPropertiesFeatureErrorsFactory } from './i-hub-properties-feat
 
 @injectable()
 export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory {
-    constructor(
-        @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
-        @inject(HUB_PROPERTIES_REPLIES_PARSER) private readonly replyParser: IReplyParser<MessageType.properties>,
-        @inject(HUB_PROPERTIES_MESSAGE_FACTORY) private readonly messageFactory: IHubPropertiesMessageFactory,
-        @inject(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY) private readonly errorsFactory: IHubPropertiesFeatureErrorsFactory
-    ) {
-    }
+  constructor(
+    @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
+    @inject(HUB_PROPERTIES_REPLIES_PARSER) private readonly replyParser: IReplyParser<MessageType.properties>,
+    @inject(HUB_PROPERTIES_MESSAGE_FACTORY) private readonly messageFactory: IHubPropertiesMessageFactory,
+    @inject(HUB_PROPERTIES_FEATURE_ERRORS_FACTORY) private readonly errorsFactory: IHubPropertiesFeatureErrorsFactory
+  ) {}
 
-    public create(
-        characteristicDataStream: Observable<RawMessage<MessageType>>,
-        onHubDisconnected: Observable<void>,
-        messenger: IOutboundMessenger,
-        logger: ILogger
-    ): HubPropertiesFeature {
-        const replies$ = this.messageListenerFactory.create(
-            characteristicDataStream,
-            this.replyParser,
-            onHubDisconnected,
-        );
-        return new HubPropertiesFeature(
-            this.messageFactory,
-            messenger,
-            logger,
-            replies$,
-            this.errorsFactory,
-            onHubDisconnected
-        );
-    }
+  public create(
+    characteristicDataStream: Observable<RawMessage<MessageType>>,
+    onHubDisconnected: Observable<void>,
+    messenger: IOutboundMessenger,
+    logger: ILogger
+  ): HubPropertiesFeature {
+    const replies$ = this.messageListenerFactory.create(characteristicDataStream, this.replyParser, onHubDisconnected);
+    return new HubPropertiesFeature(this.messageFactory, messenger, logger, replies$, this.errorsFactory, onHubDisconnected);
+  }
 }

@@ -9,19 +9,12 @@ import { PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from '../i-port-input-format-
 
 @injectable()
 export class RgbLightFeatureFactory implements IRgbLightFeatureFactory {
-    constructor(
-        @inject(RGB_LIGHT_COMMANDS_FACTORY) private readonly ledCommandsFactory: IRgbLightCommandsFactory,
-        @inject(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY) private readonly portInputSetupMessageFactory: IPortInputFormatSetupMessageFactory
-    ) {
-    }
+  constructor(
+    @inject(RGB_LIGHT_COMMANDS_FACTORY) private readonly ledCommandsFactory: IRgbLightCommandsFactory,
+    @inject(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY) private readonly portInputSetupMessageFactory: IPortInputFormatSetupMessageFactory
+  ) {}
 
-    public createFeature(
-        messenger: IOutboundMessenger
-    ): IRgbLightFeature {
-        return new RgbLightFeature(
-            messenger,
-            this.ledCommandsFactory,
-            this.portInputSetupMessageFactory
-        );
-    }
+  public createFeature(messenger: IOutboundMessenger): IRgbLightFeature {
+    return new RgbLightFeature(messenger, this.ledCommandsFactory, this.portInputSetupMessageFactory);
+  }
 }

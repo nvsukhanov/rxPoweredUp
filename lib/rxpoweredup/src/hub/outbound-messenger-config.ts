@@ -11,9 +11,9 @@ import { IMessageMiddleware } from './i-message-middleware';
  * @property {boolean} [useLinuxWorkaround] - Whether to use the workaround for breaking connections on Linux Chrome. Defaults to false.
  */
 export type OutboundMessengerConfig = {
-    readonly messageSendTimeout: number;
-    readonly maxMessageSendAttempts: number;
-    readonly initialMessageSendRetryDelayMs: number;
-    readonly outgoingMessageMiddleware: IMessageMiddleware[];
-    readonly useLinuxWorkaround?: boolean;
+  readonly messageSendTimeout: number;
+  readonly maxMessageSendAttempts: number;
+  readonly initialMessageSendRetryDelayMs: number;
+  readonly outgoingMessageMiddleware: IMessageMiddleware[];
+  readonly useLinuxWorkaround?: boolean;
 };

@@ -6,21 +6,15 @@
   "targets": {
     "build": {
       "executor": "@nx/esbuild:esbuild",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
         "outputPath": "dist/node-examples",
-        "format": [
-          "esm"
-        ],
+        "format": ["esm"],
         "bundle": true,
         "main": "apps/examples/node/src/motor-speed.ts",
-        "additionalEntryPoints": [
-          "apps/examples/node/src/port-value.ts"
-        ],
+        "additionalEntryPoints": ["apps/examples/node/src/port-value.ts"],
         "tsConfig": "apps/examples/node/tsconfig.app.json"
       },
       "configurations": {
@@ -52,15 +46,11 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": [
-        "{options.outputFile}"
-      ]
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/examples/node/jest.config.ts"
       }

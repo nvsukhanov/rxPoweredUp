@@ -2,7 +2,6 @@ name: CI
 on: push
 jobs:
   build:
-
     timeout-minutes: 5
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
@@ -13,5 +12,13 @@ jobs:
           node-version: '18.15.x'
       - name: Install modules
         run: npm install
-      - name: Run CI tasks
-        run: npm run ci
+      - name: Lint
+        run: npm run lint
+      - name: Format check
+        run: npm run format:check
+      - name: Run tests
+        run: npm run test
+      - name: Build docs
+        run: npm run docs
+      - name: Build scripts
+        run: npm run build

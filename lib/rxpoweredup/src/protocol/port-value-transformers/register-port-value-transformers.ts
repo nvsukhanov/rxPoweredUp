@@ -8,10 +8,10 @@ import { TiltValueTransformer } from './tilt-value-transformer';
 import { ColorValueTransformer } from './color-value-transformer';
 
 export function registerPortValueTransformers(): void {
-    container.registerSingleton(MotorAposValueTransformer);
-    container.registerSingleton(MotorPosValueTransformer);
-    container.registerSingleton(VoltageValueTransformerFactory);
-    container.registerSingleton(TiltValueTransformer);
-    container.registerSingleton(TemperatureValueTransformer);
-    container.registerSingleton(ColorValueTransformer);
+  container.registerSingleton(MotorAposValueTransformer);
+  container.registerSingleton(MotorPosValueTransformer);
+  container.registerSingleton(VoltageValueTransformerFactory);
+  container.registerSingleton(TiltValueTransformer);
+  container.registerSingleton(TemperatureValueTransformer);
+  container.registerSingleton(ColorValueTransformer);
 }

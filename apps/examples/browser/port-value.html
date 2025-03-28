@@ -1,44 +1,44 @@
 <head>
-    <title>Port value</title>
+  <title>Port value</title>
 </head>
 
 <body>
-<main>
+  <main>
     <button id="connect">Connect</button>
     <h1>Motor position</h1>
     <pre id="motor-position"></pre>
-</main>
+  </main>
 
-<script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
-<script type="module">
-    import {connectHub, WELL_KNOWN_PORT_MODE_IDS, ValueTransformers} from 'https://www.unpkg.com/rxpoweredup@0.4.8/rxpoweredup.min.js';
+  <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
+  <script type="module">
+    import { connectHub, WELL_KNOWN_PORT_MODE_IDS, ValueTransformers } from 'https://www.unpkg.com/rxpoweredup@0.4.8/rxpoweredup.min.js';
 
     const connectButton = document.querySelector('#connect');
     const motorPositionElement = document.querySelector('#motor-position');
 
     connectButton.addEventListener('click', () => {
-        if (!navigator.bluetooth) {
-            alert('Web Bluetooth is not available in your browser.');
-            return;
-        }
+      if (!navigator.bluetooth) {
+        alert('Web Bluetooth is not available in your browser.');
+        return;
+      }
 
-        connectHub(navigator.bluetooth).pipe(
-            rxjs.tap(() => {
-                connectButton.disabled = true;
-                motorPositionElement.textContent = 'Waiting for motor to be attached to port A...'
-            }),
-            rxjs.audit((hub) => hub.ports.onIoAttach({ports: [0]})),
-            rxjs.switchMap((hub) => hub.ports.portValueChanges(0, WELL_KNOWN_PORT_MODE_IDS.motor['POS'], 1, ValueTransformers.position)),
-        ).subscribe({
-            next: (position) => {
-                motorPositionElement.textContent = `${position}°`;
-            },
-            complete: () => {
-                connectButton.disabled = false;
-            }
+      connectHub(navigator.bluetooth)
+        .pipe(
+          rxjs.tap(() => {
+            connectButton.disabled = true;
+            motorPositionElement.textContent = 'Waiting for motor to be attached to port A...';
+          }),
+          rxjs.audit((hub) => hub.ports.onIoAttach({ ports: [0] })),
+          rxjs.switchMap((hub) => hub.ports.portValueChanges(0, WELL_KNOWN_PORT_MODE_IDS.motor['POS'], 1, ValueTransformers.position))
+        )
+        .subscribe({
+          next: (position) => {
+            motorPositionElement.textContent = `${position}°`;
+          },
+          complete: () => {
+            connectButton.disabled = false;
+          },
         });
     });
-
-</script>
-
+  </script>
 </body>

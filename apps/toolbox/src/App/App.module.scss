@@ -1,11 +1,11 @@
 .main {
-    display: block;
-    overflow-y: auto;
-    padding: 20px 30px;
-    flex-grow: 1;
+  display: block;
+  overflow-y: auto;
+  padding: 20px 30px;
+  flex-grow: 1;
 }
 
 .footer {
-    flex-shrink: 1;
-    flex-grow: 0;
+  flex-shrink: 1;
+  flex-grow: 0;
 }

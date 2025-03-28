@@ -8,17 +8,12 @@ import { waitForPromise } from './wait-for-promise';
 console.log('Waiting for Hub...');
 
 const sequence = lastValueFrom(
-    connectHub(bluetooth, {
-        logLevel: LogLevel.Debug
-    }).pipe(
-        audit((hub) => hub.ports.onIoAttach({ ports: [ 0 ] })),
-        switchMap((hub) => concat(
-            hub.motors.startSpeed(0, 100),
-            timer(1000),
-            hub.motors.startSpeed(0, 0),
-            hub.switchOff()
-        ))
-    )
+  connectHub(bluetooth, {
+    logLevel: LogLevel.Debug,
+  }).pipe(
+    audit((hub) => hub.ports.onIoAttach({ ports: [0] })),
+    switchMap((hub) => concat(hub.motors.startSpeed(0, 100), timer(1000), hub.motors.startSpeed(0, 0), hub.switchOff()))
+  )
 );
 
 waitForPromise(sequence);

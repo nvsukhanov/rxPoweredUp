@@ -19,21 +19,13 @@
     "target": "esnext",
     "module": "esnext",
     "useDefineForClassFields": true,
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "rxpoweredup": [
-        "lib/rxpoweredup/src/index.ts"
-      ]
+      "rxpoweredup": ["lib/rxpoweredup/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

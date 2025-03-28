@@ -5,11 +5,9 @@ import { CharacteristicDataStreamFactory } from './characteristic-data-stream-fa
 import { OutboundMessengerFactory } from './outbound-messenger';
 import { ChannelFactory, LinuxChromeChannelFactory } from './outbound-messenger/channel';
 
-export function registerMessengerServices(
-    container: DependencyContainer
-): void {
-    container.registerSingleton(LinuxChromeChannelFactory);
-    container.registerSingleton(ChannelFactory);
-    container.register(CHARACTERISTIC_DATA_STREAM_FACTORY, CharacteristicDataStreamFactory);
-    container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
+export function registerMessengerServices(container: DependencyContainer): void {
+  container.registerSingleton(LinuxChromeChannelFactory);
+  container.registerSingleton(ChannelFactory);
+  container.register(CHARACTERISTIC_DATA_STREAM_FACTORY, CharacteristicDataStreamFactory);
+  container.register(OUTBOUND_MESSAGE_FACTORY, OutboundMessengerFactory);
 }

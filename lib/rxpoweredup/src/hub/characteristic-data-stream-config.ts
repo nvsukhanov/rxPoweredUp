@@ -7,5 +7,5 @@ import { IMessageMiddleware } from './i-message-middleware';
  * @property {IMessageMiddleware[]} incomingMessageMiddleware - The middleware to apply to incoming messages after receiving them
  */
 export type CharacteristicDataStreamConfig = {
-    readonly incomingMessageMiddleware: IMessageMiddleware[];
+  readonly incomingMessageMiddleware: IMessageMiddleware[];
 };

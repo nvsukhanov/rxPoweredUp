@@ -1,32 +1,32 @@
 .modeIdHeader {
-    display: grid;
-    grid-template-columns: 70px 55px 120px;
-    grid-gap: 0 10px;
+  display: grid;
+  grid-template-columns: 70px 55px 120px;
+  grid-gap: 0 10px;
 }
 
 .modeIdTitle {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .rawValueResultsContainer {
-    margin: 0;
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    gap: 0 10px;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 0 10px;
 
-    & > dd {
-        margin: 0;
-        font-family: monospace, monospace;
-    }
+  & > dd {
+    margin: 0;
+    font-family: monospace, monospace;
+  }
 }
 
 .modeValuesContainer {
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    margin: 0;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  margin: 0;
 }
 
 .portValuesContainer {
-    display: flex;
-    gap: 15px;
+  display: flex;
+  gap: 15px;
 }

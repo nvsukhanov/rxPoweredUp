@@ -1,9 +1,7 @@
 export class ConnectionError extends Error {
-    public readonly type = 'Connection error';
+  public readonly type = 'Connection error';
 
-    constructor(
-        message: string,
-    ) {
-        super(message);
-    }
+  constructor(message: string) {
+    super(message);
+  }
 }
