@@ -11,7 +11,9 @@ export function OutputPortModeId(props: {
   modeId: number;
   onPortModeIdGetInfoRequest: (infoType: PortModeInformationType) => void;
 }): ReactElement {
-  const portModeInfo: PortModeInfoState | undefined = useHubStore(useShallow((state) => state.portModeInfo[hashPortIdModeId(props.portId, props.modeId)]));
+  const portModeInfo: PortModeInfoState | undefined = useHubStore(
+    useShallow((state) => state.portModeInfo[hashPortIdModeId(props.portId, props.modeId)])
+  );
 
   return (
     <section>

@@ -43,7 +43,10 @@ export function SpeedControl(props: { hub: IHub; portId: number | undefined }): 
       return;
     }
     nextOperationStart$.next();
-    props.hub.motors.startSpeed(props.portId, speed, speedOptions).pipe(takeUntil(dispose$), takeUntil(nextOperationStart$)).subscribe();
+    props.hub.motors
+      .startSpeed(props.portId, speed, speedOptions)
+      .pipe(takeUntil(dispose$), takeUntil(nextOperationStart$))
+      .subscribe();
   };
 
   const canExecute = speedOptions && props.portId !== undefined;

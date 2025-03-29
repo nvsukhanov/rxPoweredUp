@@ -1,6 +1,12 @@
 import { injectable } from 'tsyringe';
 
-import { HubProperty, HubPropertyOperation, MessageType, SubscribableHubProperties, WritableHubProperties } from '../../constants';
+import {
+  HubProperty,
+  HubPropertyOperation,
+  MessageType,
+  SubscribableHubProperties,
+  WritableHubProperties,
+} from '../../constants';
 import { RawMessage } from '../../types';
 import { IHubPropertiesMessageFactory } from '../../features';
 
@@ -24,7 +30,9 @@ export class HubPropertiesOutboundMessageFactory implements IHubPropertiesMessag
     };
   }
 
-  public createSubscriptionMessage<TProp extends SubscribableHubProperties>(property: TProp): RawMessage<MessageType.properties> {
+  public createSubscriptionMessage<TProp extends SubscribableHubProperties>(
+    property: TProp
+  ): RawMessage<MessageType.properties> {
     return {
       header: {
         messageType: MessageType.properties,
@@ -33,7 +41,9 @@ export class HubPropertiesOutboundMessageFactory implements IHubPropertiesMessag
     };
   }
 
-  public createUnsubscriptionMessage<TProp extends SubscribableHubProperties>(property: TProp): RawMessage<MessageType.properties> {
+  public createUnsubscriptionMessage<TProp extends SubscribableHubProperties>(
+    property: TProp
+  ): RawMessage<MessageType.properties> {
     return {
       header: {
         messageType: MessageType.properties,

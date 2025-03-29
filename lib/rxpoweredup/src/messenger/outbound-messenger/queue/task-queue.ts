@@ -1,4 +1,17 @@
-import { Observable, TimeoutError, filter, finalize, merge, of, retry, switchMap, take, throwError, timeout, timer } from 'rxjs';
+import {
+  Observable,
+  TimeoutError,
+  filter,
+  finalize,
+  merge,
+  of,
+  retry,
+  switchMap,
+  take,
+  throwError,
+  timeout,
+  timer,
+} from 'rxjs';
 
 import type { GenericErrorInboundMessage, IDisposable, ILogger } from '../../../types';
 import { IQueueTask } from './i-queue-task';

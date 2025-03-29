@@ -13,7 +13,9 @@ const sequence = lastValueFrom(
   }).pipe(
     audit((hub) => hub.ports.onIoAttach({ ports: [0] })),
     switchMap((hub) =>
-      hub.ports.portValueChanges(0, WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.position], 1, ValueTransformers.position).pipe(takeUntil(hub.disconnected))
+      hub.ports
+        .portValueChanges(0, WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.position], 1, ValueTransformers.position)
+        .pipe(takeUntil(hub.disconnected))
     ),
     tap((position) => console.log(`Position: ${position}`))
   )

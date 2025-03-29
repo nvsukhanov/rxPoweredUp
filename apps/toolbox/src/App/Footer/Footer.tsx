@@ -31,7 +31,9 @@ export function Footer(): ReactElement {
         />
         <label htmlFor={'displayConsole'}>Console</label>
       </section>
-      <section className={styles['messagesContainer']}>{displayMode === DisplayMode.Console ? <ConsoleLog /> : <MessagesLog />}</section>
+      <section className={styles['messagesContainer']}>
+        {displayMode === DisplayMode.Console ? <ConsoleLog /> : <MessagesLog />}
+      </section>
     </section>
   );
 }

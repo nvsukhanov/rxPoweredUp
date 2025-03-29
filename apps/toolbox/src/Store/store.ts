@@ -130,7 +130,12 @@ export type HubStore = {
   processIoDetachMessage(message: AttachedIODetachInboundMessage): void;
   processPortModeMessage(message: PortModeInboundMessage): void;
   processPortModeInformationMessage(message: PortModeInformationInboundMessage): void;
-  processPortModeInformationRequestError(portId: number, modeId: number, infoType: PortModeInformationType, error: Error): void;
+  processPortModeInformationRequestError(
+    portId: number,
+    modeId: number,
+    infoType: PortModeInformationType,
+    error: Error
+  ): void;
   processPortRawValue(portId: number, modeId: number, rawValue: number[]): void;
   processPortValue(portId: number, modeId: number, parsedValue: string): void;
   addMessagesLogEntry(direction: MessageDirection, message: RawMessage<MessageType>, id: string): void;
@@ -281,7 +286,12 @@ export const useHubStore = create<HubStore>(
         };
       });
     },
-    processPortModeInformationRequestError(portId: number, modeId: number, infoType: PortModeInformationType, error: Error): void {
+    processPortModeInformationRequestError(
+      portId: number,
+      modeId: number,
+      infoType: PortModeInformationType,
+      error: Error
+    ): void {
       const hash = hashPortIdModeId(portId, modeId);
       set((state) => {
         return {

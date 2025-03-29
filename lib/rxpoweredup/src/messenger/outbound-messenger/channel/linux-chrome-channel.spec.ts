@@ -16,7 +16,11 @@ describe('LinuxChromeChannel', () => {
     characteristicMock = mock<BluetoothRemoteGATTCharacteristic>();
     packetBuilderMock = mock<PacketBuilder>();
     messageMiddlewareMock = [mock<IMessageMiddleware>()];
-    subject = new LinuxChromeChannel(instance(characteristicMock), instance(packetBuilderMock), messageMiddlewareMock.map(instance));
+    subject = new LinuxChromeChannel(
+      instance(characteristicMock),
+      instance(packetBuilderMock),
+      messageMiddlewareMock.map(instance)
+    );
   });
 
   it('should call packet builder with message', async () => {

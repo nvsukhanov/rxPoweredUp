@@ -2,7 +2,10 @@
 import { ILogger, LogLevel } from 'rxpoweredup';
 
 export class StoreLogger implements ILogger {
-  constructor(private logMessageFn: (logLevel: LogLevel, message: string, id: string) => void, private readonly window: Window) {}
+  constructor(
+    private logMessageFn: (logLevel: LogLevel, message: string, id: string) => void,
+    private readonly window: Window
+  ) {}
 
   public debug(...args: unknown[]): void {
     console.debug(...args);

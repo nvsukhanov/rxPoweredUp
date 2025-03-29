@@ -22,7 +22,9 @@ import { readBitAtPosition } from '../../helpers';
 export class PortModeInformationReplyParser implements IReplyParser<MessageType.portModeInformation> {
   public readonly messageType = MessageType.portModeInformation;
 
-  public parseMessage(message: RawMessage<MessageType.portModeInformation>): InboundMessage & { messageType: MessageType.portModeInformation } {
+  public parseMessage(
+    message: RawMessage<MessageType.portModeInformation>
+  ): InboundMessage & { messageType: MessageType.portModeInformation } {
     const baseMessageData: PortModeInformationBase = {
       portId: message.payload[0],
       mode: message.payload[1],
@@ -53,7 +55,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     }
   }
 
-  private parsePortModeInformationName(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationName {
+  private parsePortModeInformationName(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationName {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.name,
@@ -64,7 +69,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationRawRange(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationRawRange {
+  private parsePortModeInformationRawRange(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationRawRange {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.rawRange,
@@ -73,7 +81,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationPctRange(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationPctRange {
+  private parsePortModeInformationPctRange(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationPctRange {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.pctRange,
@@ -82,7 +93,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationSiRange(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationSiRange {
+  private parsePortModeInformationSiRange(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationSiRange {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.siRange,
@@ -91,7 +105,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationSymbol(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationSymbol {
+  private parsePortModeInformationSymbol(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationSymbol {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.symbol,
@@ -102,7 +119,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationMapping(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationMapping {
+  private parsePortModeInformationMapping(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationMapping {
     const inputSideValue = payload[3];
     const outputSideValue = payload[4];
     return {
@@ -125,7 +145,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationMotorBias(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationMotorBias {
+  private parsePortModeInformationMotorBias(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationMotorBias {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.motorBias,
@@ -133,7 +156,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationCapabilityBits(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationCapabilityBits {
+  private parsePortModeInformationCapabilityBits(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationCapabilityBits {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.capabilityBits,
@@ -141,7 +167,10 @@ export class PortModeInformationReplyParser implements IReplyParser<MessageType.
     };
   }
 
-  private parsePortModeInformationValueFormat(payload: Uint8Array, baseMessage: PortModeInformationBase): PortModeInformationValueFormat {
+  private parsePortModeInformationValueFormat(
+    payload: Uint8Array,
+    baseMessage: PortModeInformationBase
+  ): PortModeInformationValueFormat {
     return {
       ...baseMessage,
       modeInformationType: PortModeInformationType.valueFormat,

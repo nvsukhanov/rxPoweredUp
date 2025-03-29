@@ -11,7 +11,8 @@ import { PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY } from '../i-port-input-format-
 export class RgbLightFeatureFactory implements IRgbLightFeatureFactory {
   constructor(
     @inject(RGB_LIGHT_COMMANDS_FACTORY) private readonly ledCommandsFactory: IRgbLightCommandsFactory,
-    @inject(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY) private readonly portInputSetupMessageFactory: IPortInputFormatSetupMessageFactory
+    @inject(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY)
+    private readonly portInputSetupMessageFactory: IPortInputFormatSetupMessageFactory
   ) {}
 
   public createFeature(messenger: IOutboundMessenger): IRgbLightFeature {

@@ -69,13 +69,17 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
 
   public getBatteryLevel(): Observable<number> {
     const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.batteryVoltage);
-    const reply = this.inboundMessages.pipe(filter((r) => r.propertyType === HubProperty.batteryVoltage)) as Observable<HubPropertyBatteryInboundMessage>;
+    const reply = this.inboundMessages.pipe(
+      filter((r) => r.propertyType === HubProperty.batteryVoltage)
+    ) as Observable<HubPropertyBatteryInboundMessage>;
     return this.messenger.sendWithResponse({ message, reply }).pipe(map((r) => r.level));
   }
 
   public getButtonState(): Observable<boolean> {
     const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.button);
-    const reply = this.inboundMessages.pipe(filter((r) => r.propertyType === HubProperty.button)) as Observable<HubPropertyButtonStateInboundMessage>;
+    const reply = this.inboundMessages.pipe(
+      filter((r) => r.propertyType === HubProperty.button)
+    ) as Observable<HubPropertyButtonStateInboundMessage>;
     return this.messenger.sendWithResponse({ message, reply }).pipe(map((r) => r.isPressed));
   }
 
@@ -89,13 +93,17 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
 
   public getRSSILevel(): Observable<number> {
     const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.RSSI);
-    const reply = this.inboundMessages.pipe(filter((r) => r.propertyType === HubProperty.RSSI)) as Observable<HubPropertyRssiInboundMessage>;
+    const reply = this.inboundMessages.pipe(
+      filter((r) => r.propertyType === HubProperty.RSSI)
+    ) as Observable<HubPropertyRssiInboundMessage>;
     return this.messenger.sendWithResponse({ message, reply }).pipe(map((r) => r.level));
   }
 
   public getSystemTypeId(): Observable<HubType> {
     const message = this.messageFactoryService.requestPropertyUpdate(HubProperty.systemTypeId);
-    const reply = this.inboundMessages.pipe(filter((r) => r.propertyType === HubProperty.systemTypeId)) as Observable<HubPropertySystemTypeIdInboundMessage>;
+    const reply = this.inboundMessages.pipe(
+      filter((r) => r.propertyType === HubProperty.systemTypeId)
+    ) as Observable<HubPropertySystemTypeIdInboundMessage>;
     return this.messenger.sendWithResponse({ message, reply }).pipe(map((r) => r.hubType));
   }
 
@@ -155,7 +163,9 @@ export class HubPropertiesFeature implements IHubPropertiesFeature {
     return this.messenger.sendWithoutResponse(subscribeMessage);
   }
 
-  private createPropertyStream<T extends SubscribableHubProperties>(trackedProperty: T): Observable<HubPropertyInboundMessage & { propertyType: T }> {
+  private createPropertyStream<T extends SubscribableHubProperties>(
+    trackedProperty: T
+  ): Observable<HubPropertyInboundMessage & { propertyType: T }> {
     return new Observable<HubPropertyInboundMessage & { propertyType: T }>((subscriber) => {
       this.logging.debug('subscribing to property stream', HubProperty[trackedProperty]);
 

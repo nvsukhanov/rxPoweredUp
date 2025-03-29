@@ -3,10 +3,14 @@ import { MessageType } from '../../constants';
 import { PortInputSetupSingleHandshakeInboundMessage, RawMessage } from '../../types';
 import { readNumberFromUint8LEArray } from '../../helpers';
 
-export class PortInputFormatSetupSingleHandshakeReplyParser implements IReplyParser<MessageType.portInputFormatSetupSingleHandshake> {
+export class PortInputFormatSetupSingleHandshakeReplyParser
+  implements IReplyParser<MessageType.portInputFormatSetupSingleHandshake>
+{
   public readonly messageType = MessageType.portInputFormatSetupSingleHandshake;
 
-  public parseMessage(message: RawMessage<MessageType.portInputFormatSetupSingleHandshake>): PortInputSetupSingleHandshakeInboundMessage {
+  public parseMessage(
+    message: RawMessage<MessageType.portInputFormatSetupSingleHandshake>
+  ): PortInputSetupSingleHandshakeInboundMessage {
     return {
       messageType: MessageType.portInputFormatSetupSingleHandshake,
       portId: message.payload[0],

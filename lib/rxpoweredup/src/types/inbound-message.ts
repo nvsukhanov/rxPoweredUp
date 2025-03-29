@@ -101,7 +101,10 @@ export type AttachedIODetachInboundMessage = {
   event: AttachIoEvent.Detached;
 };
 
-export type AttachedIOInboundMessage = AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage | AttachedIODetachInboundMessage;
+export type AttachedIOInboundMessage =
+  | AttachedIoAttachInboundMessage
+  | AttachedIOAttachVirtualInboundMessage
+  | AttachedIODetachInboundMessage;
 
 export type PortValueInboundMessage = {
   messageType: MessageType.portValueSingle;

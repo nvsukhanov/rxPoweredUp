@@ -8,7 +8,9 @@ import { WriteDirectModeDataBuilder } from './write-direct-mode-data-builder';
 
 @injectable()
 export class RgbLightCommandOutboundMessageFactory implements IRgbLightCommandsFactory {
-  constructor(@inject(WriteDirectModeDataBuilder) private readonly writeDirectModeDataBuilder: WriteDirectModeDataBuilder) {}
+  constructor(
+    @inject(WriteDirectModeDataBuilder) private readonly writeDirectModeDataBuilder: WriteDirectModeDataBuilder
+  ) {}
 
   public createSetRgbColorCommand(portId: number, modeId: number, color: ColorDescriptor): RawPortOutputCommandMessage {
     this.ensureColorIsValid(color);

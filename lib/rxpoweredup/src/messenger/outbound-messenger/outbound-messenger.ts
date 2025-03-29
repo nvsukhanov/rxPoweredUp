@@ -27,7 +27,9 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     TResult extends LastOfTuple<TSequenceItems> extends WithResponseSequenceItem<infer R> ? R : never
   >(...sequenceItems: TSequenceItems): Observable<TResult> {
     const tasks = sequenceItems.map(({ message, reply }) => new TaskWithResponse(message, reply));
-    const executionStreams: Array<Observable<unknown>> = tasks.map((task) => this.createExecutionStreamForTask(task, this.genericTaskQueue));
+    const executionStreams: Array<Observable<unknown>> = tasks.map((task) =>
+      this.createExecutionStreamForTask(task, this.genericTaskQueue)
+    );
 
     if (executionStreams.length === 1) {
       return executionStreams[0] as Observable<TResult>;
@@ -45,7 +47,10 @@ export class OutboundMessenger implements IOutboundMessenger, IDisposable {
     return this.createExecutionStreamForTask(task, this.getQueueForPort(task.portId));
   }
 
-  public createExecutionStreamForTask<TTaskResult>(task: IQueueTask<TTaskResult>, queue: TaskQueue): Observable<TTaskResult> {
+  public createExecutionStreamForTask<TTaskResult>(
+    task: IQueueTask<TTaskResult>,
+    queue: TaskQueue
+  ): Observable<TTaskResult> {
     let isEnqueued = false;
     return new Observable((observer) => {
       if (this.isDisposed) {

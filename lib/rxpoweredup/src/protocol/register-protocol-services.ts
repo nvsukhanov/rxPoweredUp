@@ -54,7 +54,10 @@ export function registerProtocolServices(container: DependencyContainer): void {
   container.register(PORT_INFORMATION_REPLY_PARSER, PortInformationReplyParser);
   container.register(ATTACHED_IO_REPLIES_PARSER, AttachedIoReplyParser);
   container.register(PORT_MODE_INFORMATION_REPLY_PARSER, PortModeInformationReplyParser);
-  container.register(PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER, PortInputFormatSetupSingleHandshakeReplyParser);
+  container.register(
+    PORT_INPUT_FORMAT_SETUP_SINGLE_HANDSHAKE_REPLY_PARSER,
+    PortInputFormatSetupSingleHandshakeReplyParser
+  );
   container.register(PORT_INFORMATION_REQUEST_MESSAGE_FACTORY, PortInformationRequestOutboundMessageFactory);
   container.register(PORT_MODE_INFORMATION_REQUEST_MESSAGE_FACTORY, PortModeInformationRequestOutboundMessageFactory);
   container.register(PORT_INPUT_FORMAT_SETUP_MESSAGE_FACTORY, PortInputFormatSetupSingleOutboundMessageFactory);

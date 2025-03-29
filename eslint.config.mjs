@@ -3,10 +3,8 @@ import nx from '@nx/eslint-plugin';
 import stylistic from '@stylistic/eslint-plugin';
 import myCommonRules from '@nvsukhanov/eslint-config-common';
 import typescriptEslint from 'typescript-eslint';
-import importPlugin from 'eslint-plugin-import';
 
 export default defineConfig([
-  importPlugin.flatConfigs.recommended,
   globalIgnores(['node_modules', 'docs']),
   {
     plugins: {

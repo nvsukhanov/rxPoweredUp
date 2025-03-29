@@ -30,7 +30,10 @@ export function PositionControl(props: { hub: IHub; portId: number | undefined }
       return;
     }
     nextOperationStart$.next();
-    props.hub.motors.rotateByDegree(props.portId, step, servoOptions).pipe(takeUntil(dispose$), takeUntil(nextOperationStart$)).subscribe();
+    props.hub.motors
+      .rotateByDegree(props.portId, step, servoOptions)
+      .pipe(takeUntil(dispose$), takeUntil(nextOperationStart$))
+      .subscribe();
   };
 
   const handleGoTo = (position: number): void => {
@@ -38,7 +41,10 @@ export function PositionControl(props: { hub: IHub; portId: number | undefined }
       return;
     }
     nextOperationStart$.next();
-    props.hub.motors.goToPosition(props.portId, position, servoOptions).pipe(takeUntil(dispose$), takeUntil(nextOperationStart$)).subscribe();
+    props.hub.motors
+      .goToPosition(props.portId, position, servoOptions)
+      .pipe(takeUntil(dispose$), takeUntil(nextOperationStart$))
+      .subscribe();
   };
 
   const canExecute = servoOptions && props.portId !== undefined;

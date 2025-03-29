@@ -56,7 +56,9 @@ describe('Helpers', () => {
 
   describe('concatUintArraysToUint8Array', () => {
     it('should concat multiple Uint8Arrays', () => {
-      expect(concatUintArraysToUint8Array(new Uint8Array([0x01, 0x02]), new Uint8Array([0x03, 0x04]))).toEqual(new Uint8Array([0x01, 0x02, 0x03, 0x04]));
+      expect(concatUintArraysToUint8Array(new Uint8Array([0x01, 0x02]), new Uint8Array([0x03, 0x04]))).toEqual(
+        new Uint8Array([0x01, 0x02, 0x03, 0x04])
+      );
     });
   });
 

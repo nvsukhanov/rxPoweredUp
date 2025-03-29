@@ -39,7 +39,9 @@ export class HubPropertiesReplyParser implements IReplyParser<MessageType.proper
     [HubProperty.hardwareVersion]: (v): HubPropertyHardwareVersionInboundMessage => this.parseHardwareVersion(v),
   } satisfies { [k in HubProperty]: (payload: Uint8Array) => HubPropertyInboundMessage };
 
-  public parseMessage(message: RawMessage<MessageType.properties>): InboundMessage & { messageType: MessageType.properties } {
+  public parseMessage(
+    message: RawMessage<MessageType.properties>
+  ): InboundMessage & { messageType: MessageType.properties } {
     const propertyType = message.payload[0] as HubProperty;
     const payload = message.payload.slice(this.hubPropertyLength + this.operationLength);
     return this.hubPropertyValueParser[propertyType](payload);

@@ -82,7 +82,11 @@ describe('TaskPortOutputCommand', () => {
       subject.setExecutionStatus(status);
     });
 
-    [PortCommandExecutionStatus.discarded, PortCommandExecutionStatus.executionError, PortCommandExecutionStatus.completed].forEach((status) => {
+    [
+      PortCommandExecutionStatus.discarded,
+      PortCommandExecutionStatus.executionError,
+      PortCommandExecutionStatus.completed,
+    ].forEach((status) => {
       it(`should complete result when terminal status ${PortCommandExecutionStatus[status]} is reached`, (done) => {
         subject.result.subscribe({
           complete: () => done(),

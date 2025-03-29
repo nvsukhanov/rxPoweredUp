@@ -26,5 +26,11 @@ export function HubReadableProperty<TStateKey extends keyof HubPropertiesState>(
       .subscribe((value) => setHubProperty(props.stateKey, value));
   }, [props.stateKey, props.readValue, setHubProperty, dispose$]);
 
-  return <HubPropertyValue name={props.name} value={props.formatValue(hubPropertiesState[props.stateKey])} onRead={readValue} />;
+  return (
+    <HubPropertyValue
+      name={props.name}
+      value={props.formatValue(hubPropertiesState[props.stateKey])}
+      onRead={readValue}
+    />
+  );
 }

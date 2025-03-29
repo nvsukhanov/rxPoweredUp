@@ -89,7 +89,9 @@
           hub.properties.getAdvertisingName().pipe(rxjs.tap((name) => (advertisingNameElement.textContent = name))),
           hub.properties.getSystemTypeId().pipe(rxjs.tap((id) => (systemTypeIdElement.textContent = id))),
           hub.properties.getManufacturerName().pipe(rxjs.tap((name) => (manufacturerNameElement.textContent = name))),
-          hub.properties.getPrimaryMacAddress().pipe(rxjs.tap((address) => (primaryMacAddressElement.textContent = address)))
+          hub.properties
+            .getPrimaryMacAddress()
+            .pipe(rxjs.tap((address) => (primaryMacAddressElement.textContent = address)))
         )
         .pipe(rxjs.takeUntil(hub.disconnected));
     }

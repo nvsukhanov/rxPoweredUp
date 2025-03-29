@@ -1,4 +1,18 @@
-import { Observable, ReplaySubject, catchError, delay, from, fromEvent, of, share, switchMap, take, tap, throwError, timeout } from 'rxjs';
+import {
+  Observable,
+  ReplaySubject,
+  catchError,
+  delay,
+  from,
+  fromEvent,
+  of,
+  share,
+  switchMap,
+  take,
+  tap,
+  throwError,
+  timeout,
+} from 'rxjs';
 
 import { HUB_CHARACTERISTIC_UUID, HUB_SERVICE_UUID, MessageType } from '../constants';
 import { IHubConnectionErrorsFactory } from './i-hub-connection-errors-factory';
@@ -195,7 +209,9 @@ export class Hub implements IHub {
       incomingMessageMiddleware: this.config.incomingMessageMiddleware,
     });
 
-    const genericErrorsStream = this.messageListenerFactory.create(dataStream, this.genericErrorReplyParser, this._disconnected$).pipe(share());
+    const genericErrorsStream = this.messageListenerFactory
+      .create(dataStream, this.genericErrorReplyParser, this._disconnected$)
+      .pipe(share());
 
     this.outboundMessenger = this.outboundMessengerFactory.create(
       dataStream,
@@ -206,11 +222,20 @@ export class Hub implements IHub {
       this.config
     );
 
-    this._actionsFeature = this.hubActionsFeatureFactory.create(dataStream, this.outboundMessenger, this._disconnected$);
+    this._actionsFeature = this.hubActionsFeatureFactory.create(
+      dataStream,
+      this.outboundMessenger,
+      this._disconnected$
+    );
 
     this._ports = this.ioFeatureFactory.create(dataStream, this._disconnected$, this.outboundMessenger);
 
-    this._properties = this.propertiesFeatureFactory.create(dataStream, this._disconnected$, this.outboundMessenger, this.logger);
+    this._properties = this.propertiesFeatureFactory.create(
+      dataStream,
+      this._disconnected$,
+      this.outboundMessenger,
+      this.logger
+    );
 
     this._motors = this.commandsFeatureFactory.createMotorsFeature(this.outboundMessenger, this.config);
 

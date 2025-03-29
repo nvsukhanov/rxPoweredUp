@@ -34,10 +34,12 @@ export class HubFactory {
     @inject(OUTBOUND_MESSAGE_FACTORY) private readonly outboundMessengerFactory: IOutboundMessengerFactory,
     @inject(HUB_PROPERTY_FEATURE_FACTORY) private readonly hubPropertiesFactory: IHubPropertiesFeatureFactory,
     @inject(PORTS_FEATURE_FACTORY) private readonly ioFeatureFactoryService: IPortsFeatureFactory,
-    @inject(CHARACTERISTIC_DATA_STREAM_FACTORY) private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
+    @inject(CHARACTERISTIC_DATA_STREAM_FACTORY)
+    private readonly characteristicsDataStreamFactory: ICharacteristicDataStreamFactory,
     @inject(MOTORS_FEATURE_FACTORY) private readonly motorsFeatureFactory: IMotorsFeatureFactory,
     @inject(RGB_LIGHT_FEATURE_FACTORY) private readonly ledFeatureFactory: IRgbLightFeatureFactory,
-    @inject(GENERIC_ERRORS_REPLIES_PARSER) private readonly genericErrorsReplyParser: IReplyParser<MessageType.genericError>,
+    @inject(GENERIC_ERRORS_REPLIES_PARSER)
+    private readonly genericErrorsReplyParser: IReplyParser<MessageType.genericError>,
     @inject(INBOUND_MESSAGE_LISTENER_FACTORY) private readonly messageListenerFactory: IInboundMessageListenerFactory,
     @inject(PREFIXED_CONSOLE_LOGGER_FACTORY) private readonly loggerFactory: IPrefixedConsoleLoggerFactory,
     @inject(HUB_ACTIONS_FEATURE_FACTORY) private readonly hubActionsFeatureFactory: IHubActionsFeatureFactory

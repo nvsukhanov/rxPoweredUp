@@ -6,8 +6,14 @@ import styles from './PhysicalPort.module.scss';
 import { PhysicalPortState, PortModeState, useHubStore } from '../../../Store';
 import { PortModesList } from '../PortModesList';
 
-export function PhysicalPort(props: { hub: IHub; port: PhysicalPortState; onHandlePortModesRequest: () => void }): ReactElement {
-  const portModeState: PortModeState | undefined = useHubStore(useShallow((state) => state.portModes[props.port.portId]));
+export function PhysicalPort(props: {
+  hub: IHub;
+  port: PhysicalPortState;
+  onHandlePortModesRequest: () => void;
+}): ReactElement {
+  const portModeState: PortModeState | undefined = useHubStore(
+    useShallow((state) => state.portModes[props.port.portId])
+  );
 
   return (
     <>

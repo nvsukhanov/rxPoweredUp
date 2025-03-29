@@ -23,8 +23,12 @@ export function App(): ReactElement {
   const addMessageLogEntry = useHubStore((state) => state.addMessagesLogEntry);
   const addConsoleLogEntry = useHubStore((state) => state.addConsoleLogEntry);
 
-  const inboundLoggingMiddleware = useRef(new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Inbound, window));
-  const outboundLoggingMiddleware = useRef(new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Outbound, window));
+  const inboundLoggingMiddleware = useRef(
+    new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Inbound, window)
+  );
+  const outboundLoggingMiddleware = useRef(
+    new StoreMessageMiddleware(addMessageLogEntry, MessageDirection.Outbound, window)
+  );
   const storeLogger = useRef(new StoreLogger(addConsoleLogEntry, window));
 
   window.onerror = (message): void => {

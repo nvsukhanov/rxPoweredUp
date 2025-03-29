@@ -41,7 +41,9 @@ export function HubPropertiesPage(props: { hub: IHub | undefined }): ReactElemen
           stateKey={'buttonState'}
           readValue={(): Observable<boolean> => props.hub?.properties.getButtonState() ?? EMPTY}
           subscribeValue={(): Observable<boolean> => props.hub?.properties.buttonState ?? EMPTY}
-          formatValue={(value?: boolean): string => (value !== undefined ? (value ? 'Pressed' : 'Released') : 'Unknown')}
+          formatValue={(value?: boolean): string =>
+            value !== undefined ? (value ? 'Pressed' : 'Released') : 'Unknown'
+          }
         />
 
         <HubReadableProperty
@@ -75,13 +77,17 @@ export function HubPropertiesPage(props: { hub: IHub | undefined }): ReactElemen
           name={'Firmware version'}
           stateKey={'firmwareVersion'}
           readValue={(): Observable<VersionInformation> => props.hub?.properties.getFirmwareVersion() ?? EMPTY}
-          formatValue={(v?: VersionInformation): string => (v !== undefined ? `${v.major}.${v.minor}.${v.bugfix}.${v.build}` : 'Unknown')}
+          formatValue={(v?: VersionInformation): string =>
+            v !== undefined ? `${v.major}.${v.minor}.${v.bugfix}.${v.build}` : 'Unknown'
+          }
         />
         <HubReadableProperty
           name={'Hardware version'}
           stateKey={'hardwareVersion'}
           readValue={(): Observable<VersionInformation> => props.hub?.properties.getHardwareVersion() ?? EMPTY}
-          formatValue={(v?: VersionInformation): string => (v !== undefined ? `${v.major}.${v.minor}.${v.bugfix}.${v.build}` : 'Unknown')}
+          formatValue={(v?: VersionInformation): string =>
+            v !== undefined ? `${v.major}.${v.minor}.${v.bugfix}.${v.build}` : 'Unknown'
+          }
         />
       </section>
       <h2>Set hub advertising name</h2>

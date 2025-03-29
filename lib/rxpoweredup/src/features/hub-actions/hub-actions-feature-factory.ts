@@ -1,7 +1,13 @@
 import { inject, injectable } from 'tsyringe';
 import { Observable } from 'rxjs';
 
-import type { IHubActionsFeature, IHubActionsFeatureFactory, IInboundMessageListenerFactory, IOutboundMessenger, IReplyParser } from '../../hub';
+import type {
+  IHubActionsFeature,
+  IHubActionsFeatureFactory,
+  IInboundMessageListenerFactory,
+  IOutboundMessenger,
+  IReplyParser,
+} from '../../hub';
 import { INBOUND_MESSAGE_LISTENER_FACTORY } from '../../hub';
 import { HubActionsFeature } from './hub-actions-feature';
 import { HUB_ACTIONS_REPLY_PARSER } from './hub-actions-reply-parser';
@@ -23,7 +29,11 @@ export class HubActionsFeatureFactory implements IHubActionsFeatureFactory {
     messenger: IOutboundMessenger,
     onDisconnected$: Observable<void>
   ): IHubActionsFeature {
-    const inboundMessages = this.messageListenerFactory.create(characteristicDataStream, this.hubActionsReplyParser, onDisconnected$);
+    const inboundMessages = this.messageListenerFactory.create(
+      characteristicDataStream,
+      this.hubActionsReplyParser,
+      onDisconnected$
+    );
     return new HubActionsFeature(this.hubActionsMessageFactory, messenger, inboundMessages);
   }
 }

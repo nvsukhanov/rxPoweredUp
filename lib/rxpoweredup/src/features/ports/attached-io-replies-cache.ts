@@ -8,7 +8,10 @@ export class AttachedIoRepliesCache {
 
   private cacheMap = new Map<number, AttachedIOInboundMessage>();
 
-  constructor(private readonly messages$: Observable<AttachedIOInboundMessage>, private readonly onDisconnected$: Observable<void>) {
+  constructor(
+    private readonly messages$: Observable<AttachedIOInboundMessage>,
+    private readonly onDisconnected$: Observable<void>
+  ) {
     this.replies$ = new Observable((observer) => {
       if (this.cacheMap.size) {
         [...this.cacheMap.values()].forEach((message) => {

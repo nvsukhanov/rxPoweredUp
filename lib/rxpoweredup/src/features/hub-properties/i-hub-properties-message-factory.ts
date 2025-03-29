@@ -8,9 +8,15 @@ export interface IHubPropertiesMessageFactory {
 
   requestPropertyUpdate(property: HubProperty): RawMessage<MessageType.properties>;
 
-  createSubscriptionMessage<TProp extends SubscribableHubProperties>(property: TProp): RawMessage<MessageType.properties>;
+  createSubscriptionMessage<TProp extends SubscribableHubProperties>(
+    property: TProp
+  ): RawMessage<MessageType.properties>;
 
-  createUnsubscriptionMessage<TProp extends SubscribableHubProperties>(property: TProp): RawMessage<MessageType.properties>;
+  createUnsubscriptionMessage<TProp extends SubscribableHubProperties>(
+    property: TProp
+  ): RawMessage<MessageType.properties>;
 }
 
-export const HUB_PROPERTIES_MESSAGE_FACTORY: InjectionToken<IHubPropertiesMessageFactory> = Symbol('HUB_PROPERTIES_MESSAGE_FACTORY');
+export const HUB_PROPERTIES_MESSAGE_FACTORY: InjectionToken<IHubPropertiesMessageFactory> = Symbol(
+  'HUB_PROPERTIES_MESSAGE_FACTORY'
+);

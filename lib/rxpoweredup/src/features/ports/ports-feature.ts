@@ -63,16 +63,23 @@ export class PortsFeature implements IPortsFeature, IDisposable {
       }
       if (filterOptions.ioTypes !== undefined) {
         const ioTypesSet = new Set(filterOptions.ioTypes);
-        filters.push(filter((message) => ioTypesSet.has((message as AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage).ioTypeId)));
+        filters.push(
+          filter((message) =>
+            ioTypesSet.has((message as AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage).ioTypeId)
+          )
+        );
       }
     }
-    return filters.reduce((acc, filterOperator) => acc.pipe(filterOperator), this.attachedIoCachedReplies) as Observable<
-      AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage
-    >;
+    return filters.reduce(
+      (acc, filterOperator) => acc.pipe(filterOperator),
+      this.attachedIoCachedReplies
+    ) as Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
   }
 
   public onIoDetach(filterOptions?: OnIoDetachFilter | number): Observable<AttachedIODetachInboundMessage> {
-    const filters: Array<MonoTypeOperatorFunction<AttachedIOInboundMessage>> = [filter((message) => message.event === AttachIoEvent.Detached)];
+    const filters: Array<MonoTypeOperatorFunction<AttachedIOInboundMessage>> = [
+      filter((message) => message.event === AttachIoEvent.Detached),
+    ];
 
     if (typeof filterOptions === 'number') {
       filters.push(filter((message) => message.portId === filterOptions));
@@ -81,7 +88,10 @@ export class PortsFeature implements IPortsFeature, IDisposable {
       filters.push(filter((message) => portIdsSet.has(message.portId)));
     }
 
-    return filters.reduce((acc, filterOperator) => acc.pipe(filterOperator), this.attachedIoCachedReplies) as Observable<AttachedIODetachInboundMessage>;
+    return filters.reduce(
+      (acc, filterOperator) => acc.pipe(filterOperator),
+      this.attachedIoCachedReplies
+    ) as Observable<AttachedIODetachInboundMessage>;
   }
 
   public getPortValue<TTransformer extends IPortValueTransformer<unknown> | void>(
@@ -104,9 +114,9 @@ export class PortsFeature implements IPortsFeature, IDisposable {
         { message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ },
         { message: portValueRequestMessage, reply: portValuesReplies$ }
       )
-      .pipe(map((r) => (transformer ? transformer.fromRawValue(r.value) : r.value))) as TTransformer extends IPortValueTransformer<infer R>
-      ? Observable<R>
-      : Observable<number[]>;
+      .pipe(
+        map((r) => (transformer ? transformer.fromRawValue(r.value) : r.value))
+      ) as TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
   }
 
   public portValueChanges<TTransformer extends IPortValueTransformer<unknown> | void>(
@@ -126,8 +136,15 @@ export class PortsFeature implements IPortsFeature, IDisposable {
     const teardownLogic = (sub: Subscription): void => {
       subscribersCount--;
       if (!this.isDisposed && subscribersCount === 0) {
-        const disableNotificationsMessage = this.portInputFormatSetupMessageFactory.createMessage(portId, modeId, false);
-        this.messenger.sendWithResponse({ message: disableNotificationsMessage, reply: portValueHandshakeReplies$ }).pipe(take(1)).subscribe();
+        const disableNotificationsMessage = this.portInputFormatSetupMessageFactory.createMessage(
+          portId,
+          modeId,
+          false
+        );
+        this.messenger
+          .sendWithResponse({ message: disableNotificationsMessage, reply: portValueHandshakeReplies$ })
+          .pipe(take(1))
+          .subscribe();
       }
       sub.unsubscribe();
     };
@@ -137,8 +154,15 @@ export class PortsFeature implements IPortsFeature, IDisposable {
       const portValuesReplies$ = this.rawPortValueReplies.pipe(filter((r) => r.portId === portId));
 
       if (!handShakeMessageSent) {
-        const numericDeltaThreshold = transformer ? transformer.toValueThreshold(deltaThreshold) : (deltaThreshold as number);
-        const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(portId, modeId, true, numericDeltaThreshold);
+        const numericDeltaThreshold = transformer
+          ? transformer.toValueThreshold(deltaThreshold)
+          : (deltaThreshold as number);
+        const setPortInputFormatMessage = this.portInputFormatSetupMessageFactory.createMessage(
+          portId,
+          modeId,
+          true,
+          numericDeltaThreshold
+        );
 
         const sub = this.messenger
           .sendWithResponse({ message: setPortInputFormatMessage, reply: portValueHandshakeReplies$ })
@@ -152,7 +176,9 @@ export class PortsFeature implements IPortsFeature, IDisposable {
         handShakeMessageSent = true;
         return () => teardownLogic(sub);
       } else {
-        const sub = portValuesReplies$.pipe(map(({ value }) => (transformer ? transformer.fromRawValue(value) : value))).subscribe(subscriber);
+        const sub = portValuesReplies$
+          .pipe(map(({ value }) => (transformer ? transformer.fromRawValue(value) : value)))
+          .subscribe(subscriber);
         return () => teardownLogic(sub);
       }
     }) as TTransformer extends IPortValueTransformer<infer R> ? Observable<R> : Observable<number[]>;
@@ -170,17 +196,23 @@ export class PortsFeature implements IPortsFeature, IDisposable {
     mode: number,
     modeInformationType: T
   ): Observable<PortModeInformationInboundMessage & { modeInformationType: T }> {
-    const message = this.portModeInformationMessageFactory.createPortModeInformationRequest(portId, mode, modeInformationType);
-
-    const reply = (this.portModeInformationReplies as Observable<PortModeInformationInboundMessage & { modeInformationType: T }>).pipe(
-      filter((r) => r.modeInformationType === modeInformationType && r.portId === portId && r.mode === mode)
+    const message = this.portModeInformationMessageFactory.createPortModeInformationRequest(
+      portId,
+      mode,
+      modeInformationType
     );
+
+    const reply = (
+      this.portModeInformationReplies as Observable<PortModeInformationInboundMessage & { modeInformationType: T }>
+    ).pipe(filter((r) => r.modeInformationType === modeInformationType && r.portId === portId && r.mode === mode));
 
     return this.messenger.sendWithResponse({ message, reply });
   }
 
   public createVirtualPort(portIdA: number, portIdB: number): Observable<AttachedIOAttachVirtualInboundMessage> {
-    const replies = this.attachedIoReplies.pipe(filter((r) => r.event === AttachIoEvent.AttachedVirtual && r.portIdA === portIdA && r.portIdB === portIdB));
+    const replies = this.attachedIoReplies.pipe(
+      filter((r) => r.event === AttachIoEvent.AttachedVirtual && r.portIdA === portIdA && r.portIdB === portIdB)
+    );
     return this.messenger.sendWithResponse({
       message: this.virtualPortSetupMessageFactory.createVirtualPort(portIdA, portIdB),
       reply: replies,
@@ -188,7 +220,9 @@ export class PortsFeature implements IPortsFeature, IDisposable {
   }
 
   public deleteVirtualPort(virtualPortId: number): Observable<AttachedIODetachInboundMessage> {
-    const replies = this.attachedIoReplies.pipe(filter((r) => r.event === AttachIoEvent.Detached && r.portId === virtualPortId));
+    const replies = this.attachedIoReplies.pipe(
+      filter((r) => r.event === AttachIoEvent.Detached && r.portId === virtualPortId)
+    );
     return this.messenger.sendWithResponse({
       message: this.virtualPortSetupMessageFactory.deleteVirtualPort(virtualPortId),
       reply: replies,

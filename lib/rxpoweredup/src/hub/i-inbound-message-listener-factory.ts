@@ -13,4 +13,6 @@ export interface IInboundMessageListenerFactory {
   ): Observable<InboundMessage & { messageType: TMessageType }>;
 }
 
-export const INBOUND_MESSAGE_LISTENER_FACTORY: InjectionToken<IInboundMessageListenerFactory> = Symbol('IInboundMessageListenerFactory');
+export const INBOUND_MESSAGE_LISTENER_FACTORY: InjectionToken<IInboundMessageListenerFactory> = Symbol(
+  'IInboundMessageListenerFactory'
+);

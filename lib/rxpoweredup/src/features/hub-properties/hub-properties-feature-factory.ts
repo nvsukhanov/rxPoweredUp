@@ -5,7 +5,12 @@ import { MessageType } from '../../constants';
 import { HubPropertiesFeature } from './hub-properties-feature';
 import type { ILogger, RawMessage } from '../../types';
 import { INBOUND_MESSAGE_LISTENER_FACTORY } from '../../hub';
-import type { IHubPropertiesFeatureFactory, IInboundMessageListenerFactory, IOutboundMessenger, IReplyParser } from '../../hub';
+import type {
+  IHubPropertiesFeatureFactory,
+  IInboundMessageListenerFactory,
+  IOutboundMessenger,
+  IReplyParser,
+} from '../../hub';
 import { HUB_PROPERTIES_REPLIES_PARSER } from './hub-properties-reply-parser';
 import { HUB_PROPERTIES_MESSAGE_FACTORY } from './i-hub-properties-message-factory';
 import type { IHubPropertiesMessageFactory } from './i-hub-properties-message-factory';
@@ -28,6 +33,13 @@ export class HubPropertiesFeatureFactory implements IHubPropertiesFeatureFactory
     logger: ILogger
   ): HubPropertiesFeature {
     const replies$ = this.messageListenerFactory.create(characteristicDataStream, this.replyParser, onHubDisconnected);
-    return new HubPropertiesFeature(this.messageFactory, messenger, logger, replies$, this.errorsFactory, onHubDisconnected);
+    return new HubPropertiesFeature(
+      this.messageFactory,
+      messenger,
+      logger,
+      replies$,
+      this.errorsFactory,
+      onHubDisconnected
+    );
   }
 }

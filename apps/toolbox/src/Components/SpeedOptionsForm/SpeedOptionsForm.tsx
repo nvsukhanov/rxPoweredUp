@@ -13,7 +13,10 @@ export type SpeedOptionsFormResult = {
   bufferMode: PortOperationStartupInformation;
 };
 
-export function SpeedOptionsForm(props: { initialState?: SpeedOptionsFormResult; onChanges: (result?: SpeedOptionsFormResult) => void }): ReactElement {
+export function SpeedOptionsForm(props: {
+  initialState?: SpeedOptionsFormResult;
+  onChanges: (result?: SpeedOptionsFormResult) => void;
+}): ReactElement {
   const [formResult, setFormResult] = useState<Partial<SpeedOptionsFormResult>>(
     props.initialState ?? {
       power: MOTOR_LIMITS.maxPower,
@@ -34,7 +37,10 @@ export function SpeedOptionsForm(props: { initialState?: SpeedOptionsFormResult;
     );
   }
 
-  function handleChange<K extends keyof SpeedOptionsFormResult, V extends SpeedOptionsFormResult[K]>(k: K, v: V | undefined): void {
+  function handleChange<K extends keyof SpeedOptionsFormResult, V extends SpeedOptionsFormResult[K]>(
+    k: K,
+    v: V | undefined
+  ): void {
     const nextResult: Partial<SpeedOptionsFormResult> = {
       ...formResult,
       [k]: v,
@@ -49,13 +55,22 @@ export function SpeedOptionsForm(props: { initialState?: SpeedOptionsFormResult;
         <PowerInput power={formResult.power} onPowerChange={(v): void => handleChange('power', v)} />
       </div>
       <div>
-        <MotorUseProfileSelect useProfile={formResult.useProfile} onUseProfileChange={(v): void => handleChange('useProfile', v)} />
+        <MotorUseProfileSelect
+          useProfile={formResult.useProfile}
+          onUseProfileChange={(v): void => handleChange('useProfile', v)}
+        />
       </div>
       <div>
-        <NoFeedbackToggle noFeedback={formResult.noFeedback} onNoFeedbackChange={(v): void => handleChange('noFeedback', v)} />
+        <NoFeedbackToggle
+          noFeedback={formResult.noFeedback}
+          onNoFeedbackChange={(v): void => handleChange('noFeedback', v)}
+        />
       </div>
       <div>
-        <MotorBufferModeSelect bufferMode={formResult.bufferMode} onBufferModeChange={(v): void => handleChange('bufferMode', v)} />
+        <MotorBufferModeSelect
+          bufferMode={formResult.bufferMode}
+          onBufferModeChange={(v): void => handleChange('bufferMode', v)}
+        />
       </div>
     </>
   );

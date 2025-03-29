@@ -25,7 +25,13 @@ export function PositionInfoItem(props: {
     <>
       <div>
         <label htmlFor={modeIdId}>Mode id</label>
-        <input type={'number'} id={modeIdId} disabled={!props.canEditMode} value={modeId} onChange={(e): void => handleModeIdChange(e)} />
+        <input
+          type={'number'}
+          id={modeIdId}
+          disabled={!props.canEditMode}
+          value={modeId}
+          onChange={(e): void => handleModeIdChange(e)}
+        />
       </div>
       <div>Value: {props.value === undefined ? 'N/A' : props.value}</div>
       <div>

@@ -15,4 +15,5 @@ export interface IHubPropertiesFeatureFactory {
   ): IHubPropertiesFeature;
 }
 
-export const HUB_PROPERTY_FEATURE_FACTORY: InjectionToken<IHubPropertiesFeatureFactory> = Symbol('HUB_PROPERTY_FEATURE_FACTORY');
+export const HUB_PROPERTY_FEATURE_FACTORY: InjectionToken<IHubPropertiesFeatureFactory> =
+  Symbol('HUB_PROPERTY_FEATURE_FACTORY');
