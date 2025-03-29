@@ -9,7 +9,7 @@ This is a Nx monorepo for rxPoweredUp packages.
 ## Packages
 
 - [rxPoweredUp](https://github.com/nvsukhanov/rxPoweredUp/tree/main/lib/rxpoweredup) - A Typescript RxJS-based library for controlling LEGO Powered UP hubs & peripherals.
-- [toolbox](https://github.com/nvsukhanov/rxPoweredUp/tree/main/apps/toolbox) - A web-based toolbox for probing hub & peripheral capabilities, testing rxPoweredUp library and reverse-engineering LEGO Powered UP protocol. Live demo can be found [here](https://nvsukhanov.com/).
+- [toolbox](https://github.com/nvsukhanov/rxPoweredUp/tree/main/apps/toolbox) - A web-based toolbox for probing hub & peripheral capabilities, testing rxPoweredUp library and reverse-engineering LEGO Powered UP protocol. Live demo can be found [here](https://rxpoweredup.pages.dev/).
 - [examples](https://github.com/nvsukhanov/rxPoweredUp/tree/main/apps/examples) - Examples of using rxPoweredUp library in Node.js and browser environments.
 
 ## Installation
