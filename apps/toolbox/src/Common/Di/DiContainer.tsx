@@ -13,7 +13,9 @@ function isValueProviderWithToken<T>(provider: InjectionProviderWithToken<T>): p
   return (provider as ValueProviderWithToken<T>).useValue !== undefined;
 }
 
-function isFactoryProviderWithToken<T>(provider: InjectionProviderWithToken<T>): provider is FactoryProviderWithToken<T> {
+function isFactoryProviderWithToken<T>(
+  provider: InjectionProviderWithToken<T>
+): provider is FactoryProviderWithToken<T> {
   return (provider as FactoryProviderWithToken<T>).useFactory !== undefined;
 }
 
@@ -25,7 +27,10 @@ function isClassProviderWithToken<T>(provider: InjectionProviderWithToken<T>): p
   return (provider as ClassProviderWithToken<T>).useClass !== undefined;
 }
 
-export function DiContainer(props: { providers: ReadonlyArray<InjectionProviderWithToken<unknown>>; children: ReactElement[] | ReactElement }): ReactElement {
+export function DiContainer(props: {
+  providers: ReadonlyArray<InjectionProviderWithToken<unknown>>;
+  children: ReactElement[] | ReactElement;
+}): ReactElement {
   const parentContainer = useContext(DiContext);
   const childContainer = parentContainer.createChildContainer();
   props.providers.forEach((provider) => {

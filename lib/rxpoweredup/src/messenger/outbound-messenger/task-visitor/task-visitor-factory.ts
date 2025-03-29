@@ -10,7 +10,10 @@ import { FeedbackHandler } from './feedback-handler';
 export class TaskVisitorFactory {
   constructor(@inject(FeedbackHandler) private readonly feedbackHandler: FeedbackHandler) {}
 
-  public createFeedbackHandler(feedback: Observable<PortOutputCommandFeedbackInboundMessage>, logger: ILogger): ITaskVisitor {
+  public createFeedbackHandler(
+    feedback: Observable<PortOutputCommandFeedbackInboundMessage>,
+    logger: ILogger
+  ): ITaskVisitor {
     return new TaskVisitor(feedback, logger, this.feedbackHandler);
   }
 }

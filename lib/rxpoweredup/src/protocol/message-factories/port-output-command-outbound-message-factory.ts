@@ -19,7 +19,9 @@ import { WriteDirectModeDataBuilder } from './write-direct-mode-data-builder';
 
 @injectable()
 export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOutboundMessageFactory {
-  constructor(@inject(WriteDirectModeDataBuilder) private readonly writeDirectModeDataBuilder: WriteDirectModeDataBuilder) {}
+  constructor(
+    @inject(WriteDirectModeDataBuilder) private readonly writeDirectModeDataBuilder: WriteDirectModeDataBuilder
+  ) {}
 
   public startPower(
     portId: number,
@@ -61,7 +63,14 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
         messageType: MessageType.portOutputCommand,
       },
       portId,
-      payload: new Uint8Array([portId, startupMode | completionMode, OutputSubCommand.startSpeed, speed, power, profile]),
+      payload: new Uint8Array([
+        portId,
+        startupMode | completionMode,
+        OutputSubCommand.startSpeed,
+        speed,
+        power,
+        profile,
+      ]),
       waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
     };
   }
@@ -84,7 +93,15 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
         messageType: MessageType.portOutputCommand,
       },
       portId: virtualPortId,
-      payload: new Uint8Array([virtualPortId, startupMode | completionMode, OutputSubCommand.startSpeedSynchronized, speed1, speed2, power, useProfile]),
+      payload: new Uint8Array([
+        virtualPortId,
+        startupMode | completionMode,
+        OutputSubCommand.startSpeedSynchronized,
+        speed1,
+        speed2,
+        power,
+        useProfile,
+      ]),
       waitForFeedback: completionMode === PortOperationCompletionInformation.commandFeedback,
     };
   }
@@ -255,7 +272,9 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
 
   private ensureAccDecTimeIsWithinLimits(timeMs: number): void {
     if (timeMs > MOTOR_LIMITS.maxAccDecTime || timeMs < MOTOR_LIMITS.minAccDecTime) {
-      throw new Error(`Acceleration/deceleration time must be between ${MOTOR_LIMITS.minAccDecTime} and ${MOTOR_LIMITS.maxAccDecTime}. Got ${timeMs}`);
+      throw new Error(
+        `Acceleration/deceleration time must be between ${MOTOR_LIMITS.minAccDecTime} and ${MOTOR_LIMITS.maxAccDecTime}. Got ${timeMs}`
+      );
     }
   }
 
@@ -279,7 +298,9 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
 
   private ensureAbsolutePositionIsWithinLimits(absolutePosition: number): void {
     if (absolutePosition > MOTOR_LIMITS.maxRawAngle || absolutePosition < MOTOR_LIMITS.minRawAngle) {
-      throw new Error(`Absolute position must be between ${MOTOR_LIMITS.minRawAngle} and ${MOTOR_LIMITS.maxRawAngle}. Got ${absolutePosition}`);
+      throw new Error(
+        `Absolute position must be between ${MOTOR_LIMITS.minRawAngle} and ${MOTOR_LIMITS.maxRawAngle}. Got ${absolutePosition}`
+      );
     }
   }
 }

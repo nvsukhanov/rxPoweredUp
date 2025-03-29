@@ -17,6 +17,14 @@ export class TaskQueueFactoryFactory {
     genericErrorsStream: Observable<GenericErrorInboundMessage>,
     taskVisitor: ITaskVisitor
   ): TaskQueueFactory {
-    return new TaskQueueFactory(channel, messageSendTimeout, maxMessageSendAttempts, initialMessageSendRetryDelay, logger, genericErrorsStream, taskVisitor);
+    return new TaskQueueFactory(
+      channel,
+      messageSendTimeout,
+      maxMessageSendAttempts,
+      initialMessageSendRetryDelay,
+      logger,
+      genericErrorsStream,
+      taskVisitor
+    );
   }
 }

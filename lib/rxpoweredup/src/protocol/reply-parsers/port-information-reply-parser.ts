@@ -9,7 +9,9 @@ import { concatUint8ToUint16, readBitAtPosition } from '../../helpers';
 export class PortInformationReplyParser implements IReplyParser<MessageType.portInformation> {
   public readonly messageType = MessageType.portInformation;
 
-  public parseMessage(message: RawMessage<MessageType.portInformation>): InboundMessage & { messageType: MessageType.portInformation } {
+  public parseMessage(
+    message: RawMessage<MessageType.portInformation>
+  ): InboundMessage & { messageType: MessageType.portInformation } {
     const informationType: PortInformationReplyType = message.payload[1];
     switch (informationType) {
       case PortInformationReplyType.modeInfo:

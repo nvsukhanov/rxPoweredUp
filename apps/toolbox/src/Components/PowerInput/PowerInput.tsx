@@ -1,7 +1,10 @@
 import { ChangeEvent, ReactElement, useId, useState } from 'react';
 import { MOTOR_LIMITS } from 'rxpoweredup';
 
-export function PowerInput(props: { power: number | undefined; onPowerChange: (power: number | undefined) => void }): ReactElement {
+export function PowerInput(props: {
+  power: number | undefined;
+  onPowerChange: (power: number | undefined) => void;
+}): ReactElement {
   const powerId = useId();
   const [power, setPower] = useState<string>(props.power?.toString() ?? '');
 
@@ -19,7 +22,14 @@ export function PowerInput(props: { power: number | undefined; onPowerChange: (p
   return (
     <>
       <label htmlFor={powerId}>Power</label>
-      <input type="number" id={powerId} value={power} onChange={handleChange} min={MOTOR_LIMITS.minPower} max={MOTOR_LIMITS.maxPower} />
+      <input
+        type="number"
+        id={powerId}
+        value={power}
+        onChange={handleChange}
+        min={MOTOR_LIMITS.minPower}
+        max={MOTOR_LIMITS.maxPower}
+      />
     </>
   );
 }

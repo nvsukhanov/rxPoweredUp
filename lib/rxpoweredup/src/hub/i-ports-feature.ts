@@ -27,9 +27,13 @@ export interface IPortsFeature {
    * Events are cached, so if you subscribe after an io device is attached, you will still get the event.
    * @param filterOptions - Optional filter options. If not specified, all events will be emitted. Port id may be specified to filter by port.
    */
-  onIoAttach(filterOptions?: OnIoAttachFilter): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
+  onIoAttach(
+    filterOptions?: OnIoAttachFilter
+  ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
 
-  onIoAttach(filterOptions?: number): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
+  onIoAttach(
+    filterOptions?: number
+  ): Observable<AttachedIoAttachInboundMessage | AttachedIOAttachVirtualInboundMessage>;
 
   /**
    * Emits when an io device is detached from a port.

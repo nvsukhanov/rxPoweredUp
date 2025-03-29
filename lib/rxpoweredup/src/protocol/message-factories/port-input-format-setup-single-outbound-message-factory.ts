@@ -17,7 +17,9 @@ export class PortInputFormatSetupSingleOutboundMessageFactory implements IPortIn
     notificationsEnabled: boolean,
     deltaThreshold: number = 1
   ): RawMessage<MessageType.portInputFormatSetupSingle> {
-    const pollInterval = notificationsEnabled ? Math.max(deltaThreshold, this.minAllowedDeltaThreshold) : this.defaultUnsubscribePortPollingInterval;
+    const pollInterval = notificationsEnabled
+      ? Math.max(deltaThreshold, this.minAllowedDeltaThreshold)
+      : this.defaultUnsubscribePortPollingInterval;
     return {
       header: {
         messageType: MessageType.portInputFormatSetupSingle,

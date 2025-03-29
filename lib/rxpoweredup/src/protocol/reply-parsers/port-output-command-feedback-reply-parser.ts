@@ -8,7 +8,9 @@ import { PortOutputCommandFeedbackInboundMessage, RawMessage } from '../../types
 export class PortOutputCommandFeedbackReplyParser implements IReplyParser<MessageType.portOutputCommandFeedback> {
   public readonly messageType = MessageType.portOutputCommandFeedback;
 
-  public parseMessage(message: RawMessage<MessageType.portOutputCommandFeedback>): PortOutputCommandFeedbackInboundMessage {
+  public parseMessage(
+    message: RawMessage<MessageType.portOutputCommandFeedback>
+  ): PortOutputCommandFeedbackInboundMessage {
     return {
       messageType: MessageType.portOutputCommandFeedback,
       portId: message.payload[0],

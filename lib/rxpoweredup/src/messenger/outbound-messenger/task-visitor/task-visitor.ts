@@ -20,7 +20,9 @@ export class TaskVisitor implements ITaskVisitor {
     feedbackHandler: FeedbackHandler
   ) {
     this.subscription.add(
-      this.feedbackStream.subscribe((message) => feedbackHandler.handlePortOutputCommandFeedback(this.commands.get(message.portId) ?? [], message.feedback))
+      this.feedbackStream.subscribe((message) =>
+        feedbackHandler.handlePortOutputCommandFeedback(this.commands.get(message.portId) ?? [], message.feedback)
+      )
     );
   }
 

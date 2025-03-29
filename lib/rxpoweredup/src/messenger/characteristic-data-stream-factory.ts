@@ -12,7 +12,10 @@ export class CharacteristicDataStreamFactory implements ICharacteristicDataStrea
 
   constructor(@inject(InboundMessageDissector) private readonly dissector: InboundMessageDissector) {}
 
-  public create(characteristic: BluetoothRemoteGATTCharacteristic, config: CharacteristicDataStreamConfig): Observable<RawMessage<MessageType>> {
+  public create(
+    characteristic: BluetoothRemoteGATTCharacteristic,
+    config: CharacteristicDataStreamConfig
+  ): Observable<RawMessage<MessageType>> {
     return fromEvent<Event>(characteristic, this.characteristicValueChangedEventName).pipe(
       map((e) => this.getValueFromEvent(e)),
       switchMap((value) => (value ? of(value) : EMPTY)),

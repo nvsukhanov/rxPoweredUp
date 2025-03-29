@@ -16,7 +16,10 @@ export class TaskWithResponse<TResponse> implements IQueueTask<TResponse> {
 
   private earlyResponseCaptureSubscription?: Subscription;
 
-  constructor(public readonly message: RawMessage<OutboundMessageTypes>, private responsesStream: Observable<TResponse>) {
+  constructor(
+    public readonly message: RawMessage<OutboundMessageTypes>,
+    private responsesStream: Observable<TResponse>
+  ) {
     this.result = new Subject<TResponse>();
   }
 

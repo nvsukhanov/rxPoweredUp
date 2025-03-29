@@ -9,4 +9,6 @@ export interface IVirtualPortSetupMessageFactory {
   deleteVirtualPort(virtualPortId: number): RawMessage<MessageType.virtualPortSetup>;
 }
 
-export const VIRTUAL_PORT_SETUP_MESSAGE_FACTORY: InjectionToken<IVirtualPortSetupMessageFactory> = Symbol('VIRTUAL_PORT_SETUP_MESSAGE_FACTORY');
+export const VIRTUAL_PORT_SETUP_MESSAGE_FACTORY: InjectionToken<IVirtualPortSetupMessageFactory> = Symbol(
+  'VIRTUAL_PORT_SETUP_MESSAGE_FACTORY'
+);

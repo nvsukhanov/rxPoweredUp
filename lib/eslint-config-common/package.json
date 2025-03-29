@@ -1,6 +1,6 @@
 {
   "name": "@nvsukhanov/eslint-config-common",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "description": "Common eslint preset for my projects",
   "main": "index.mjs",
   "author": "Nikolai Sukhanov",

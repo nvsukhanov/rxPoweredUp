@@ -1,7 +1,12 @@
 import { DependencyContainer } from 'tsyringe';
 
 import { HUB_SCANNER_ERROR_FACTORY } from './i-hub-scanner-error-factory';
-import { HUB_CONNECTION_ERRORS_FACTORY, INBOUND_MESSAGE_LISTENER_FACTORY, InboundMessageListenerFactory, PREFIXED_CONSOLE_LOGGER_FACTORY } from '../hub';
+import {
+  HUB_CONNECTION_ERRORS_FACTORY,
+  INBOUND_MESSAGE_LISTENER_FACTORY,
+  InboundMessageListenerFactory,
+  PREFIXED_CONSOLE_LOGGER_FACTORY,
+} from '../hub';
 import { HUB_PROPERTIES_FEATURE_ERRORS_FACTORY, registerFeaturesServices } from '../features';
 import { ErrorFactory } from '../errors';
 import { PrefixedConsoleLoggerFactory } from '../logger';

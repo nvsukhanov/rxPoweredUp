@@ -26,7 +26,11 @@ export function PortsList(props: { hub: IHub }): ReactElement {
   const physicalPortElements: ReactElement[] = physicalPorts.map((port: PhysicalPortState) => {
     return (
       <li key={port.portId}>
-        <PhysicalPort hub={props.hub} port={port} onHandlePortModesRequest={(): void => handlePortModesRequest(port.portId)} />
+        <PhysicalPort
+          hub={props.hub}
+          port={port}
+          onHandlePortModesRequest={(): void => handlePortModesRequest(port.portId)}
+        />
       </li>
     );
   });

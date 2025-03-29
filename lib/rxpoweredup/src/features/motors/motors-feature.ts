@@ -30,39 +30,65 @@ export class MotorsFeature implements IMotorsFeature {
   ) {}
 
   public setAccelerationTime(portId: number, timeMs: number): Observable<PortCommandExecutionStatus> {
-    const message = this.portOutputCommandOutboundMessageFactoryService.setAccelerationTime(portId, timeMs, MOTOR_ACC_DEC_DEFAULT_PROFILE_ID);
+    const message = this.portOutputCommandOutboundMessageFactoryService.setAccelerationTime(
+      portId,
+      timeMs,
+      MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+    );
     return this.execute(message);
   }
 
   public setDecelerationTime(portId: number, timeMs: number): Observable<PortCommandExecutionStatus> {
-    const message = this.portOutputCommandOutboundMessageFactoryService.setDecelerationTime(portId, timeMs, MOTOR_ACC_DEC_DEFAULT_PROFILE_ID);
+    const message = this.portOutputCommandOutboundMessageFactoryService.setDecelerationTime(
+      portId,
+      timeMs,
+      MOTOR_ACC_DEC_DEFAULT_PROFILE_ID
+    );
     return this.execute(message);
   }
 
-  public startPower(portId: number, power: number, powerModeId: number, options?: StartPowerOptions): Observable<PortCommandExecutionStatus> {
+  public startPower(
+    portId: number,
+    power: number,
+    powerModeId: number,
+    options?: StartPowerOptions
+  ): Observable<PortCommandExecutionStatus> {
     const message = this.portOutputCommandOutboundMessageFactoryService.startPower(
       portId,
       power,
       powerModeId,
       options?.bufferMode ?? this.config.defaultBufferMode,
-      options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback
+      options?.noFeedback
+        ? PortOperationCompletionInformation.noAction
+        : PortOperationCompletionInformation.commandFeedback
     );
     return this.execute(message);
   }
 
-  public startSpeed(portId: number, speed: number, options?: StartSpeedOptions): Observable<PortCommandExecutionStatus> {
+  public startSpeed(
+    portId: number,
+    speed: number,
+    options?: StartSpeedOptions
+  ): Observable<PortCommandExecutionStatus> {
     const message = this.portOutputCommandOutboundMessageFactoryService.startSpeed(
       portId,
       speed,
       options?.power ?? MOTOR_LIMITS.maxPower,
       options?.useProfile ?? MotorUseProfile.dontUseProfiles,
       options?.bufferMode ?? this.config.defaultBufferMode,
-      options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback
+      options?.noFeedback
+        ? PortOperationCompletionInformation.noAction
+        : PortOperationCompletionInformation.commandFeedback
     );
     return this.execute(message);
   }
 
-  public setSpeedSynchronized(virtualPortId: number, speed1: number, speed2: number, options?: StartSpeedOptions): Observable<PortCommandExecutionStatus> {
+  public setSpeedSynchronized(
+    virtualPortId: number,
+    speed1: number,
+    speed2: number,
+    options?: StartSpeedOptions
+  ): Observable<PortCommandExecutionStatus> {
     const message = this.portOutputCommandOutboundMessageFactoryService.startRotationSynchronized(
       virtualPortId,
       speed1,
@@ -70,12 +96,18 @@ export class MotorsFeature implements IMotorsFeature {
       options?.power ?? MOTOR_LIMITS.maxPower,
       options?.useProfile ?? MotorUseProfile.dontUseProfiles,
       options?.bufferMode ?? this.config.defaultBufferMode,
-      options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback
+      options?.noFeedback
+        ? PortOperationCompletionInformation.noAction
+        : PortOperationCompletionInformation.commandFeedback
     );
     return this.execute(message);
   }
 
-  public goToPosition(portId: number, absoluteDegree: number, options?: ServoCommandOptions): Observable<PortCommandExecutionStatus> {
+  public goToPosition(
+    portId: number,
+    absoluteDegree: number,
+    options?: ServoCommandOptions
+  ): Observable<PortCommandExecutionStatus> {
     const message = this.portOutputCommandOutboundMessageFactoryService.goToAbsolutePosition(
       portId,
       absoluteDegree,
@@ -84,7 +116,9 @@ export class MotorsFeature implements IMotorsFeature {
       options?.endState ?? MotorServoEndState.hold,
       options?.useProfile ?? MotorUseProfile.dontUseProfiles,
       options?.bufferMode ?? this.config.defaultBufferMode,
-      options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback
+      options?.noFeedback
+        ? PortOperationCompletionInformation.noAction
+        : PortOperationCompletionInformation.commandFeedback
     );
     return this.execute(message);
   }
@@ -104,7 +138,9 @@ export class MotorsFeature implements IMotorsFeature {
       options?.endState ?? MotorServoEndState.hold,
       options?.useProfile ?? MotorUseProfile.dontUseProfiles,
       options?.bufferMode ?? this.config.defaultBufferMode,
-      options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback
+      options?.noFeedback
+        ? PortOperationCompletionInformation.noAction
+        : PortOperationCompletionInformation.commandFeedback
     );
     return this.execute(message);
   }
@@ -131,7 +167,11 @@ export class MotorsFeature implements IMotorsFeature {
     return this.execute(message);
   }
 
-  public rotateByDegree(portId: number, degree: number, options?: ServoCommandOptions): Observable<PortCommandExecutionStatus> {
+  public rotateByDegree(
+    portId: number,
+    degree: number,
+    options?: ServoCommandOptions
+  ): Observable<PortCommandExecutionStatus> {
     const message = this.portOutputCommandOutboundMessageFactoryService.startSpeedForDegrees(
       portId,
       Math.abs(degree),
@@ -140,7 +180,9 @@ export class MotorsFeature implements IMotorsFeature {
       options?.endState ?? MotorServoEndState.brake,
       options?.useProfile ?? MotorUseProfile.dontUseProfiles,
       options?.bufferMode ?? this.config.defaultBufferMode,
-      options?.noFeedback ? PortOperationCompletionInformation.noAction : PortOperationCompletionInformation.commandFeedback
+      options?.noFeedback
+        ? PortOperationCompletionInformation.noAction
+        : PortOperationCompletionInformation.commandFeedback
     );
     return this.execute(message);
   }

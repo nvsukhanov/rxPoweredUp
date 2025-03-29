@@ -10,7 +10,11 @@ export function AccelerationDecelerationTimings(props: { hub: IHub; port: number
   const [isInProgress, setIsInProgress] = useState<boolean>(false);
 
   const isValid = (): boolean =>
-    props.port !== undefined && accelerationTimeMs >= 0 && accelerationTimeMs <= 10000 && decelerationTimeMs >= 0 && decelerationTimeMs <= 10000;
+    props.port !== undefined &&
+    accelerationTimeMs >= 0 &&
+    accelerationTimeMs <= 10000 &&
+    decelerationTimeMs >= 0 &&
+    decelerationTimeMs <= 10000;
 
   const handleApply = (): void => {
     if (props.port !== undefined) {
@@ -32,7 +36,9 @@ export function AccelerationDecelerationTimings(props: { hub: IHub; port: number
           type="number"
           id={accelerationTimeMsId}
           value={accelerationTimeMs}
-          onChange={(event: ChangeEvent): void => setAccelerationTimeMs(parseInt((event.target as HTMLInputElement).value))}
+          onChange={(event: ChangeEvent): void =>
+            setAccelerationTimeMs(parseInt((event.target as HTMLInputElement).value))
+          }
           min={0}
           max={10000}
         />
@@ -43,7 +49,9 @@ export function AccelerationDecelerationTimings(props: { hub: IHub; port: number
           type="number"
           id={decelerationTimeMsId}
           value={decelerationTimeMs}
-          onChange={(event: ChangeEvent): void => setDecelerationTimeMs(parseInt((event.target as HTMLInputElement).value))}
+          onChange={(event: ChangeEvent): void =>
+            setDecelerationTimeMs(parseInt((event.target as HTMLInputElement).value))
+          }
           min={0}
           max={10000}
         />

@@ -35,7 +35,13 @@ export function EncoderControl(props: { hub: IHub; portId: number | undefined })
     <>
       <div>
         <label htmlFor={encoderOffsetInputId}>Encoder offset</label>
-        <input id={encoderOffsetInputId} disabled={isCommandRunning} type="number" value={encoderOffset} onChange={handleEncoderOffsetChange} />
+        <input
+          id={encoderOffsetInputId}
+          disabled={isCommandRunning}
+          type="number"
+          value={encoderOffset}
+          onChange={handleEncoderOffsetChange}
+        />
       </div>
       <div>
         <button type={'button'} disabled={!canExecute} onClick={handleEncoderOffsetApply}>

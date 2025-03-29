@@ -1,6 +1,9 @@
 import { ChangeEvent, ReactElement, useId } from 'react';
 
-export function ModeIdInput(props: { modeId: number | undefined; onModeIdChange: (modeId: number | undefined) => void }): ReactElement {
+export function ModeIdInput(props: {
+  modeId: number | undefined;
+  onModeIdChange: (modeId: number | undefined) => void;
+}): ReactElement {
   const modeIdId = useId();
   const MAX_MODE_ID = 0xff;
 
@@ -16,7 +19,14 @@ export function ModeIdInput(props: { modeId: number | undefined; onModeIdChange:
   return (
     <>
       <label htmlFor={modeIdId}>Mode ID</label>
-      <input type={'number'} id={modeIdId} value={props.modeId ?? ''} onChange={handleModeIdChange} min={0} max={MAX_MODE_ID} />
+      <input
+        type={'number'}
+        id={modeIdId}
+        value={props.modeId ?? ''}
+        onChange={handleModeIdChange}
+        min={0}
+        max={MAX_MODE_ID}
+      />
     </>
   );
 }

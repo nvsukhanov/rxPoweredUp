@@ -11,7 +11,10 @@ export function MotorUseProfileSelect(props: {
     { name: "Don't use profiles", value: MotorUseProfile.dontUseProfiles },
     { name: 'Use acceleration profile', value: MotorUseProfile.useAccelerationProfile },
     { name: 'Use deceleration profile', value: MotorUseProfile.useDecelerationProfile },
-    { name: 'Use acceleration and deceleration profiles', value: MotorUseProfile.useAccelerationAndDecelerationProfiles },
+    {
+      name: 'Use acceleration and deceleration profiles',
+      value: MotorUseProfile.useAccelerationAndDecelerationProfiles,
+    },
   ];
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {

@@ -1,6 +1,12 @@
 import { DependencyContainer } from 'tsyringe';
 
-import { HUB_ACTIONS_FEATURE_FACTORY, HUB_PROPERTY_FEATURE_FACTORY, MOTORS_FEATURE_FACTORY, PORTS_FEATURE_FACTORY, RGB_LIGHT_FEATURE_FACTORY } from '../hub';
+import {
+  HUB_ACTIONS_FEATURE_FACTORY,
+  HUB_PROPERTY_FEATURE_FACTORY,
+  MOTORS_FEATURE_FACTORY,
+  PORTS_FEATURE_FACTORY,
+  RGB_LIGHT_FEATURE_FACTORY,
+} from '../hub';
 import { HubPropertiesFeatureFactory } from './hub-properties';
 import { MotorsFeatureFactory } from './motors';
 import { PortsFeatureFactory } from './ports';

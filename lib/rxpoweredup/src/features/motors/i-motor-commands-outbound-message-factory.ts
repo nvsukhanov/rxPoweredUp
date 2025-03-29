@@ -1,6 +1,11 @@
 import { InjectionToken } from 'tsyringe';
 
-import { MotorServoEndState, MotorUseProfile, PortOperationCompletionInformation, PortOperationStartupInformation } from '../../constants';
+import {
+  MotorServoEndState,
+  MotorUseProfile,
+  PortOperationCompletionInformation,
+  PortOperationStartupInformation,
+} from '../../constants';
 import { RawPortOutputCommandMessage } from '../../types';
 
 export interface IMotorCommandsOutboundMessageFactory {
@@ -84,4 +89,6 @@ export interface IMotorCommandsOutboundMessageFactory {
   ): RawPortOutputCommandMessage;
 }
 
-export const PORT_OUTPUT_COMMAND_MESSAGE_FACTORY: InjectionToken<IMotorCommandsOutboundMessageFactory> = Symbol('IPortOutputCommandOutboundMessageFactory');
+export const PORT_OUTPUT_COMMAND_MESSAGE_FACTORY: InjectionToken<IMotorCommandsOutboundMessageFactory> = Symbol(
+  'IPortOutputCommandOutboundMessageFactory'
+);

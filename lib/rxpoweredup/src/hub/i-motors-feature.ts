@@ -88,7 +88,12 @@ export interface IMotorsFeature {
    * @param powerModeId - power mode ID, defaults to WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.power]
    * @param options
    */
-  startPower(portId: number, power: number, powerModeId: number, options?: StartPowerOptions): Observable<PortCommandExecutionStatus>;
+  startPower(
+    portId: number,
+    power: number,
+    powerModeId: number,
+    options?: StartPowerOptions
+  ): Observable<PortCommandExecutionStatus>;
 
   /**
    * Starts motor rotation at the specified speed.
@@ -109,7 +114,12 @@ export interface IMotorsFeature {
    * @param speed2
    * @param options
    */
-  setSpeedSynchronized(virtualPortId: number, speed1: number, speed2: number, options?: StartSpeedOptions): Observable<PortCommandExecutionStatus>;
+  setSpeedSynchronized(
+    virtualPortId: number,
+    speed1: number,
+    speed2: number,
+    options?: StartSpeedOptions
+  ): Observable<PortCommandExecutionStatus>;
 
   /**
    * Rotates the motor to the specified position (relative to zero).
@@ -122,7 +132,11 @@ export interface IMotorsFeature {
    * @param targetDegree - must be in [-2147483647, 2147483647] range
    * @param options
    */
-  goToPosition(portId: number, targetDegree: number, options?: ServoCommandOptions): Observable<PortCommandExecutionStatus>;
+  goToPosition(
+    portId: number,
+    targetDegree: number,
+    options?: ServoCommandOptions
+  ): Observable<PortCommandExecutionStatus>;
 
   /**
    * Rotates virtual port motors to the specified positions (relative to zero).
@@ -164,5 +178,9 @@ export interface IMotorsFeature {
    * @param position - Target position in degrees.
    * @param positionModeId - Position mode ID, defaults to WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.position]
    */
-  setZeroPositionRelativeToCurrentPosition(portId: number, position: number, positionModeId?: number): Observable<PortCommandExecutionStatus>;
+  setZeroPositionRelativeToCurrentPosition(
+    portId: number,
+    position: number,
+    positionModeId?: number
+  ): Observable<PortCommandExecutionStatus>;
 }

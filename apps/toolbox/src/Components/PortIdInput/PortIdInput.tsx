@@ -1,6 +1,9 @@
 import { ChangeEvent, ReactElement, useId, useState } from 'react';
 
-export function PortIdInput(props: { portId: number | undefined; onPortIdChange: (portId: number | undefined) => void }): ReactElement {
+export function PortIdInput(props: {
+  portId: number | undefined;
+  onPortIdChange: (portId: number | undefined) => void;
+}): ReactElement {
   const portIdId = useId();
   const [portId, setPortId] = useState<string>(props.portId?.toString() ?? '');
 

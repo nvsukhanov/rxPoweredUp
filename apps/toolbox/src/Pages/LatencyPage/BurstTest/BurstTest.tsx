@@ -10,7 +10,9 @@ export function BurstTest(props: {
   onStart: (sequeceLength: number) => void;
 }): ReactElement {
   const [burstLength, setBurstLength] = useState(10);
-  const [bufferMode, setBufferMode] = useState<PortOperationStartupInformation>(PortOperationStartupInformation.bufferIfNecessary);
+  const [bufferMode, setBufferMode] = useState<PortOperationStartupInformation>(
+    PortOperationStartupInformation.bufferIfNecessary
+  );
   const [noFeedback, setNoFeedback] = useState(false);
   const [portId, setPortId] = useState<number | undefined>(0);
   const disposeRef$ = useRef(new Subject<void>());
@@ -62,7 +64,13 @@ export function BurstTest(props: {
       </div>
       <div>
         Burst sequence length:
-        <input type={'range'} min={1} max={100} value={burstLength} onChange={(event) => setBurstLength(parseInt(event.target.value))} />
+        <input
+          type={'range'}
+          min={1}
+          max={100}
+          value={burstLength}
+          onChange={(event) => setBurstLength(parseInt(event.target.value))}
+        />
         {burstLength}
       </div>
       <div>

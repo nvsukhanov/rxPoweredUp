@@ -270,6 +270,10 @@ export enum VirtualPortSetupCommand {
   Connect = 0x01,
 }
 
-export type SubscribableHubProperties = HubProperty.RSSI | HubProperty.batteryVoltage | HubProperty.button | HubProperty.advertisingName;
+export type SubscribableHubProperties =
+  | HubProperty.RSSI
+  | HubProperty.batteryVoltage
+  | HubProperty.button
+  | HubProperty.advertisingName;
 
 export type WritableHubProperties = HubProperty.advertisingName;

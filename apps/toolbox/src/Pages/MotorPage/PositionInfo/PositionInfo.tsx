@@ -31,7 +31,8 @@ export function PositionInfo(props: { hub: IHub; portId: number | undefined }): 
     if (props.portId === undefined || modeId === undefined || isCommandRunning || isSubscribed) {
       return;
     }
-    const valueTransformer = readType === PortModeName.position ? ValueTransformers.position : ValueTransformers.absolutePosition;
+    const valueTransformer =
+      readType === PortModeName.position ? ValueTransformers.position : ValueTransformers.absolutePosition;
     const setter = readType === PortModeName.position ? setPos : setApos;
     setIsCommandRunning(true);
     props.hub.ports
@@ -48,7 +49,8 @@ export function PositionInfo(props: { hub: IHub; portId: number | undefined }): 
     if (props.portId === undefined || modeId === undefined || isCommandRunning || isSubscribed) {
       return;
     }
-    const valueTransformer = readType === PortModeName.position ? ValueTransformers.position : ValueTransformers.absolutePosition;
+    const valueTransformer =
+      readType === PortModeName.position ? ValueTransformers.position : ValueTransformers.absolutePosition;
     const setter = readType === PortModeName.position ? setPos : setApos;
     setIsSubscribed(true);
     props.hub.ports

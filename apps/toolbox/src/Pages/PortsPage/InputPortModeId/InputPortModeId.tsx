@@ -14,8 +14,12 @@ export function InputPortModeId(props: {
   onPortModeIdGetInfoRequest: (infoType: PortModeInformationType) => void;
 }): ReactElement {
   const hubType = useHubStore(useShallow((state) => state.hubProperties?.systemTypeId));
-  const portModeInfo: PortModeInfoState | undefined = useHubStore(useShallow((state) => state.portModeInfo[hashPortIdModeId(props.portId, props.modeId)]));
-  const portValues: PortValuesState | undefined = useHubStore(useShallow((state) => state.portValues[hashPortIdModeId(props.portId, props.modeId)]));
+  const portModeInfo: PortModeInfoState | undefined = useHubStore(
+    useShallow((state) => state.portModeInfo[hashPortIdModeId(props.portId, props.modeId)])
+  );
+  const portValues: PortValuesState | undefined = useHubStore(
+    useShallow((state) => state.portValues[hashPortIdModeId(props.portId, props.modeId)])
+  );
   const processPortRawValue = useHubStore((state) => state.processPortRawValue);
   const processPortValue = useHubStore((state) => state.processPortValue);
 
@@ -39,7 +43,9 @@ export function InputPortModeId(props: {
   };
 
   const handleReadRawPortValueRequest = (): void => {
-    props.hub?.ports.getPortValue(props.portId, props.modeId).subscribe((r) => processPortRawValue(props.portId, props.modeId, r));
+    props.hub?.ports
+      .getPortValue(props.portId, props.modeId)
+      .subscribe((r) => processPortRawValue(props.portId, props.modeId, r));
   };
 
   const handleReadPortValueRequest = (): void => {

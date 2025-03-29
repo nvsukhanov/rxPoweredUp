@@ -10,7 +10,10 @@ export function ServoSequence(props: { hub: IHub; portId: number | undefined }):
       return;
     }
     setIsCommandRunning(true);
-    concat(props.hub.motors.goToPosition(props.portId, 2000, { speed: 30 }), props.hub.motors.goToPosition(props.portId, 0))
+    concat(
+      props.hub.motors.goToPosition(props.portId, 2000, { speed: 30 }),
+      props.hub.motors.goToPosition(props.portId, 0)
+    )
       .pipe(finalize(() => setIsCommandRunning(false)))
       .subscribe();
   }

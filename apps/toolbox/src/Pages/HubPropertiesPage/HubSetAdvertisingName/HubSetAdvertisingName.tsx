@@ -17,7 +17,12 @@ export function HubSetAdvertisingName(props: { name: string; hub: IHub }): React
   if (props.name !== name && !inputNameDirty) {
     setName(props.name);
   }
-  const canSubmit = name.length > 0 && name.length <= 14 && name.match(/^[a-zA-Z0-9\s-]+$/) !== null && name !== props.name && !isSettingsName;
+  const canSubmit =
+    name.length > 0 &&
+    name.length <= 14 &&
+    name.match(/^[a-zA-Z0-9\s-]+$/) !== null &&
+    name !== props.name &&
+    !isSettingsName;
 
   function handleFormSubmit(event?: FormEvent<HTMLFormElement>): void {
     event?.preventDefault();
@@ -42,7 +47,15 @@ export function HubSetAdvertisingName(props: { name: string; hub: IHub }): React
   return (
     <form onSubmit={handleFormSubmit} className={styles['advertisementNameForm']}>
       <label htmlFor={id}>Advertisement name</label>
-      <input id={id} type={'text'} minLength={1} maxLength={14} placeholder={'Enter new name'} value={name} onChange={handleNameChange} />
+      <input
+        id={id}
+        type={'text'}
+        minLength={1}
+        maxLength={14}
+        placeholder={'Enter new name'}
+        value={name}
+        onChange={handleNameChange}
+      />
       <button disabled={!canSubmit}>Submit</button>
     </form>
   );

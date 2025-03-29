@@ -82,11 +82,15 @@ export class TaskPortOutputCommand implements IQueueTask<PortCommandExecutionSta
   public execute(channel: IChannel): Observable<unknown> {
     if (this.message.waitForFeedback) {
       return of(null).pipe(
-        switchMap(() => from(channel.sendMessage(this.message, () => (this.state = PortOutputCommandTaskState.waitingForResponse)))),
+        switchMap(() =>
+          from(channel.sendMessage(this.message, () => (this.state = PortOutputCommandTaskState.waitingForResponse)))
+        ),
         switchMap(() => this.responseReceived),
         take(1)
       );
     }
-    return from(channel.sendMessage(this.message)).pipe(tap(() => this.setExecutionStatus(PortCommandExecutionStatus.completed)));
+    return from(channel.sendMessage(this.message)).pipe(
+      tap(() => this.setExecutionStatus(PortCommandExecutionStatus.completed))
+    );
   }
 }

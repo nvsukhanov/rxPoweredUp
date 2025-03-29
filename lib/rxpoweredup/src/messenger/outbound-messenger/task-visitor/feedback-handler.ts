@@ -14,9 +14,14 @@ export class FeedbackHandler {
     PortOutputCommandTaskState.waitingForResponse,
   ]);
 
-  private readonly waitingForResponse: ReadonlySet<PortOutputCommandTaskState> = new Set([PortOutputCommandTaskState.waitingForResponse]);
+  private readonly waitingForResponse: ReadonlySet<PortOutputCommandTaskState> = new Set([
+    PortOutputCommandTaskState.waitingForResponse,
+  ]);
 
-  public handlePortOutputCommandFeedback(commands: ReadonlyArray<TaskPortOutputCommand>, feedback: PortOutputCommandFeedback): void {
+  public handlePortOutputCommandFeedback(
+    commands: ReadonlyArray<TaskPortOutputCommand>,
+    feedback: PortOutputCommandFeedback
+  ): void {
     // The feedback can hold information about multiple port output commands simultaneously,
     // that's why we should iterate over all of them and try to find the corresponding task in the queue.
 

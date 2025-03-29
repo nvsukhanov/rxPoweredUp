@@ -6,7 +6,10 @@ import { IHubScannerErrorFactory } from './i-hub-scanner-error-factory';
 import { IHubScanner } from './i-hub-scanner';
 
 export class HubScanner implements IHubScanner {
-  constructor(private readonly hubScannerErrorFactory: IHubScannerErrorFactory, private readonly bluetoothApi: Bluetooth) {}
+  constructor(
+    private readonly hubScannerErrorFactory: IHubScannerErrorFactory,
+    private readonly bluetoothApi: Bluetooth
+  ) {}
 
   public discoverHub(): Observable<BluetoothDeviceWithGatt> {
     return from(

@@ -9,7 +9,14 @@ describe('HubPropertiesReplyParser', () => {
   });
 
   it('should parse firmware version', () => {
-    const payload = new Uint8Array([HubProperty.firmwareVersion, HubPropertyOperation.requestUpdate, 0x10, 0x15, 0x37, 0x17]);
+    const payload = new Uint8Array([
+      HubProperty.firmwareVersion,
+      HubPropertyOperation.requestUpdate,
+      0x10,
+      0x15,
+      0x37,
+      0x17,
+    ]);
     const result = subject.parseMessage({
       header: {
         messageType: MessageType.properties,
@@ -29,7 +36,14 @@ describe('HubPropertiesReplyParser', () => {
   });
 
   it('should parse hardware version', () => {
-    const payload = new Uint8Array([HubProperty.hardwareVersion, HubPropertyOperation.requestUpdate, 0x00, 0x00, 0x00, 0x12]);
+    const payload = new Uint8Array([
+      HubProperty.hardwareVersion,
+      HubPropertyOperation.requestUpdate,
+      0x00,
+      0x00,
+      0x00,
+      0x12,
+    ]);
     const result = subject.parseMessage({
       header: {
         messageType: MessageType.properties,

@@ -44,7 +44,9 @@ describe('PortsFeature', () => {
     portValueSetupSingleHandshakeReplies = new Subject<PortInputSetupSingleHandshakeInboundMessage>();
 
     portValueSetupSingleHandshakeRepliesMock = mock(Observable<PortInputSetupSingleHandshakeInboundMessage>);
-    when(portValueSetupSingleHandshakeRepliesMock.pipe(anything(), anything())).thenReturn(portValueSetupSingleHandshakeReplies);
+    when(portValueSetupSingleHandshakeRepliesMock.pipe(anything(), anything())).thenReturn(
+      portValueSetupSingleHandshakeReplies
+    );
 
     portInformationRequestMessageFactoryMock = mock<IPortInformationRequestMessageFactory>();
     rawPortValueReplies = new Subject<PortValueInboundMessage>();
@@ -87,34 +89,54 @@ describe('PortsFeature', () => {
       deltaThreshold = Symbol() as unknown as number;
 
       handshakeMessage = Symbol() as unknown as RawMessage<MessageType.portInputFormatSetupSingle>;
-      when(portInputFormatSetupMessageFactoryMock.createMessage(portId, modeId, true, deltaThreshold)).thenReturn(handshakeMessage);
+      when(portInputFormatSetupMessageFactoryMock.createMessage(portId, modeId, true, deltaThreshold)).thenReturn(
+        handshakeMessage
+      );
 
       disableNotificationMessage = Symbol() as unknown as RawMessage<MessageType.portInputFormatSetupSingle>;
-      when(portInputFormatSetupMessageFactoryMock.createMessage(portId, modeId, false)).thenReturn(disableNotificationMessage);
+      when(portInputFormatSetupMessageFactoryMock.createMessage(portId, modeId, false)).thenReturn(
+        disableNotificationMessage
+      );
 
       handshakeReply = Symbol() as unknown as PortInputSetupSingleHandshakeInboundMessage;
       disableNotificationReply = Symbol() as unknown as PortInputSetupSingleHandshakeInboundMessage;
 
-      when(messengerMock.sendWithResponse(deepEqual({ message: handshakeMessage, reply: portValueSetupSingleHandshakeReplies }))).thenReturn(
-        of(handshakeReply)
-      );
-      when(messengerMock.sendWithResponse(deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies }))).thenReturn(
-        of(disableNotificationReply)
-      );
+      when(
+        messengerMock.sendWithResponse(
+          deepEqual({ message: handshakeMessage, reply: portValueSetupSingleHandshakeReplies })
+        )
+      ).thenReturn(of(handshakeReply));
+      when(
+        messengerMock.sendWithResponse(
+          deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies })
+        )
+      ).thenReturn(of(disableNotificationReply));
     });
 
     it('should send handshake message', () => {
       subscription.add(subject.portValueChanges(portId, modeId, deltaThreshold).subscribe());
 
-      verify(messengerMock.sendWithResponse(deepEqual({ message: handshakeMessage, reply: portValueSetupSingleHandshakeReplies }))).once();
+      verify(
+        messengerMock.sendWithResponse(
+          deepEqual({ message: handshakeMessage, reply: portValueSetupSingleHandshakeReplies })
+        )
+      ).once();
     });
 
     it('should send disable notification message when last subscriber unsubscribes', () => {
       const sub = subject.portValueChanges(portId, modeId, deltaThreshold).subscribe();
       subscription.add(sub);
-      verify(messengerMock.sendWithResponse(deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies }))).never();
+      verify(
+        messengerMock.sendWithResponse(
+          deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies })
+        )
+      ).never();
       sub.unsubscribe();
-      verify(messengerMock.sendWithResponse(deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies }))).once();
+      verify(
+        messengerMock.sendWithResponse(
+          deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies })
+        )
+      ).once();
     });
 
     it('should not send disable notification message when disposed', () => {
@@ -122,7 +144,11 @@ describe('PortsFeature', () => {
       subscription.add(sub);
       subject.dispose();
       sub.unsubscribe();
-      verify(messengerMock.sendWithResponse(deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies }))).never();
+      verify(
+        messengerMock.sendWithResponse(
+          deepEqual({ message: disableNotificationMessage, reply: portValueSetupSingleHandshakeReplies })
+        )
+      ).never();
     });
   });
 });

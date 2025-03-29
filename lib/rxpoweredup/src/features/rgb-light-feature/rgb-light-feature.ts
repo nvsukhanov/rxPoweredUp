@@ -12,7 +12,11 @@ export class RgbLightFeature implements IRgbLightFeature {
     private readonly portInputSetupMessageFactory: IPortInputFormatSetupMessageFactory
   ) {}
 
-  setRgbColor(portId: number, color: ColorDescriptor, modeId: number = WELL_KNOWN_PORT_MODE_IDS.rgbLightRgbColor): Observable<PortCommandExecutionStatus> {
+  setRgbColor(
+    portId: number,
+    color: ColorDescriptor,
+    modeId: number = WELL_KNOWN_PORT_MODE_IDS.rgbLightRgbColor
+  ): Observable<PortCommandExecutionStatus> {
     const setPortModeMessage = this.portInputSetupMessageFactory.createMessage(portId, modeId, false);
     const message = this.ledCommandsFactory.createSetRgbColorCommand(portId, modeId, color);
     return this.messenger.sendWithoutResponse(setPortModeMessage).pipe(

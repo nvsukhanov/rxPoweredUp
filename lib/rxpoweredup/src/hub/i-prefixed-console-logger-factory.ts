@@ -7,4 +7,6 @@ export interface IPrefixedConsoleLoggerFactory {
   createLogger(prefix: string, logLevel: LogLevel): ILogger;
 }
 
-export const PREFIXED_CONSOLE_LOGGER_FACTORY: InjectionToken<IPrefixedConsoleLoggerFactory> = Symbol('PREFIXED_CONSOLE_LOGGER_FACTORY');
+export const PREFIXED_CONSOLE_LOGGER_FACTORY: InjectionToken<IPrefixedConsoleLoggerFactory> = Symbol(
+  'PREFIXED_CONSOLE_LOGGER_FACTORY'
+);

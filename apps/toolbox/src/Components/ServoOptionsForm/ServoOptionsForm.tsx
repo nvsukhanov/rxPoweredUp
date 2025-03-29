@@ -17,7 +17,10 @@ export type ServoOptionsFormResult = {
   bufferMode: PortOperationStartupInformation;
 };
 
-export function ServoOptionsForm(props: { initialState?: ServoOptionsFormResult; onChanges: (result?: ServoOptionsFormResult) => void }): ReactElement {
+export function ServoOptionsForm(props: {
+  initialState?: ServoOptionsFormResult;
+  onChanges: (result?: ServoOptionsFormResult) => void;
+}): ReactElement {
   const [formResult, setFormResult] = useState<Partial<ServoOptionsFormResult>>(
     props.initialState ?? {
       speed: MOTOR_LIMITS.maxSpeed,
@@ -44,7 +47,10 @@ export function ServoOptionsForm(props: { initialState?: ServoOptionsFormResult;
     );
   }
 
-  function handleChange<K extends keyof ServoOptionsFormResult, V extends ServoOptionsFormResult[K]>(k: K, v: V | undefined): void {
+  function handleChange<K extends keyof ServoOptionsFormResult, V extends ServoOptionsFormResult[K]>(
+    k: K,
+    v: V | undefined
+  ): void {
     const nextResult: Partial<ServoOptionsFormResult> = {
       ...formResult,
       [k]: v,
@@ -62,16 +68,28 @@ export function ServoOptionsForm(props: { initialState?: ServoOptionsFormResult;
         <PowerInput power={formResult.power} onPowerChange={(v): void => handleChange('power', v)} />
       </div>
       <div>
-        <MotorUseProfileSelect useProfile={formResult.useProfile} onUseProfileChange={(v): void => handleChange('useProfile', v)} />
+        <MotorUseProfileSelect
+          useProfile={formResult.useProfile}
+          onUseProfileChange={(v): void => handleChange('useProfile', v)}
+        />
       </div>
       <div>
-        <MotorEndStateSelect endState={formResult.endState} onEndStateChange={(v): void => handleChange('endState', v)} />
+        <MotorEndStateSelect
+          endState={formResult.endState}
+          onEndStateChange={(v): void => handleChange('endState', v)}
+        />
       </div>
       <div>
-        <NoFeedbackToggle noFeedback={formResult.noFeedback} onNoFeedbackChange={(v): void => handleChange('noFeedback', v)} />
+        <NoFeedbackToggle
+          noFeedback={formResult.noFeedback}
+          onNoFeedbackChange={(v): void => handleChange('noFeedback', v)}
+        />
       </div>
       <div>
-        <MotorBufferModeSelect bufferMode={formResult.bufferMode} onBufferModeChange={(v): void => handleChange('bufferMode', v)} />
+        <MotorBufferModeSelect
+          bufferMode={formResult.bufferMode}
+          onBufferModeChange={(v): void => handleChange('bufferMode', v)}
+        />
       </div>
     </>
   );

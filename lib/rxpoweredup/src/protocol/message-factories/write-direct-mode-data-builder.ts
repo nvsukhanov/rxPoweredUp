@@ -17,6 +17,12 @@ export class WriteDirectModeDataBuilder {
     modeId: number;
     payload: number[];
   }): Uint8Array {
-    return new Uint8Array([portId, startupInformation | completionInformation, OutputSubCommand.writeDirectModeData, modeId, ...payload]);
+    return new Uint8Array([
+      portId,
+      startupInformation | completionInformation,
+      OutputSubCommand.writeDirectModeData,
+      modeId,
+      ...payload,
+    ]);
   }
 }
