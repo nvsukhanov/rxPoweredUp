@@ -9,7 +9,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           registry-url: 'https://registry.npmjs.org'
-          node-version: '18.15.x'
+          node-version: '22.14.x'
       - name: Install modules
         run: npm install
       - name: Lint

@@ -28,7 +28,7 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
     startupMode: PortOperationStartupInformation = PortOperationStartupInformation.executeImmediately,
     completionMode: PortOperationCompletionInformation = PortOperationCompletionInformation.commandFeedback
   ): RawPortOutputCommandMessage {
-    this.ensurePowerIsWithinLimits(power);
+    this.ensureLpfPowerIsWithinLimits(power);
     return {
       header: {
         messageType: MessageType.portOutputCommand,
@@ -268,6 +268,12 @@ export class PortOutputCommandOutboundMessageFactory implements IMotorCommandsOu
   private ensurePowerIsWithinLimits(power: number): void {
     if (power > MOTOR_LIMITS.maxPower || power < MOTOR_LIMITS.minPower) {
       throw new Error(`Power must be between ${MOTOR_LIMITS.minPower} and ${MOTOR_LIMITS.maxPower}. Got ${power}`);
+    }
+  }
+
+  private ensureLpfPowerIsWithinLimits(power: number): void {
+    if (Math.abs(power) > MOTOR_LIMITS.maxPower) {
+      throw new Error(`Power must be between -${MOTOR_LIMITS.maxPower} and ${MOTOR_LIMITS.maxPower}. Got ${power}`);
     }
   }
 
