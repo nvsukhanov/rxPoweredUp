@@ -14,7 +14,10 @@
         "format": ["esm"],
         "bundle": true,
         "main": "apps/examples/node/src/motor-speed.ts",
-        "additionalEntryPoints": ["apps/examples/node/src/port-value.ts"],
+        "additionalEntryPoints": [
+          "apps/examples/node/src/port-value.ts",
+          "apps/examples/node/src/pf-motor-power.ts"
+        ],
         "tsConfig": "apps/examples/node/tsconfig.app.json"
       },
       "configurations": {
