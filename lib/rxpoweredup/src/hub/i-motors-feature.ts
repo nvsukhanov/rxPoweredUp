@@ -80,11 +80,11 @@ export interface IMotorsFeature {
   setDecelerationTime(portId: number, timeMs: number): Observable<PortCommandExecutionStatus>;
 
   /**
-   * Starts motor power at the specified power.
+   * Starts motor rotation at the specified power. Used to control Power Functions motors, e.g. LPF2-TRAIN
    * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
    *
    * @param portId
-   * @param power - power in range (0 - 100)
+   * @param power - power in range [-100, 100]
    * @param powerModeId - power mode ID, defaults to WELL_KNOWN_PORT_MODE_IDS.motor[PortModeName.power]
    * @param options
    */
@@ -95,7 +95,7 @@ export interface IMotorsFeature {
    * Stream completes when the command is executed by the hub. Do not expect InProgress status to be emitted.
    *
    * @param portId
-   * @param speed - speed in range (-100 - 100), where positive values rotate the motor clockwise, negative values rotate the motor counter-clockwise.
+   * @param speed - speed in range [-100, 100], where positive values rotate the motor clockwise, negative values rotate the motor counter-clockwise.
    * @param options
    */
   startSpeed(portId: number, speed: number, options?: StartSpeedOptions): Observable<PortCommandExecutionStatus>;
@@ -119,7 +119,7 @@ export interface IMotorsFeature {
    * WARNING: setting noFeedback to true can lead to the motor rotating forever (until the hub is switched off) if
    * the next command issued in quick succession. Use with caution.
    * @param portId
-   * @param targetDegree - must be in range from -2147483647 to 2147483647
+   * @param targetDegree - must be in [-2147483647, 2147483647] range
    * @param options
    */
   goToPosition(portId: number, targetDegree: number, options?: ServoCommandOptions): Observable<PortCommandExecutionStatus>;

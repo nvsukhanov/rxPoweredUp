@@ -153,6 +153,8 @@ export enum PortModeName {
   temperature = 'TEMP',
   gravity = 'GRV',
   gesture = 'GEST',
+  lpf2Train = 'LPF2-TRAIN', // mode specific to 88011
+  lpf2MMotor = 'LPF2-MMOTOR', //  45303 ?
 }
 
 export enum PortModeSymbol {
@@ -254,6 +256,8 @@ export const WELL_KNOWN_PORT_MODE_IDS = {
     [PortModeName.power]: 0,
     [PortModeName.position]: 2,
     [PortModeName.absolutePosition]: 3,
+    [PortModeName.lpf2Train]: 0,
+    [PortModeName.lpf2MMotor]: 0,
   },
   voltage: 0,
   tilt: 0,
